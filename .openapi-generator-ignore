@@ -1,0 +1,7 @@
+# OpenAPI Generator Ignore
+
+main.go
+pkg/fetcher/api_default_service.go
+go.mod
+
+Dockerfile

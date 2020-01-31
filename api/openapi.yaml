@@ -1,0 +1,75 @@
+openapi: 3.0.2
+info:
+  description: Internal workings of Jesse Michael
+  title: jessemichael.me internal
+  version: v1
+servers:
+- description: Jesse's internal api
+  url: http://jessemichael.me/v1
+paths:
+  /feed:
+    get:
+      description: Get feed.
+      operationId: getFeed
+      parameters:
+      - description: twitterID
+        explode: false
+        in: query
+        name: twitterID
+        required: false
+        schema:
+          type: string
+        style: simple
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/feedItems'
+                type: array
+          description: feed item array response
+      summary: Get feed
+components:
+  schemas:
+    feedItems:
+      example:
+        items:
+        - id: 1
+          date: 2000-01-23
+          source: twitter
+        - id: 2
+          date: 2000-01-23
+          source: twitter
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/feedItem'
+          type: array
+      required:
+      - items
+      type: object
+    feedItem:
+      example:
+        id: 1
+        date: 2000-01-23
+        source: twitter
+      properties:
+        id:
+          type: string
+        date:
+          format: date
+          type: string
+        source:
+          type: string
+        link:
+          type: string
+        media:
+          type: string
+        content:
+          type: string
+      required:
+      - date
+      - id
+      - source
+      type: object

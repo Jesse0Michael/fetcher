@@ -9,6 +9,8 @@ gen-docs:
 
 build:
 	go build -o bin/fetcher
+	GOOS=linux go build -o bin/lambda pkg/lambda/main.go
+	cd bin && zip function.zip lambda
 
 build-docker:
 	docker build -t fetcher .

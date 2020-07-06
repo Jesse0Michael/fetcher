@@ -24,8 +24,8 @@ func main() {
 
 	// oauth2 configures a client that uses app credentials to keep a fresh token
 	config := &clientcredentials.Config{
-		ClientID:     "<redacted>",
-		ClientSecret: "<redacted>",
+		ClientID:     "tswH7DBOa2WbGMMBUasl8g",
+		ClientSecret: "htau31s5eKenDHP0e3gPbVq1krXC6kQxzvXsp20ls0",
 		TokenURL:     "https://api.twitter.com/oauth2/token",
 	}
 	// http.Client will automatically authorize Requests

@@ -1,4 +1,4 @@
-FROM golang:1.13-alpine AS build
+FROM golang:1.14-alpine AS build
 
 # Install git + SSL ca certificates.
 # Git is required for fetching the dependencies.
@@ -7,16 +7,17 @@ RUN apk update && apk add --no-cache git ca-certificates && update-ca-certificat
 
 # Copy project files
 WORKDIR /go/src
-COPY . .
+COPY go.mod .
+COPY go.sum .
+RUN mkdir /dir
 
-# Fetch dependencies (go mod)
-ENV GO111MODULE=on
+# Fetch dependencies
 RUN go mod download
-RUN go mod verify
+COPY . .
 
 # Build project
 ENV CGO_ENABLED=0
-RUN go build -a -installsuffix cgo -o fetcher .
+RUN go build -a -installsuffix cgo -o fetcher .cmd/fetcher
 
 FROM scratch AS runtime
 

@@ -1,3 +1,14 @@
+## [1.0.1](https://github.com/Jesse0Michael/fetcher/compare/v1.0.0...v1.0.1) (2020-07-06)
+
+### Chores
+
+- restructure repo ([e2d7d2b](https://github.com/Jesse0Michael/fetcher/commit/e2d7d2bc9b3691a6b3836439e28e55745bfe4f96))
+- update app description ([767d258](https://github.com/Jesse0Michael/fetcher/commit/767d2589612841f0d344511787c0305fb27250b1))
+
+### Other
+
+- Merge branch 'master' of ssh://github.com/Jesse0Michael/fetcher ([4e552c6](https://github.com/Jesse0Michael/fetcher/commit/4e552c610d9d3b69b28a98e7affd7d49169b5e50))
+
 # 1.0.0 (2020-07-06)
 
 ### Bug Fixes

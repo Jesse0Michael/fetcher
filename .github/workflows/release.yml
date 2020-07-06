@@ -1,8 +1,7 @@
 name: Release Workflow
 on:
-  push:
-    tags:
-      - "*"
+  release:
+    types: [published]
 
 jobs:
   release:
@@ -18,21 +17,21 @@ jobs:
         run: |
           docker build \
             -t docker.pkg.github.com/jesse0michael/fetcher/api:${REF##*/} \
-            -t registry.heroku.com/fetcher/api .
+            -t registry.heroku.com/jesse0michael-fetcher/api .
 
       - name: Publish Server
         run: |
           docker login docker.pkg.github.com -u Jesse0Michael -p ${{ secrets.GITHUB_SECRET }}
           docker push docker.pkg.github.com/jesse0michael/fetcher/api:${REF##*/}
           docker login registry.heroku.com -u Jesse0Michael -p ${{ secrets.HEROKU_API_KEY }}
-          docker push registry.heroku.com/fetcher/api
+          docker push registry.heroku.com/jesse0michael-fetcher/api
 
       - name: Deploy
         uses: actions/heroku@master
         env:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
         with:
-          args: container:release api -a fetcher
+          args: container:release api -a jesse0michael-fetcher
 
   release-client:
     env:

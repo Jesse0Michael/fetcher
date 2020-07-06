@@ -17,7 +17,7 @@ COPY . .
 
 # Build project
 ENV CGO_ENABLED=0
-RUN go build -a -installsuffix cgo -o fetcher .cmd/fetcher
+RUN go build -o fetcher ./cmd/fetcher
 
 FROM scratch AS runtime
 

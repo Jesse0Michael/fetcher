@@ -1,6 +1,6 @@
 /**
- * jessemichael.me internal
- * Internal workings of Jesse Michael
+ * Fetcher
+ * Fetch social media feeds
  *
  * The version of the OpenAPI document: v1
  * 

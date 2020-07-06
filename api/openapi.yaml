@@ -1,11 +1,11 @@
 openapi: 3.0.2
 info:
-  description: Internal workings of Jesse Michael
-  title: jessemichael.me internal
+  description: Fetch social media feeds
+  title: Fetcher
   version: v1
 servers:
 - description: Jesse's internal api
-  url: http://jessemichael.me/v1
+  url: http://localhost:8080/
 paths:
   /feed:
     get:

@@ -51,25 +51,32 @@ components:
       type: object
     feedItem:
       example:
-        id: 1
-        date: 2000-01-23
+        id: hnoy78d34qdty3
+        ts: 1560802637
         source: twitter
       properties:
         id:
+          description: Unique identifier for a feed item
           type: string
-        date:
-          format: date
-          type: string
+        ts:
+          description: Unix timestamp (seconds) for when the item was published
+          type: integer
         source:
+          description: The source platform the item is from
+          enum:
+          - twitter
           type: string
-        link:
+        url:
+          description: Permalink to the feed item on the platform
           type: string
         media:
+          description: URL to media (image, video, etc..)
           type: string
         content:
+          description: Text content for the item
           type: string
       required:
-      - date
       - id
       - source
+      - ts
       type: object

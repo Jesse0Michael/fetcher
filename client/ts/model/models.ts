@@ -19,6 +19,7 @@ let primitives = [
                  ];
 
 let enumsMap: {[index: string]: any} = {
+        "FeedItem.SourceEnum": FeedItem.SourceEnum,
 }
 
 let typeMap: {[index: string]: any} = {

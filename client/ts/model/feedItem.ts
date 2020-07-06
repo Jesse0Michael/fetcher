@@ -13,11 +13,29 @@
 import { RequestFile } from '../api';
 
 export class FeedItem {
+    /**
+    * Unique identifier for a feed item
+    */
     'id': string;
-    'date': string;
-    'source': string;
-    'link'?: string;
+    /**
+    * Unix timestamp (seconds) for when the item was published
+    */
+    'ts': number;
+    /**
+    * The source platform the item is from
+    */
+    'source': FeedItem.SourceEnum;
+    /**
+    * Permalink to the feed item on the platform
+    */
+    'url'?: string;
+    /**
+    * URL to media (image, video, etc..)
+    */
     'media'?: string;
+    /**
+    * Text content for the item
+    */
     'content'?: string;
 
     static discriminator: string | undefined = undefined;
@@ -29,18 +47,18 @@ export class FeedItem {
             "type": "string"
         },
         {
-            "name": "date",
-            "baseName": "date",
-            "type": "string"
+            "name": "ts",
+            "baseName": "ts",
+            "type": "number"
         },
         {
             "name": "source",
             "baseName": "source",
-            "type": "string"
+            "type": "FeedItem.SourceEnum"
         },
         {
-            "name": "link",
-            "baseName": "link",
+            "name": "url",
+            "baseName": "url",
             "type": "string"
         },
         {
@@ -59,3 +77,8 @@ export class FeedItem {
     }
 }
 
+export namespace FeedItem {
+    export enum SourceEnum {
+        Twitter = <any> 'twitter'
+    }
+}

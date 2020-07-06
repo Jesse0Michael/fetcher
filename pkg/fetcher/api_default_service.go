@@ -13,6 +13,7 @@ import (
 	"fmt"
 	"log"
 	"strconv"
+	"time"
 
 	"github.com/dghubble/go-twitter/twitter"
 )
@@ -81,11 +82,12 @@ func (s *DefaultApiService) getTwitter(twitterID string) ([]FeedItem, error) {
 			}
 			media += "</div>"
 		}
+		ts, _ := time.Parse(time.RFC3339, tweet.CreatedAt)
 		item := FeedItem{
 			Id:      tweet.IDStr,
-			Date:    tweet.CreatedAt,
+			Ts:      int32(ts.Unix()),
 			Source:  "twitter",
-			Link:    "",
+			Url:     "",
 			Media:   "",
 			Content: author + tweet.Text + media,
 		}

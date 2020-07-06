@@ -1,3 +1,13 @@
+## [1.0.2](https://github.com/Jesse0Michael/fetcher/compare/v1.0.1...v1.0.2) (2020-07-06)
+
+### Continuous Integration
+
+- fix publishing ([fefd047](https://github.com/Jesse0Michael/fetcher/commit/fefd0472a970569a1b4c97bbd069a624bcd76d98))
+
+### Other
+
+- Merge branch 'master' of ssh://github.com/Jesse0Michael/fetcher ([e90ed67](https://github.com/Jesse0Michael/fetcher/commit/e90ed6731bf9dbaf742f8e8093a42bd4a2ed0069))
+
 ## [1.0.1](https://github.com/Jesse0Michael/fetcher/compare/v1.0.0...v1.0.1) (2020-07-06)
 
 ### Chores

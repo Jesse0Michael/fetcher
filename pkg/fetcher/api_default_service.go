@@ -18,6 +18,10 @@ import (
 	"github.com/dghubble/go-twitter/twitter"
 )
 
+const (
+	count = 20
+)
+
 // DefaultApiService is a service that implents the logic for the DefaultApiServicer
 // This service should implement the business logic for every endpoint for the DefaultApi API.
 // Include any external packages or services that will be required by this service.
@@ -49,7 +53,7 @@ func (s *DefaultApiService) getTwitter(twitterID string) ([]FeedItem, error) {
 		return nil, nil
 	}
 
-	id, err := strconv.Atoi(twitterID)
+	id, err := strconv.ParseInt(twitterID, 10, 64)
 	if err != nil {
 		return nil, err
 	}
@@ -58,8 +62,8 @@ func (s *DefaultApiService) getTwitter(twitterID string) ([]FeedItem, error) {
 	includeRetweets := true
 	trimUser := false
 	timeline := &twitter.UserTimelineParams{
-		UserID:          int64(id),
-		Count:           20,
+		UserID:          id,
+		Count:           count,
 		ExcludeReplies:  &excludeReplies,
 		IncludeRetweets: &includeRetweets,
 		TrimUser:        &trimUser,
@@ -82,7 +86,7 @@ func (s *DefaultApiService) getTwitter(twitterID string) ([]FeedItem, error) {
 			}
 			media += "</div>"
 		}
-		ts, _ := time.Parse(time.RFC3339, tweet.CreatedAt)
+		ts, _ := time.Parse(time.RubyDate, tweet.CreatedAt)
 		item := FeedItem{
 			Id:      tweet.IDStr,
 			Ts:      int32(ts.Unix()),

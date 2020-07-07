@@ -1,3 +1,18 @@
+# [1.1.0](https://github.com/Jesse0Michael/fetcher/compare/v1.0.2...v1.1.0) (2020-07-07)
+
+### Bug Fixes
+
+- update node packaging ([b19bf50](https://github.com/Jesse0Michael/fetcher/commit/b19bf50a660cdd5fb48d34190de99edaf487f297))
+- update twitter processing ([7056446](https://github.com/Jesse0Michael/fetcher/commit/7056446a2687f77db194a9589d31301dc894d750))
+
+### Continuous Integration
+
+- fix docker build ([b2d5b35](https://github.com/Jesse0Michael/fetcher/commit/b2d5b35f7bfec4256ef4a2bad7db1c5ad631ab16))
+
+### Features
+
+- add configuration ([1bbd4ee](https://github.com/Jesse0Michael/fetcher/commit/1bbd4eea96f13842e23d2ee4217ed740012c4f86))
+
 ## [1.0.2](https://github.com/Jesse0Michael/fetcher/compare/v1.0.1...v1.0.2) (2020-07-06)
 
 ### Continuous Integration

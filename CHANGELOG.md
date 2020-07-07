@@ -1,3 +1,9 @@
+## [1.1.1](https://github.com/Jesse0Michael/fetcher/compare/v1.1.0...v1.1.1) (2020-07-07)
+
+### Continuous Integration
+
+- fix github authentication ([f4b9b12](https://github.com/Jesse0Michael/fetcher/commit/f4b9b126aaf9fb33b8430fcf3e2771371861824a))
+
 # [1.1.0](https://github.com/Jesse0Michael/fetcher/compare/v1.0.2...v1.1.0) (2020-07-07)
 
 ### Bug Fixes

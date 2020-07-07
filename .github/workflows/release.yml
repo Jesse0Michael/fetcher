@@ -22,7 +22,7 @@ jobs:
 
       - name: Publish Server
         run: |
-          docker login docker.pkg.github.com -u Jesse0Michael -p ${{ secrets.GITHUB_SECRET }}
+          docker login docker.pkg.github.com -u Jesse0Michael -p ${{ secrets.PAT }}
           docker push docker.pkg.github.com/jesse0michael/fetcher/api:${REF##*/}
           docker login registry.heroku.com -u Jesse0Michael -p ${{ secrets.HEROKU_API_KEY }}
           docker push registry.heroku.com/jesse0michael-fetcher/api
@@ -64,4 +64,4 @@ jobs:
           npm version ${REF##*/}
           npm publish
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_SECRET }}
+          NODE_AUTH_TOKEN: ${{ secrets.PAT }}

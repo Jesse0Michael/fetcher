@@ -1,8 +1,8 @@
 {
-    "name": "@jesse0michael/jessemichael.me",
+    "name": "@jesse0michael/fetcher",
     "version": "1.0.0",
-    "description": "NodeJS client for @jesse0michael/jessemichael.me",
-    "repository": "jesse0michael/jessemichael.me",
+    "description": "NodeJS client for @jesse0michael/fetcher",
+    "repository": "jesse0michael/fetcher",
     "main": "dist/api.js",
     "types": "dist/api.d.ts",
     "scripts": {

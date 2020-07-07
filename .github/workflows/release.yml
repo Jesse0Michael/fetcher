@@ -16,7 +16,7 @@ jobs:
       - name: Build
         run: |
           docker build \
-            -- file ./build/Dockerfile \
+            --file ./build/Dockerfile \
             -t docker.pkg.github.com/jesse0michael/fetcher/api:${REF##*/} \
             -t registry.heroku.com/jesse0michael-fetcher/api .
 

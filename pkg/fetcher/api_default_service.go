@@ -11,13 +11,17 @@ package fetcher
 
 import (
 	"fmt"
+	"io/ioutil"
 	"log"
+	"net/http"
+	"net/url"
 	"sort"
 	"strconv"
 	"time"
 
 	"github.com/ahmdrz/goinsta/v2"
 	"github.com/dghubble/go-twitter/twitter"
+	"github.com/tidwall/gjson"
 )
 
 const (
@@ -41,7 +45,7 @@ func NewDefaultApiService(twitterClient *twitter.Client, insta *goinsta.Instagra
 }
 
 // GetFeed - Get feed
-func (s *DefaultApiService) GetFeed(twitterID, instagramID string) (interface{}, error) {
+func (s *DefaultApiService) GetFeed(twitterID, instagramID, bloggerID string) (interface{}, error) {
 	items := []FeedItem{}
 	twitterItems, err := s.getTwitter(twitterID)
 	if err != nil {
@@ -53,8 +57,14 @@ func (s *DefaultApiService) GetFeed(twitterID, instagramID string) (interface{},
 		log.Printf("error retrieving instagram items. err: %s\n", err)
 	}
 
+	bloggerItems, err := s.getBlogger(bloggerID)
+	if err != nil {
+		log.Printf("error retrieving blogger items. err: %s\n", err)
+	}
+
 	items = append(items, twitterItems...)
 	items = append(items, instagramItems...)
+	items = append(items, bloggerItems...)
 
 	sort.SliceStable(items, func(i, j int) bool {
 		return items[i].Ts > items[j].Ts
@@ -172,4 +182,48 @@ func getInstagramMedia(media goinsta.Item) []FeedItemMedia {
 	}
 
 	return medias
+}
+
+func (s *DefaultApiService) getBlogger(bloggerID string) ([]FeedItem, error) {
+	if s.tClient == nil {
+		return nil, nil
+	}
+
+	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("https://www.googleapis.com/blogger/v2/blogs/%s/posts", bloggerID), nil)
+	if err != nil {
+		return nil, err
+	}
+	q := url.Values{}
+	q.Add("key", "AIzaSyBU3_KGZO90Vu_s8Lhbl7lJAEsaIouAEaY")
+	q.Add("fetchBodies", "true")
+	q.Add("maxResults", "20")
+	req.URL.RawQuery = q.Encode()
+
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+	fmt.Println(string(body))
+
+	items := []FeedItem{}
+	for _, blog := range gjson.Get(string(body), "items").Array() {
+		time, err := time.Parse(time.RFC3339, blog.Get("published").String())
+		if err != nil {
+			return nil, err
+		}
+		item := FeedItem{
+			Id:      blog.Get("id").String(),
+			Ts:      time.Unix(),
+			Source:  "blogger",
+			Url:     blog.Get("url").String(),
+			Content: blog.Get("content").String(),
+		}
+		items = append(items, item)
+	}
+	return items, nil
 }

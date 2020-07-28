@@ -41,7 +41,8 @@ func (c *DefaultApiController) GetFeed(w http.ResponseWriter, r *http.Request) {
 	query := r.URL.Query()
 	twitterID := query.Get("twitterID")
 	instagramID := query.Get("instagramID")
-	result, err := c.service.GetFeed(twitterID, instagramID)
+	bloggerID := query.Get("bloggerID")
+	result, err := c.service.GetFeed(twitterID, instagramID, bloggerID)
 	if err != nil {
 		w.WriteHeader(500)
 		return

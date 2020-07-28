@@ -81,6 +81,7 @@ export class FeedItem {
 export namespace FeedItem {
     export enum SourceEnum {
         Twitter = <any> 'twitter',
-        Instagram = <any> 'instagram'
+        Instagram = <any> 'instagram',
+        Blogger = <any> 'blogger'
     }
 }

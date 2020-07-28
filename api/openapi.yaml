@@ -28,6 +28,14 @@ paths:
         schema:
           type: string
         style: simple
+      - description: bloggerID
+        explode: false
+        in: query
+        name: bloggerID
+        required: false
+        schema:
+          type: string
+        style: simple
       responses:
         "200":
           content:
@@ -75,6 +83,7 @@ components:
           enum:
           - twitter
           - instagram
+          - blogger
           type: string
         url:
           description: Permalink to the feed item on the platform

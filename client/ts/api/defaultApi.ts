@@ -90,8 +90,9 @@ export class DefaultApi {
      * @summary Get feed
      * @param twitterID twitterID
      * @param instagramID instagramID
+     * @param bloggerID bloggerID
      */
-    public async getFeed (twitterID?: string, instagramID?: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.ClientResponse; body: Array<FeedItems>;  }> {
+    public async getFeed (twitterID?: string, instagramID?: string, bloggerID?: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.ClientResponse; body: Array<FeedItems>;  }> {
         const localVarPath = this.basePath + '/feed';
         let localVarQueryParameters: any = {};
         let localVarHeaderParams: any = (<any>Object).assign({}, this._defaultHeaders);
@@ -110,6 +111,10 @@ export class DefaultApi {
 
         if (instagramID !== undefined) {
             localVarQueryParameters['instagramID'] = ObjectSerializer.serialize(instagramID, "string");
+        }
+
+        if (bloggerID !== undefined) {
+            localVarQueryParameters['bloggerID'] = ObjectSerializer.serialize(bloggerID, "string");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);

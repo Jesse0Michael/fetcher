@@ -1,3 +1,9 @@
+# [1.2.0](https://github.com/Jesse0Michael/fetcher/compare/v1.1.1...v1.2.0) (2020-07-28)
+
+### Features
+
+- get inststagram feed ([5040b1a](https://github.com/Jesse0Michael/fetcher/commit/5040b1aa61980d38866265064c07e43e5615ef83))
+
 ## [1.1.1](https://github.com/Jesse0Michael/fetcher/compare/v1.1.0...v1.1.1) (2020-07-07)
 
 ### Continuous Integration

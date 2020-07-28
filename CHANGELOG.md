@@ -1,3 +1,13 @@
+# [1.3.0](https://github.com/Jesse0Michael/fetcher/compare/v1.2.0...v1.3.0) (2020-07-28)
+
+### Features
+
+- add blogger ([bf6378c](https://github.com/Jesse0Michael/fetcher/commit/bf6378cb09c4073858c1412ddabc8c43ec01df74))
+
+### Other
+
+- Merge branch 'master' of ssh://github.com/Jesse0Michael/fetcher ([8713428](https://github.com/Jesse0Michael/fetcher/commit/8713428843fe7d3e55b3daa434b39ac24d5282fc))
+
 # [1.2.0](https://github.com/Jesse0Michael/fetcher/compare/v1.1.1...v1.2.0) (2020-07-28)
 
 ### Features

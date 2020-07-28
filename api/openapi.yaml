@@ -2,7 +2,7 @@ openapi: 3.0.2
 info:
   description: Fetch social media feeds
   title: Fetcher
-  version: v1
+  version: 1.1.0
 servers:
 - description: Jesse's internal api
   url: http://localhost:8080/
@@ -16,6 +16,14 @@ paths:
         explode: false
         in: query
         name: twitterID
+        required: false
+        schema:
+          type: string
+        style: simple
+      - description: instagramID
+        explode: false
+        in: query
+        name: instagramID
         required: false
         schema:
           type: string
@@ -35,11 +43,11 @@ components:
     feedItems:
       example:
         items:
-        - id: 1
-          date: 2000-01-23
-          source: twitter
-        - id: 2
-          date: 2000-01-23
+        - id: CAfj92js93gjai
+          ts: 1560834652
+          source: instagram
+        - id: hnoy78d34qdty3
+          ts: 1560802637
           source: twitter
       properties:
         items:
@@ -60,23 +68,45 @@ components:
           type: string
         ts:
           description: Unix timestamp (seconds) for when the item was published
+          format: int64
           type: integer
         source:
           description: The source platform the item is from
           enum:
           - twitter
+          - instagram
           type: string
         url:
           description: Permalink to the feed item on the platform
           type: string
         media:
-          description: URL to media (image, video, etc..)
-          type: string
+          description: Array of media items (images, videos, etc...)
+          items:
+            $ref: '#/components/schemas/feedItem_media'
+          type: array
         content:
-          description: Text content for the item
+          description: Text content for the item (may contain HTML)
           type: string
       required:
       - id
       - source
       - ts
       type: object
+    feedItem_media:
+      properties:
+        url:
+          description: The URL to the media content
+          type: string
+        poster:
+          description: The URL to a poster image
+          type: string
+        kind:
+          description: The kind of media
+          enum:
+          - image
+          - video
+          - audio
+          type: string
+      required:
+      - kind
+      - url

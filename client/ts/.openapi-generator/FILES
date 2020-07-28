@@ -4,6 +4,7 @@ api/apis.ts
 api/defaultApi.ts
 git_push.sh
 model/./feedItem.ts
+model/./feedItemMedia.ts
 model/./feedItems.ts
 model/models.ts
 package.json

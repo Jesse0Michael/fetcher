@@ -12,9 +12,11 @@ package fetcher
 import (
 	"fmt"
 	"log"
+	"sort"
 	"strconv"
 	"time"
 
+	"github.com/ahmdrz/goinsta/v2"
 	"github.com/dghubble/go-twitter/twitter"
 )
 
@@ -27,24 +29,36 @@ const (
 // Include any external packages or services that will be required by this service.
 type DefaultApiService struct {
 	tClient *twitter.Client
+	iClient *goinsta.Instagram
 }
 
 // NewDefaultApiService creates a default api service
-func NewDefaultApiService(twitterClient *twitter.Client) DefaultApiServicer {
+func NewDefaultApiService(twitterClient *twitter.Client, insta *goinsta.Instagram) DefaultApiServicer {
 	return &DefaultApiService{
 		tClient: twitterClient,
+		iClient: insta,
 	}
 }
 
 // GetFeed - Get feed
-func (s *DefaultApiService) GetFeed(twitterID string) (interface{}, error) {
+func (s *DefaultApiService) GetFeed(twitterID, instagramID string) (interface{}, error) {
 	items := []FeedItem{}
 	twitterItems, err := s.getTwitter(twitterID)
 	if err != nil {
 		log.Printf("error retrieving twitter items. err: %s\n", err)
 	}
 
+	instagramItems, err := s.getInstagram(instagramID)
+	if err != nil {
+		log.Printf("error retrieving instagram items. err: %s\n", err)
+	}
+
 	items = append(items, twitterItems...)
+	items = append(items, instagramItems...)
+
+	sort.SliceStable(items, func(i, j int) bool {
+		return items[i].Ts > items[j].Ts
+	})
 	return FeedItems{Items: items}, nil
 }
 
@@ -67,6 +81,7 @@ func (s *DefaultApiService) getTwitter(twitterID string) ([]FeedItem, error) {
 		ExcludeReplies:  &excludeReplies,
 		IncludeRetweets: &includeRetweets,
 		TrimUser:        &trimUser,
+		TweetMode:       "extended",
 	}
 
 	tweets, _, err := s.tClient.Timelines.UserTimeline(timeline)
@@ -89,13 +104,72 @@ func (s *DefaultApiService) getTwitter(twitterID string) ([]FeedItem, error) {
 		ts, _ := time.Parse(time.RubyDate, tweet.CreatedAt)
 		item := FeedItem{
 			Id:      tweet.IDStr,
-			Ts:      int32(ts.Unix()),
+			Ts:      ts.Unix(),
 			Source:  "twitter",
-			Url:     "",
-			Media:   "",
-			Content: author + tweet.Text + media,
+			Url:     tweetURL,
+			Media:   []FeedItemMedia{},
+			Content: author + tweet.FullText + media,
 		}
 		items = append(items, item)
 	}
 	return items, nil
+}
+
+func (s *DefaultApiService) getInstagram(instagramID string) ([]FeedItem, error) {
+	if s.iClient == nil {
+		return nil, nil
+	}
+
+	id, err := strconv.ParseInt(instagramID, 10, 64)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := s.iClient.Profiles.ByID(id)
+	if err != nil {
+		return nil, err
+	}
+	f := res.Feed()
+	f.Next()
+
+	items := []FeedItem{}
+	for _, media := range f.Items {
+		medias := getInstagramMedia(media)
+
+		item := FeedItem{
+			Id:      media.ID,
+			Ts:      media.TakenAt,
+			Source:  "instagram",
+			Url:     fmt.Sprintf("https://www.instagram.com/p/%s", media.Code),
+			Media:   medias,
+			Content: media.Caption.Text,
+		}
+		items = append(items, item)
+	}
+
+	return items, nil
+}
+
+func getInstagramMedia(media goinsta.Item) []FeedItemMedia {
+	medias := []FeedItemMedia{}
+	if len(media.CarouselMedia) > 0 {
+		for _, c := range media.CarouselMedia {
+			medias = append(medias, getInstagramMedia(c)...)
+		}
+	}
+
+	if len(media.Videos) > 0 {
+		medias = append(medias, FeedItemMedia{
+			Url:    media.Videos[0].URL,
+			Poster: media.Images.GetBest(),
+			Kind:   "video",
+		})
+	} else {
+		medias = append(medias, FeedItemMedia{
+			Url:  media.Images.GetBest(),
+			Kind: "image",
+		})
+	}
+
+	return medias
 }

@@ -1,9 +1,11 @@
 export * from './feedItem';
+export * from './feedItemMedia';
 export * from './feedItems';
 
 import localVarRequest = require('request');
 
 import { FeedItem } from './feedItem';
+import { FeedItemMedia } from './feedItemMedia';
 import { FeedItems } from './feedItems';
 
 /* tslint:disable:no-unused-variable */
@@ -20,10 +22,12 @@ let primitives = [
 
 let enumsMap: {[index: string]: any} = {
         "FeedItem.SourceEnum": FeedItem.SourceEnum,
+        "FeedItemMedia.KindEnum": FeedItemMedia.KindEnum,
 }
 
 let typeMap: {[index: string]: any} = {
     "FeedItem": FeedItem,
+    "FeedItemMedia": FeedItemMedia,
     "FeedItems": FeedItems,
 }
 

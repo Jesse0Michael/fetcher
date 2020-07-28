@@ -40,9 +40,9 @@ func HandleRequest(ctx context.Context, req events.APIGatewayProxyRequest) (inte
 	// Twitter client
 	twitterClient := twitter.NewClient(httpClient)
 
-	fetcherService := fetcher.NewDefaultApiService(twitterClient)
+	fetcherService := fetcher.NewDefaultApiService(twitterClient, nil)
 
-	return fetcherService.GetFeed(feeds.Twitter)
+	return fetcherService.GetFeed(feeds.Twitter, "")
 }
 
 func main() {

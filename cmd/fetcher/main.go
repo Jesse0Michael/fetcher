@@ -13,6 +13,7 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/ahmdrz/goinsta/v2"
 	"github.com/dghubble/go-twitter/twitter"
 	fetcher "github.com/jesse0michael/fetcher/pkg/fetcher"
 	"github.com/joho/godotenv"
@@ -41,7 +42,12 @@ func main() {
 	// Twitter client
 	twitterClient := twitter.NewClient(httpClient)
 
-	DefaultAPIService := fetcher.NewDefaultApiService(twitterClient)
+	insta := goinsta.New(cfg.Instagram.Username, cfg.Instagram.Password)
+	if err := insta.Login(); err != nil {
+		log.Fatalf("failed to log into instagram: %s", cfg.Instagram.Password)
+	}
+
+	DefaultAPIService := fetcher.NewDefaultApiService(twitterClient, insta)
 	DefaultAPIController := fetcher.NewDefaultApiController(DefaultAPIService)
 
 	router := fetcher.NewRouter(DefaultAPIController)

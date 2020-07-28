@@ -44,6 +44,14 @@ paths:
         schema:
           type: string
         style: simple
+      - description: swarmID
+        explode: false
+        in: query
+        name: swarmID
+        required: false
+        schema:
+          type: string
+        style: simple
       responses:
         "200":
           content:
@@ -93,6 +101,7 @@ components:
           - instagram
           - blogger
           - soundcloud
+          - swarm
           type: string
         url:
           description: Permalink to the feed item on the platform

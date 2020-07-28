@@ -92,8 +92,9 @@ export class DefaultApi {
      * @param instagramID instagramID
      * @param bloggerID bloggerID
      * @param soundcloudID soundcloudID
+     * @param swarmID swarmID
      */
-    public async getFeed (twitterID?: string, instagramID?: string, bloggerID?: string, soundcloudID?: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.ClientResponse; body: Array<FeedItems>;  }> {
+    public async getFeed (twitterID?: string, instagramID?: string, bloggerID?: string, soundcloudID?: string, swarmID?: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.ClientResponse; body: Array<FeedItems>;  }> {
         const localVarPath = this.basePath + '/feed';
         let localVarQueryParameters: any = {};
         let localVarHeaderParams: any = (<any>Object).assign({}, this._defaultHeaders);
@@ -120,6 +121,10 @@ export class DefaultApi {
 
         if (soundcloudID !== undefined) {
             localVarQueryParameters['soundcloudID'] = ObjectSerializer.serialize(soundcloudID, "string");
+        }
+
+        if (swarmID !== undefined) {
+            localVarQueryParameters['swarmID'] = ObjectSerializer.serialize(swarmID, "string");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);

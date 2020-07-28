@@ -83,6 +83,7 @@ export namespace FeedItem {
         Twitter = <any> 'twitter',
         Instagram = <any> 'instagram',
         Blogger = <any> 'blogger',
-        Soundcloud = <any> 'soundcloud'
+        Soundcloud = <any> 'soundcloud',
+        Swarm = <any> 'swarm'
     }
 }

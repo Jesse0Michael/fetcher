@@ -45,7 +45,7 @@ func NewDefaultApiService(twitterClient *twitter.Client, insta *goinsta.Instagra
 }
 
 // GetFeed - Get feed
-func (s *DefaultApiService) GetFeed(twitterID, instagramID, bloggerID, soundcloudID string) (interface{}, error) {
+func (s *DefaultApiService) GetFeed(twitterID, instagramID, bloggerID, soundcloudID, swarmID string) (interface{}, error) {
 	items := []FeedItem{}
 	twitterItems, err := s.getTwitter(twitterID)
 	if err != nil {
@@ -67,10 +67,16 @@ func (s *DefaultApiService) GetFeed(twitterID, instagramID, bloggerID, soundclou
 		log.Printf("error retrieving soundcloud items. err: %s\n", err)
 	}
 
+	swarmItems, err := s.getSwarm(swarmID)
+	if err != nil {
+		log.Printf("error retrieving swarm items. err: %s\n", err)
+	}
+
 	items = append(items, twitterItems...)
 	items = append(items, instagramItems...)
 	items = append(items, bloggerItems...)
 	items = append(items, soundcloudItems...)
+	items = append(items, swarmItems...)
 
 	sort.SliceStable(items, func(i, j int) bool {
 		return items[i].Ts > items[j].Ts
@@ -191,10 +197,6 @@ func getInstagramMedia(media goinsta.Item) []FeedItemMedia {
 }
 
 func (s *DefaultApiService) getBlogger(bloggerID string) ([]FeedItem, error) {
-	if s.tClient == nil {
-		return nil, nil
-	}
-
 	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("https://www.googleapis.com/blogger/v2/blogs/%s/posts", bloggerID), nil)
 	if err != nil {
 		return nil, err
@@ -234,10 +236,6 @@ func (s *DefaultApiService) getBlogger(bloggerID string) ([]FeedItem, error) {
 }
 
 func (s *DefaultApiService) getSoundcloud(soundcloudID string) ([]FeedItem, error) {
-	if s.tClient == nil {
-		return nil, nil
-	}
-
 	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("https://api.soundcloud.com/users/%s/favorites", soundcloudID), nil)
 	if err != nil {
 		return nil, err
@@ -271,6 +269,48 @@ func (s *DefaultApiService) getSoundcloud(soundcloudID string) ([]FeedItem, erro
 			Source:  "soundcloud",
 			Url:     sound.Get("uri").String(),
 			Content: content,
+		}
+		items = append(items, item)
+	}
+	return items, nil
+}
+
+func (s *DefaultApiService) getSwarm(swarmID string) ([]FeedItem, error) {
+	req, err := http.NewRequest(http.MethodGet, "https://api.foursquare.com/v2/users/self/checkins", nil)
+	if err != nil {
+		return nil, err
+	}
+	q := url.Values{}
+	q.Add("oauth_token", "OU2LAHV5RHIWU22OSUUA2QRXAWYWDISJBCY2SS5ANH41PRXS")
+	q.Add("v", "20140806")
+	req.URL.RawQuery = q.Encode()
+
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	items := []FeedItem{}
+	for _, checkin := range gjson.GetBytes(body, "response.checkins.items").Array() {
+		if checkin.Get("photos.count").Int() == 0 {
+			continue
+		}
+		media := fmt.Sprintf("%s300x300%s", checkin.Get("photos.items.0.prefix").String(), checkin.Get("photos.items.0.suffix").String())
+		item := FeedItem{
+			Id:     checkin.Get("id").String(),
+			Ts:     checkin.Get("createdAt").Int(),
+			Source: "swarm",
+			Media: []FeedItemMedia{{
+				Url:  media,
+				Kind: "image",
+			}},
+			Url:     checkin.Get("source.url").String(),
+			Content: checkin.Get("shout").String(),
 		}
 		items = append(items, item)
 	}

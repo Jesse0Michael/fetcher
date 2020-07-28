@@ -36,6 +36,14 @@ paths:
         schema:
           type: string
         style: simple
+      - description: soundcloudID
+        explode: false
+        in: query
+        name: soundcloudID
+        required: false
+        schema:
+          type: string
+        style: simple
       responses:
         "200":
           content:
@@ -84,6 +92,7 @@ components:
           - twitter
           - instagram
           - blogger
+          - soundcloud
           type: string
         url:
           description: Permalink to the feed item on the platform

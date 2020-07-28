@@ -27,5 +27,5 @@ type DefaultApiRouter interface {
 // while the service implementation can ignored with the .openapi-generator-ignore file 
 // and updated with the logic required for the API.
 type DefaultApiServicer interface { 
-	GetFeed(string, string, string) (interface{}, error)
+	GetFeed(string, string, string, string) (interface{}, error)
 }

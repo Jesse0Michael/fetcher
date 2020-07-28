@@ -45,7 +45,7 @@ func NewDefaultApiService(twitterClient *twitter.Client, insta *goinsta.Instagra
 }
 
 // GetFeed - Get feed
-func (s *DefaultApiService) GetFeed(twitterID, instagramID, bloggerID string) (interface{}, error) {
+func (s *DefaultApiService) GetFeed(twitterID, instagramID, bloggerID, soundcloudID string) (interface{}, error) {
 	items := []FeedItem{}
 	twitterItems, err := s.getTwitter(twitterID)
 	if err != nil {
@@ -62,9 +62,15 @@ func (s *DefaultApiService) GetFeed(twitterID, instagramID, bloggerID string) (i
 		log.Printf("error retrieving blogger items. err: %s\n", err)
 	}
 
+	soundcloudItems, err := s.getSoundcloud(soundcloudID)
+	if err != nil {
+		log.Printf("error retrieving soundcloud items. err: %s\n", err)
+	}
+
 	items = append(items, twitterItems...)
 	items = append(items, instagramItems...)
 	items = append(items, bloggerItems...)
+	items = append(items, soundcloudItems...)
 
 	sort.SliceStable(items, func(i, j int) bool {
 		return items[i].Ts > items[j].Ts
@@ -208,10 +214,9 @@ func (s *DefaultApiService) getBlogger(bloggerID string) ([]FeedItem, error) {
 	if err != nil {
 		return nil, err
 	}
-	fmt.Println(string(body))
 
 	items := []FeedItem{}
-	for _, blog := range gjson.Get(string(body), "items").Array() {
+	for _, blog := range gjson.GetBytes(body, "items").Array() {
 		time, err := time.Parse(time.RFC3339, blog.Get("published").String())
 		if err != nil {
 			return nil, err
@@ -222,6 +227,50 @@ func (s *DefaultApiService) getBlogger(bloggerID string) ([]FeedItem, error) {
 			Source:  "blogger",
 			Url:     blog.Get("url").String(),
 			Content: blog.Get("content").String(),
+		}
+		items = append(items, item)
+	}
+	return items, nil
+}
+
+func (s *DefaultApiService) getSoundcloud(soundcloudID string) ([]FeedItem, error) {
+	if s.tClient == nil {
+		return nil, nil
+	}
+
+	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("https://api.soundcloud.com/users/%s/favorites", soundcloudID), nil)
+	if err != nil {
+		return nil, err
+	}
+	q := url.Values{}
+	q.Add("client_id", "f330c0bb90f1c89a15e78ece83e21856")
+	q.Add("limit", "20")
+	req.URL.RawQuery = q.Encode()
+
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	items := []FeedItem{}
+	for _, sound := range gjson.ParseBytes(body).Array() {
+		time, err := time.Parse("2006/01/02 15:04:05 -0700", sound.Get("created_at").String())
+		if err != nil {
+			return nil, err
+		}
+		iframe := fmt.Sprintf("https://w.soundcloud.com/player/?url=%s&buying=false&liking=false&download=false&sharing=false&show_artwork=false&show_comments=false&show_playcount=false", sound.Get("uri").String())
+		content := fmt.Sprintf("<iframe id='iframe-%s' class='sc-widget' src='%s' width='100%%' height='130' scrolling='no' frameborder='no' target='_top'></iframe>", sound.Get("uri").String(), iframe)
+		item := FeedItem{
+			Id:      sound.Get("id").String(),
+			Ts:      time.Unix(),
+			Source:  "soundcloud",
+			Url:     sound.Get("uri").String(),
+			Content: content,
 		}
 		items = append(items, item)
 	}

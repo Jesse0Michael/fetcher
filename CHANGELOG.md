@@ -1,3 +1,13 @@
+# [1.4.0](https://github.com/Jesse0Michael/fetcher/compare/v1.3.0...v1.4.0) (2020-07-28)
+
+### Features
+
+- add soundcloud ([6795e31](https://github.com/Jesse0Michael/fetcher/commit/6795e314d1a39c0a5e3c318eab960275ea605445))
+
+### Other
+
+- Merge branch 'master' of ssh://github.com/Jesse0Michael/fetcher ([1e5ef02](https://github.com/Jesse0Michael/fetcher/commit/1e5ef02cc2cf3d691c4257b8619639e179e5de67))
+
 # [1.3.0](https://github.com/Jesse0Michael/fetcher/compare/v1.2.0...v1.3.0) (2020-07-28)
 
 ### Features

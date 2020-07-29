@@ -1,3 +1,13 @@
+# [1.6.0](https://github.com/Jesse0Michael/fetcher/compare/v1.5.0...v1.6.0) (2020-07-29)
+
+### Features
+
+- add deviantart ([9e58b71](https://github.com/Jesse0Michael/fetcher/commit/9e58b71d58ac0e763510a6e573f42351a37b0697))
+
+### Other
+
+- Merge branch 'master' of ssh://github.com/Jesse0Michael/fetcher ([46b20a9](https://github.com/Jesse0Michael/fetcher/commit/46b20a94b27c46f9a50232d1cb651a7d2917abb3))
+
 # [1.5.0](https://github.com/Jesse0Michael/fetcher/compare/v1.4.0...v1.5.0) (2020-07-29)
 
 ### Bug Fixes

@@ -21,6 +21,7 @@ import (
 
 	"github.com/ahmdrz/goinsta/v2"
 	"github.com/dghubble/go-twitter/twitter"
+	"github.com/mmcdole/gofeed"
 	"github.com/tidwall/gjson"
 	"golang.org/x/sync/errgroup"
 )
@@ -47,7 +48,7 @@ func NewDefaultApiService(twitterClient *twitter.Client, insta *goinsta.Instagra
 }
 
 // GetFeed - Get feed
-func (s *DefaultApiService) GetFeed(twitterID, instagramID int64, bloggerID, soundcloudID, swarmID string) (interface{}, error) {
+func (s *DefaultApiService) GetFeed(twitterID, instagramID int64, bloggerID, soundcloudID, swarmID, deviantartID string) (interface{}, error) {
 	items := []FeedItem{}
 	var eg errgroup.Group
 
@@ -116,6 +117,20 @@ func (s *DefaultApiService) GetFeed(twitterID, instagramID int64, bloggerID, sou
 
 		s.lock.Lock()
 		items = append(items, swarmItems...)
+		s.lock.Unlock()
+
+		return nil
+	})
+
+	eg.Go(func() error {
+		deviantartItems, err := s.getDeviantart(deviantartID)
+		if err != nil {
+			log.Printf("error retrieving deviantart items. err: %s\n", err)
+			return err
+		}
+
+		s.lock.Lock()
+		items = append(items, deviantartItems...)
 		s.lock.Unlock()
 
 		return nil
@@ -358,6 +373,45 @@ func (s *DefaultApiService) getSwarm(swarmID string) ([]FeedItem, error) {
 			}},
 			Url:     checkin.Get("source.url").String(),
 			Content: checkin.Get("shout").String(),
+		}
+		items = append(items, item)
+	}
+	return items, nil
+}
+
+func (s *DefaultApiService) getDeviantart(deviantartID string) ([]FeedItem, error) {
+	if deviantartID == "" {
+		return nil, nil
+	}
+
+	fp := gofeed.NewParser()
+	feed, _ := fp.ParseURL(fmt.Sprintf("https://backend.deviantart.com/rss.xml?q=gallery:%s", deviantartID))
+
+	items := []FeedItem{}
+	for _, art := range feed.Items {
+		var image string
+		if media, ok := art.Extensions["media"]; ok {
+			if content, ok := media["content"]; ok && len(content) > 0 {
+				if url, ok := content[0].Attrs["url"]; ok {
+					image = url
+				}
+			}
+		}
+
+		if image == "" {
+			continue
+		}
+
+		item := FeedItem{
+			Id:     art.Title,
+			Ts:     art.PublishedParsed.Unix(),
+			Source: "deviantart",
+			Media: []FeedItemMedia{{
+				Url:  image,
+				Kind: "image",
+			}},
+			Url:     art.Link,
+			Content: art.Title,
 		}
 		items = append(items, item)
 	}

@@ -54,6 +54,14 @@ paths:
         schema:
           type: string
         style: simple
+      - description: deviantartID
+        explode: false
+        in: query
+        name: deviantartID
+        required: false
+        schema:
+          type: string
+        style: simple
       responses:
         "200":
           content:
@@ -104,6 +112,7 @@ components:
           - blogger
           - soundcloud
           - swarm
+          - deviantart
           type: string
         url:
           description: Permalink to the feed item on the platform

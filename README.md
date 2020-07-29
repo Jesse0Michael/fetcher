@@ -19,3 +19,8 @@ API Docs: https://jesse0michael.github.io/fetcher/index.html
 ## Supported Platforms
 
 * Twitter
+* Instagram
+* Blogger
+* Swarm
+* Soundcloud
+* Deviantart

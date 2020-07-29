@@ -1,3 +1,9 @@
+## [1.6.1](https://github.com/Jesse0Michael/fetcher/compare/v1.6.0...v1.6.1) (2020-07-29)
+
+### Bug Fixes
+
+- use port 80 ([2c16e60](https://github.com/Jesse0Michael/fetcher/commit/2c16e606bafdf6468f426f98857dc40efe819bf5))
+
 # [1.6.0](https://github.com/Jesse0Michael/fetcher/compare/v1.5.0...v1.6.0) (2020-07-29)
 
 ### Features

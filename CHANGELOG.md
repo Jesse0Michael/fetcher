@@ -1,3 +1,9 @@
+## [1.6.5](https://github.com/Jesse0Michael/fetcher/compare/v1.6.4...v1.6.5) (2020-07-29)
+
+### Other
+
+- Revert "Revert "deploy: push as web"" ([cb215fd](https://github.com/Jesse0Michael/fetcher/commit/cb215fd3a34a546f65699695e14bcc84b43efbb8))
+
 ## [1.6.4](https://github.com/Jesse0Michael/fetcher/compare/v1.6.3...v1.6.4) (2020-07-29)
 
 ### Bug Fixes

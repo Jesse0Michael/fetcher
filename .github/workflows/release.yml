@@ -18,21 +18,21 @@ jobs:
           docker build \
             --file ./build/Dockerfile \
             -t docker.pkg.github.com/jesse0michael/fetcher/api:${REF##*/} \
-            -t registry.heroku.com/jesse0michael-fetcher/api .
+            -t registry.heroku.com/jesse0michael-fetcher/web .
 
       - name: Publish Server
         run: |
           docker login docker.pkg.github.com -u Jesse0Michael -p ${{ secrets.PAT }}
           docker push docker.pkg.github.com/jesse0michael/fetcher/api:${REF##*/}
           docker login registry.heroku.com -u Jesse0Michael -p ${{ secrets.HEROKU_API_KEY }}
-          docker push registry.heroku.com/jesse0michael-fetcher/api
+          docker push registry.heroku.com/jesse0michael-fetcher/web
 
       - name: Deploy
         uses: actions/heroku@master
         env:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
         with:
-          args: container:release api -a jesse0michael-fetcher
+          args: container:release web -a jesse0michael-fetcher
 
   release-client:
     env:

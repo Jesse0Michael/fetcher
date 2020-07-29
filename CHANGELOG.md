@@ -1,3 +1,17 @@
+# [1.5.0](https://github.com/Jesse0Michael/fetcher/compare/v1.4.0...v1.5.0) (2020-07-29)
+
+### Bug Fixes
+
+- use int64 params, fetch in parallel, skip if missing ([e6bce3c](https://github.com/Jesse0Michael/fetcher/commit/e6bce3c2e8e528a58176bfafebe55cb7dbb0bb9f))
+
+### Features
+
+- add swarm ([81dfdf1](https://github.com/Jesse0Michael/fetcher/commit/81dfdf1e0dfb980c91d0aa9a1cc0d3f63c5d217b))
+
+### Other
+
+- Merge branch 'master' of ssh://github.com/Jesse0Michael/fetcher ([fff7b10](https://github.com/Jesse0Michael/fetcher/commit/fff7b10818f30e2be7744e78228258b1244c0b22))
+
 # [1.4.0](https://github.com/Jesse0Michael/fetcher/compare/v1.3.0...v1.4.0) (2020-07-28)
 
 ### Features

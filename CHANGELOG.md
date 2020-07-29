@@ -1,3 +1,13 @@
+## [1.6.4](https://github.com/Jesse0Michael/fetcher/compare/v1.6.3...v1.6.4) (2020-07-29)
+
+### Bug Fixes
+
+- log port ([58d4d2e](https://github.com/Jesse0Michael/fetcher/commit/58d4d2e1913dc8dfe7e46400c2030845b278df3e))
+
+### Other
+
+- Merge branch 'master' of ssh://github.com/Jesse0Michael/fetcher ([853e3fa](https://github.com/Jesse0Michael/fetcher/commit/853e3fae4385a895ba716ed5e53f6dae76ee525f))
+
 ## [1.6.3](https://github.com/Jesse0Michael/fetcher/compare/v1.6.2...v1.6.3) (2020-07-29)
 
 ### Bug Fixes

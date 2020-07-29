@@ -25,7 +25,6 @@ import (
 )
 
 func main() {
-	log.Printf("Server started")
 	_ = godotenv.Load()
 	var cfg fetcher.Config
 	if err := envconfig.Process("", &cfg); err != nil {
@@ -58,5 +57,6 @@ func main() {
 	if !ok {
 		port = "8080"
 	}
+	log.Printf("Starting server on port %s", port)
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", port), router))
 }

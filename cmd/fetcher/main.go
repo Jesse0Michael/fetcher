@@ -10,8 +10,10 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/ahmdrz/goinsta/v2"
 	"github.com/dghubble/go-twitter/twitter"
@@ -52,5 +54,9 @@ func main() {
 
 	router := fetcher.NewRouter(DefaultAPIController)
 
-	log.Fatal(http.ListenAndServe(":8080", router))
+	port, ok := os.LookupEnv("PORT")
+	if !ok {
+		port = "8080"
+	}
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", port), router))
 }

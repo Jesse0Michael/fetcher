@@ -25,6 +25,4 @@ FROM scratch AS runtime
 COPY --from=build /go/src/fetcher ./
 COPY --from=build /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 
-ENV PORT=8080
-
 ENTRYPOINT ["./fetcher"]

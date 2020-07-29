@@ -25,6 +25,6 @@ FROM scratch AS runtime
 COPY --from=build /go/src/fetcher ./
 COPY --from=build /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 
-EXPOSE 80/tcp
+EXPOSE 8080/tcp
 
 ENTRYPOINT ["./fetcher"]

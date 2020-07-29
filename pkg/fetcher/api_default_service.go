@@ -16,12 +16,13 @@ import (
 	"net/http"
 	"net/url"
 	"sort"
-	"strconv"
+	"sync"
 	"time"
 
 	"github.com/ahmdrz/goinsta/v2"
 	"github.com/dghubble/go-twitter/twitter"
 	"github.com/tidwall/gjson"
+	"golang.org/x/sync/errgroup"
 )
 
 const (
@@ -34,6 +35,7 @@ const (
 type DefaultApiService struct {
 	tClient *twitter.Client
 	iClient *goinsta.Instagram
+	lock    sync.Mutex
 }
 
 // NewDefaultApiService creates a default api service
@@ -45,38 +47,81 @@ func NewDefaultApiService(twitterClient *twitter.Client, insta *goinsta.Instagra
 }
 
 // GetFeed - Get feed
-func (s *DefaultApiService) GetFeed(twitterID, instagramID, bloggerID, soundcloudID, swarmID string) (interface{}, error) {
+func (s *DefaultApiService) GetFeed(twitterID, instagramID int64, bloggerID, soundcloudID, swarmID string) (interface{}, error) {
 	items := []FeedItem{}
-	twitterItems, err := s.getTwitter(twitterID)
-	if err != nil {
-		log.Printf("error retrieving twitter items. err: %s\n", err)
-	}
+	var eg errgroup.Group
 
-	instagramItems, err := s.getInstagram(instagramID)
-	if err != nil {
-		log.Printf("error retrieving instagram items. err: %s\n", err)
-	}
+	eg.Go(func() error {
+		twitterItems, err := s.getTwitter(twitterID)
+		if err != nil {
+			log.Printf("error retrieving twitter items. err: %s\n", err)
+			return err
+		}
 
-	bloggerItems, err := s.getBlogger(bloggerID)
-	if err != nil {
-		log.Printf("error retrieving blogger items. err: %s\n", err)
-	}
+		s.lock.Lock()
+		items = append(items, twitterItems...)
+		s.lock.Unlock()
 
-	soundcloudItems, err := s.getSoundcloud(soundcloudID)
-	if err != nil {
-		log.Printf("error retrieving soundcloud items. err: %s\n", err)
-	}
+		return nil
+	})
 
-	swarmItems, err := s.getSwarm(swarmID)
-	if err != nil {
-		log.Printf("error retrieving swarm items. err: %s\n", err)
-	}
+	eg.Go(func() error {
+		instagramItems, err := s.getInstagram(instagramID)
+		if err != nil {
+			log.Printf("error retrieving instagram items. err: %s\n", err)
+			return err
+		}
 
-	items = append(items, twitterItems...)
-	items = append(items, instagramItems...)
-	items = append(items, bloggerItems...)
-	items = append(items, soundcloudItems...)
-	items = append(items, swarmItems...)
+		s.lock.Lock()
+		items = append(items, instagramItems...)
+		s.lock.Unlock()
+
+		return nil
+	})
+
+	eg.Go(func() error {
+		bloggerItems, err := s.getBlogger(bloggerID)
+		if err != nil {
+			log.Printf("error retrieving blogger items. err: %s\n", err)
+			return err
+		}
+
+		s.lock.Lock()
+		items = append(items, bloggerItems...)
+		s.lock.Unlock()
+
+		return nil
+	})
+
+	eg.Go(func() error {
+		soundcloudItems, err := s.getSoundcloud(soundcloudID)
+		if err != nil {
+			log.Printf("error retrieving soundcloud items. err: %s\n", err)
+			return err
+		}
+
+		s.lock.Lock()
+		items = append(items, soundcloudItems...)
+		s.lock.Unlock()
+
+		return nil
+	})
+
+	eg.Go(func() error {
+		swarmItems, err := s.getSwarm(swarmID)
+		if err != nil {
+			log.Printf("error retrieving swarm items. err: %s\n", err)
+			return err
+		}
+
+		s.lock.Lock()
+		items = append(items, swarmItems...)
+		s.lock.Unlock()
+
+		return nil
+	})
+
+	_ = eg.Wait()
 
 	sort.SliceStable(items, func(i, j int) bool {
 		return items[i].Ts > items[j].Ts
@@ -84,21 +129,16 @@ func (s *DefaultApiService) GetFeed(twitterID, instagramID, bloggerID, soundclou
 	return FeedItems{Items: items}, nil
 }
 
-func (s *DefaultApiService) getTwitter(twitterID string) ([]FeedItem, error) {
-	if s.tClient == nil {
+func (s *DefaultApiService) getTwitter(twitterID int64) ([]FeedItem, error) {
+	if s.tClient == nil || twitterID == 0 {
 		return nil, nil
-	}
-
-	id, err := strconv.ParseInt(twitterID, 10, 64)
-	if err != nil {
-		return nil, err
 	}
 
 	excludeReplies := false
 	includeRetweets := true
 	trimUser := false
 	timeline := &twitter.UserTimelineParams{
-		UserID:          id,
+		UserID:          twitterID,
 		Count:           count,
 		ExcludeReplies:  &excludeReplies,
 		IncludeRetweets: &includeRetweets,
@@ -137,17 +177,12 @@ func (s *DefaultApiService) getTwitter(twitterID string) ([]FeedItem, error) {
 	return items, nil
 }
 
-func (s *DefaultApiService) getInstagram(instagramID string) ([]FeedItem, error) {
-	if s.iClient == nil {
+func (s *DefaultApiService) getInstagram(instagramID int64) ([]FeedItem, error) {
+	if s.iClient == nil || instagramID == 0 {
 		return nil, nil
 	}
 
-	id, err := strconv.ParseInt(instagramID, 10, 64)
-	if err != nil {
-		return nil, err
-	}
-
-	res, err := s.iClient.Profiles.ByID(id)
+	res, err := s.iClient.Profiles.ByID(instagramID)
 	if err != nil {
 		return nil, err
 	}
@@ -197,6 +232,10 @@ func getInstagramMedia(media goinsta.Item) []FeedItemMedia {
 }
 
 func (s *DefaultApiService) getBlogger(bloggerID string) ([]FeedItem, error) {
+	if bloggerID == "" {
+		return nil, nil
+	}
+
 	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("https://www.googleapis.com/blogger/v2/blogs/%s/posts", bloggerID), nil)
 	if err != nil {
 		return nil, err
@@ -236,6 +275,10 @@ func (s *DefaultApiService) getBlogger(bloggerID string) ([]FeedItem, error) {
 }
 
 func (s *DefaultApiService) getSoundcloud(soundcloudID string) ([]FeedItem, error) {
+	if soundcloudID == "" {
+		return nil, nil
+	}
+
 	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("https://api.soundcloud.com/users/%s/favorites", soundcloudID), nil)
 	if err != nil {
 		return nil, err
@@ -276,6 +319,10 @@ func (s *DefaultApiService) getSoundcloud(soundcloudID string) ([]FeedItem, erro
 }
 
 func (s *DefaultApiService) getSwarm(swarmID string) ([]FeedItem, error) {
+	if swarmID == "" {
+		return nil, nil
+	}
+
 	req, err := http.NewRequest(http.MethodGet, "https://api.foursquare.com/v2/users/self/checkins", nil)
 	if err != nil {
 		return nil, err

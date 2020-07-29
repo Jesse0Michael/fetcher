@@ -39,8 +39,18 @@ func (c *DefaultApiController) Routes() Routes {
 // GetFeed - Get feed
 func (c *DefaultApiController) GetFeed(w http.ResponseWriter, r *http.Request) { 
 	query := r.URL.Query()
-	twitterID := query.Get("twitterID")
-	instagramID := query.Get("instagramID")
+	twitterID, err := parseIntParameter(query.Get("twitterID"))
+	if err != nil {
+		w.WriteHeader(500)
+		return
+	}
+	
+	instagramID, err := parseIntParameter(query.Get("instagramID"))
+	if err != nil {
+		w.WriteHeader(500)
+		return
+	}
+	
 	bloggerID := query.Get("bloggerID")
 	soundcloudID := query.Get("soundcloudID")
 	swarmID := query.Get("swarmID")

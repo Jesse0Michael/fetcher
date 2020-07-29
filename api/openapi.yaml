@@ -18,7 +18,8 @@ paths:
         name: twitterID
         required: false
         schema:
-          type: string
+          format: int64
+          type: integer
         style: simple
       - description: instagramID
         explode: false
@@ -26,7 +27,8 @@ paths:
         name: instagramID
         required: false
         schema:
-          type: string
+          format: int64
+          type: integer
         style: simple
       - description: bloggerID
         explode: false

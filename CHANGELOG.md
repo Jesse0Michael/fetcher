@@ -1,3 +1,14 @@
+## [1.6.3](https://github.com/Jesse0Michael/fetcher/compare/v1.6.2...v1.6.3) (2020-07-29)
+
+### Bug Fixes
+
+- use port env variable ([8e512ab](https://github.com/Jesse0Michael/fetcher/commit/8e512ab838a2ef593bc5d7851d78669b3b93856f))
+
+### Other
+
+- Merge branch 'master' of ssh://github.com/Jesse0Michael/fetcher ([c251775](https://github.com/Jesse0Michael/fetcher/commit/c2517752068928f3275cc9f1c718cf92900bdcc7))
+- set port variable ([6060f21](https://github.com/Jesse0Michael/fetcher/commit/6060f2108efe162f55dce5a2b702881024f050a8))
+
 ## [1.6.2](https://github.com/Jesse0Michael/fetcher/compare/v1.6.1...v1.6.2) (2020-07-29)
 
 ### Other

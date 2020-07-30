@@ -1,3 +1,9 @@
+## [1.7.1](https://github.com/Jesse0Michael/fetcher/compare/v1.7.0...v1.7.1) (2020-07-30)
+
+### Bug Fixes
+
+- response is not an array ([a210cbd](https://github.com/Jesse0Michael/fetcher/commit/a210cbd2b6bbab99ad3c9c26f94db2704d07068c))
+
 # [1.7.0](https://github.com/Jesse0Michael/fetcher/compare/v1.6.5...v1.7.0) (2020-07-30)
 
 ### Features

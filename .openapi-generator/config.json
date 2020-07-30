@@ -1,4 +1,5 @@
 {
   "sourceFolder": "pkg/fetcher",
-  "packageName": "fetcher"
+  "packageName": "fetcher",
+  "featureCORS": true
 }

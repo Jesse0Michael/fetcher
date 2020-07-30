@@ -67,9 +67,7 @@ paths:
           content:
             application/json:
               schema:
-                items:
-                  $ref: '#/components/schemas/feedItems'
-                type: array
+                $ref: '#/components/schemas/feedItems'
           description: feed item array response
       summary: Get feed
 components:

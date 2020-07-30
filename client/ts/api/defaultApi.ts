@@ -95,7 +95,7 @@ export class DefaultApi {
      * @param swarmID swarmID
      * @param deviantartID deviantartID
      */
-    public async getFeed (twitterID?: number, instagramID?: number, bloggerID?: string, soundcloudID?: string, swarmID?: string, deviantartID?: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.ClientResponse; body: Array<FeedItems>;  }> {
+    public async getFeed (twitterID?: number, instagramID?: number, bloggerID?: string, soundcloudID?: string, swarmID?: string, deviantartID?: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.ClientResponse; body: FeedItems;  }> {
         const localVarPath = this.basePath + '/feed';
         let localVarQueryParameters: any = {};
         let localVarHeaderParams: any = (<any>Object).assign({}, this._defaultHeaders);
@@ -161,12 +161,12 @@ export class DefaultApi {
                     localVarRequestOptions.form = localVarFormParams;
                 }
             }
-            return new Promise<{ response: http.ClientResponse; body: Array<FeedItems>;  }>((resolve, reject) => {
+            return new Promise<{ response: http.ClientResponse; body: FeedItems;  }>((resolve, reject) => {
                 localVarRequest(localVarRequestOptions, (error, response, body) => {
                     if (error) {
                         reject(error);
                     } else {
-                        body = ObjectSerializer.deserialize(body, "Array<FeedItems>");
+                        body = ObjectSerializer.deserialize(body, "FeedItems");
                         if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve({ response: response, body: body });
                         } else {

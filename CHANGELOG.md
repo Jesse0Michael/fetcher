@@ -1,3 +1,9 @@
+# [1.7.0](https://github.com/Jesse0Michael/fetcher/compare/v1.6.5...v1.7.0) (2020-07-30)
+
+### Features
+
+- add CORS ([a166080](https://github.com/Jesse0Michael/fetcher/commit/a166080f5ad76905c392c848391d3da375744877))
+
 ## [1.6.5](https://github.com/Jesse0Michael/fetcher/compare/v1.6.4...v1.6.5) (2020-07-29)
 
 ### Other

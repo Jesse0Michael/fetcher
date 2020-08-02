@@ -161,17 +161,16 @@ func (s *DefaultApiService) getTwitter(twitterID int64) ([]FeedItem, error) {
 	items := []FeedItem{}
 	for _, tweet := range tweets {
 		fmt.Printf("tweet: %+v", tweet)
+		fmt.Printf("\n")
+		fmt.Printf("retweetstatus: %+v", tweet.RetweetedStatus)
 		fmt.Printf("\n\n\n\n")
-		tweetURL := fmt.Sprintf("https://twitter.com/%s/status/%s", tweet.User.ScreenName, tweet.IDStr)
-		author := fmt.Sprintf("<a href='%s' style='text-decoration: none' target='_top'><img class='twitter-avatar' src='%s'> %s: </a>", tweetURL, tweet.User.ProfileImageURL, tweet.User.ScreenName)
-		media := ""
-		if len(tweet.Entities.Media) > 0 {
-			media = "<br/><div class='twitter-media'>"
-			for _, m := range tweet.Entities.Media {
-				media += fmt.Sprintf("<a href='%s'  target='_top'><img class='content-media' src = '%s'.png'></a>", m.URLEntity.URL, m.MediaURL)
-			}
-			media += "</div>"
+		var content string
+		if tweet.RetweetedStatus != nil {
+			content = getTwitterContent(*tweet.RetweetedStatus)
+		} else {
+			content = getTwitterContent(tweet)
 		}
+		tweetURL := fmt.Sprintf("https://twitter.com/%s/status/%s", tweet.User.ScreenName, tweet.IDStr)
 		ts, _ := time.Parse(time.RubyDate, tweet.CreatedAt)
 		item := FeedItem{
 			Id:      tweet.IDStr,
@@ -179,11 +178,26 @@ func (s *DefaultApiService) getTwitter(twitterID int64) ([]FeedItem, error) {
 			Source:  "twitter",
 			Url:     tweetURL,
 			Media:   []FeedItemMedia{},
-			Content: author + replaceTextWithHyperlink(tweet.FullText) + media,
+			Content: content,
 		}
 		items = append(items, item)
 	}
 	return items, nil
+}
+
+func getTwitterContent(tweet twitter.Tweet) string {
+	tweetURL := fmt.Sprintf("https://twitter.com/%s/status/%s", tweet.User.ScreenName, tweet.IDStr)
+	author := fmt.Sprintf("<a href='%s' style='text-decoration: none' target='_top'><img class='twitter-avatar' src='%s'> %s: </a>", tweetURL, tweet.User.ProfileImageURL, tweet.User.ScreenName)
+	media := ""
+	if len(tweet.Entities.Media) > 0 {
+		media = "<br/><div class='twitter-media'>"
+		for _, m := range tweet.Entities.Media {
+			media += fmt.Sprintf("<a href='%s'  target='_top'><img class='content-media' src = '%s'.png'></a>", m.URLEntity.URL, m.MediaURL)
+		}
+		media += "</div>"
+	}
+
+	return author + replaceTextWithHyperlink(tweet.FullText) + media
 }
 
 func replaceTextWithHyperlink(text string) string {

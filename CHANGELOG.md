@@ -1,3 +1,9 @@
+## [1.8.1](https://github.com/Jesse0Michael/fetcher/compare/v1.8.0...v1.8.1) (2020-08-02)
+
+### Bug Fixes
+
+- non duplicate media ([5b7452c](https://github.com/Jesse0Michael/fetcher/commit/5b7452c6bab7bf5c7ae2ce7044bd196f3986e18e))
+
 # [1.8.0](https://github.com/Jesse0Michael/fetcher/compare/v1.7.1...v1.8.0) (2020-08-02)
 
 ### Features

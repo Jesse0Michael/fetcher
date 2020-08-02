@@ -8,6 +8,7 @@ import (
 	"net/url"
 	"regexp"
 	"sort"
+	"strings"
 	"sync"
 	"time"
 
@@ -19,7 +20,7 @@ import (
 )
 
 const (
-	count = 20
+	count = 50
 )
 
 // DefaultApiService is a service that implents the logic for the DefaultApiServicer
@@ -160,10 +161,6 @@ func (s *DefaultApiService) getTwitter(twitterID int64) ([]FeedItem, error) {
 
 	items := []FeedItem{}
 	for _, tweet := range tweets {
-		fmt.Printf("tweet: %+v", tweet)
-		fmt.Printf("\n")
-		fmt.Printf("retweetstatus: %+v", tweet.RetweetedStatus)
-		fmt.Printf("\n\n\n\n")
 		var content string
 		if tweet.RetweetedStatus != nil {
 			content = getTwitterContent(*tweet.RetweetedStatus)
@@ -188,16 +185,18 @@ func (s *DefaultApiService) getTwitter(twitterID int64) ([]FeedItem, error) {
 func getTwitterContent(tweet twitter.Tweet) string {
 	tweetURL := fmt.Sprintf("https://twitter.com/%s/status/%s", tweet.User.ScreenName, tweet.IDStr)
 	author := fmt.Sprintf("<a href='%s' style='text-decoration: none' target='_top'><img class='twitter-avatar' src='%s'> %s: </a>", tweetURL, tweet.User.ProfileImageURL, tweet.User.ScreenName)
+	text := replaceTextWithHyperlink(tweet.FullText)
 	media := ""
 	if len(tweet.Entities.Media) > 0 {
 		media = "<br/><div class='twitter-media'>"
 		for _, m := range tweet.Entities.Media {
-			media += fmt.Sprintf("<a href='%s'  target='_top'><img class='content-media' src = '%s'.png'></a>", m.URLEntity.URL, m.MediaURL)
+			text = strings.ReplaceAll(text, m.MediaURLHttps, "")
+			media += fmt.Sprintf("<a href='%s'  target='_top'><img class='content-media' src = '%s'.png'></a>", m.URLEntity.URL, m.MediaURLHttps)
 		}
 		media += "</div>"
 	}
 
-	return author + replaceTextWithHyperlink(tweet.FullText) + media
+	return author + text + media
 }
 
 func replaceTextWithHyperlink(text string) string {

@@ -1,6 +1,6 @@
 module github.com/jesse0michael/fetcher
 
-go 1.13
+go 1.16
 
 require (
 	github.com/ahmdrz/goinsta/v2 v2.4.5

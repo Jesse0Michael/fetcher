@@ -1,3 +1,13 @@
+## [1.8.3](https://github.com/Jesse0Michael/fetcher/compare/v1.8.2...v1.8.3) (2021-04-22)
+
+### Bug Fixes
+
+- update to go 1.16 ([bfb3b5c](https://github.com/Jesse0Michael/fetcher/commit/bfb3b5cb15e8fa418ddf6ebd4eb456cae94ad93d))
+
+### Other
+
+- Merge branch 'master' of ssh://github.com/Jesse0Michael/fetcher ([ff25f0c](https://github.com/Jesse0Michael/fetcher/commit/ff25f0cbc883d62e937b275402f4f544b30a948d))
+
 ## [1.8.2](https://github.com/Jesse0Michael/fetcher/compare/v1.8.1...v1.8.2) (2021-04-22)
 
 ### Bug Fixes

@@ -1,3 +1,9 @@
+## [1.8.4](https://github.com/Jesse0Michael/fetcher/compare/v1.8.3...v1.8.4) (2021-04-22)
+
+### Bug Fixes
+
+- don't fatal ([15bfaf7](https://github.com/Jesse0Michael/fetcher/commit/15bfaf7a860bbc42afdc5db359b727ea6ebaa1f2))
+
 ## [1.8.3](https://github.com/Jesse0Michael/fetcher/compare/v1.8.2...v1.8.3) (2021-04-22)
 
 ### Bug Fixes

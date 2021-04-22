@@ -1,3 +1,9 @@
+## [1.8.2](https://github.com/Jesse0Michael/fetcher/compare/v1.8.1...v1.8.2) (2021-04-22)
+
+### Bug Fixes
+
+- allow origins \* ([a2ce844](https://github.com/Jesse0Michael/fetcher/commit/a2ce8448282eea317eb103634cb899ea169ad7f7))
+
 ## [1.8.1](https://github.com/Jesse0Michael/fetcher/compare/v1.8.0...v1.8.1) (2020-08-02)
 
 ### Bug Fixes

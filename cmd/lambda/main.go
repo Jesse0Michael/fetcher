@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"strconv"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
@@ -42,7 +43,8 @@ func HandleRequest(ctx context.Context, req events.APIGatewayProxyRequest) (inte
 
 	fetcherService := fetcher.NewDefaultApiService(twitterClient, nil)
 
-	return fetcherService.GetFeed(feeds.Twitter, "")
+	t, _ := strconv.Atoi(feeds.Twitter)
+	return fetcherService.GetFeed(int64(t), 0, "", "", "", "")
 }
 
 func main() {

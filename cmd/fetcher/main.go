@@ -45,7 +45,7 @@ func main() {
 
 	insta := goinsta.New(cfg.Instagram.Username, cfg.Instagram.Password)
 	if err := insta.Login(); err != nil {
-		log.Fatalf("failed to log into instagram: %s", err.Error())
+		log.Printf("failed to log into instagram: %s\n", err.Error())
 	}
 
 	DefaultAPIService := fetcher.NewDefaultApiService(twitterClient, insta)

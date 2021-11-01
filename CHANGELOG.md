@@ -1,3 +1,9 @@
+## [1.8.5](https://github.com/Jesse0Michael/fetcher/compare/v1.8.4...v1.8.5) (2021-11-01)
+
+### Bug Fixes
+
+- update goinsta ([f4f7265](https://github.com/Jesse0Michael/fetcher/commit/f4f726581a0584625cbc0cf1f049360c8c6f06a4))
+
 ## [1.8.4](https://github.com/Jesse0Michael/fetcher/compare/v1.8.3...v1.8.4) (2021-04-22)
 
 ### Bug Fixes

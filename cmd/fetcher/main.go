@@ -15,7 +15,7 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/ahmdrz/goinsta/v2"
+	"github.com/Davincible/goinsta"
 	"github.com/dghubble/go-twitter/twitter"
 	fetcher "github.com/jesse0michael/fetcher/pkg/fetcher"
 	"github.com/joho/godotenv"

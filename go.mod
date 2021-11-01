@@ -3,7 +3,7 @@ module github.com/jesse0michael/fetcher
 go 1.16
 
 require (
-	github.com/ahmdrz/goinsta/v2 v2.4.5
+	github.com/Davincible/goinsta v0.0.0-20210922223555-172c4b597032
 	github.com/aws/aws-lambda-go v1.13.3
 	github.com/dghubble/go-twitter v0.0.0-20190719072343-39e5462e111f
 	github.com/gorilla/handlers v1.4.2

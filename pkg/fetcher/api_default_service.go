@@ -12,7 +12,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/ahmdrz/goinsta/v2"
+	"github.com/Davincible/goinsta"
 	"github.com/dghubble/go-twitter/twitter"
 	"github.com/mmcdole/gofeed"
 	"github.com/tidwall/gjson"

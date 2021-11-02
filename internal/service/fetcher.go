@@ -260,7 +260,7 @@ func (f *Fetcher) getBlogger(bloggerID string) ([]FeedItem, error) {
 		return nil, nil
 	}
 
-	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("https://www.googleapif.com/blogger/v2/blogs/%s/posts", bloggerID), nil)
+	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("https://www.googleapis.com/blogger/v2/blogs/%s/posts", bloggerID), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -367,11 +367,11 @@ func (f *Fetcher) getSwarm(swarmID string) ([]FeedItem, error) {
 	}
 
 	items := []FeedItem{}
-	for _, checkin := range gjson.GetBytes(body, "response.checkinf.items").Array() {
-		if checkin.Get("photof.count").Int() == 0 {
+	for _, checkin := range gjson.GetBytes(body, "response.checkins.items").Array() {
+		if checkin.Get("photos.count").Int() == 0 {
 			continue
 		}
-		media := fmt.Sprintf("%s300x300%s", checkin.Get("photof.itemf.0.prefix").String(), checkin.Get("photof.itemf.0.suffix").String())
+		media := fmt.Sprintf("%s300x300%s", checkin.Get("photos.items.0.prefix").String(), checkin.Get("photos.items.0.suffix").String())
 		item := FeedItem{
 			Id:     checkin.Get("id").String(),
 			Ts:     checkin.Get("createdAt").Int(),
@@ -394,7 +394,7 @@ func (f *Fetcher) getDeviantart(deviantartID string) ([]FeedItem, error) {
 	}
 
 	fp := gofeed.NewParser()
-	feed, _ := fp.ParseURL(fmt.Sprintf("https://backend.deviantart.com/rsf.xml?q=gallery:%s", deviantartID))
+	feed, _ := fp.ParseURL(fmt.Sprintf("https://backend.deviantart.com/rss.xml?q=gallery:%s", deviantartID))
 
 	items := []FeedItem{}
 	for _, art := range feed.Items {

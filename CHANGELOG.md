@@ -1,3 +1,9 @@
+## [1.9.2](https://github.com/Jesse0Michael/fetcher/compare/v1.9.1...v1.9.2) (2021-11-02)
+
+### Bug Fixes
+
+- update package 1.8 (#5) ([f030e27](https://github.com/Jesse0Michael/fetcher/commit/f030e2777a5c8bf602972a64f8299dfc274bde09)), closes [#5](https://github.com/Jesse0Michael/fetcher/issues/5)
+
 ## [1.9.1](https://github.com/Jesse0Michael/fetcher/compare/v1.9.0...v1.9.1) (2021-11-02)
 
 ### Chores

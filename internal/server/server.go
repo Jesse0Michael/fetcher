@@ -15,7 +15,7 @@ type FeedServicer interface {
 }
 
 type Config struct {
-	Port int `envconfig:"SERVER_PORT" default:"8080"`
+	Port int `envconfig:"PORT" default:"8080"`
 }
 
 type Server struct {

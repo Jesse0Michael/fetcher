@@ -16,7 +16,6 @@ import (
 	"github.com/dghubble/go-twitter/twitter"
 	"github.com/mmcdole/gofeed"
 	"github.com/tidwall/gjson"
-	"golang.org/x/sync/errgroup"
 )
 
 const (
@@ -43,105 +42,87 @@ func NewDefaultApiService(twitterClient *twitter.Client, insta *goinsta.Instagra
 // GetFeed - Get feed
 func (s *DefaultApiService) GetFeed(twitterID, instagramID int64, bloggerID, soundcloudID, swarmID, deviantartID string) (interface{}, error) {
 	items := []FeedItem{}
-	var eg errgroup.Group
+	var wg sync.WaitGroup
 
-	eg.Go(func() error {
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
 		twitterItems, err := s.getTwitter(twitterID)
 		if err != nil {
 			log.Printf("error retrieving twitter items. err: %s\n", err)
-			return err
 		}
 
-		if len(twitterItems) > 0 {
-			s.lock.Lock()
-			items = append(items, twitterItems...)
-			s.lock.Unlock()
-		}
+		s.lock.Lock()
+		items = append(items, twitterItems...)
+		s.lock.Unlock()
+	}()
 
-		return nil
-	})
-
-	eg.Go(func() error {
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
 		instagramItems, err := s.getInstagram(instagramID)
 		if err != nil {
 			log.Printf("error retrieving instagram items. err: %s\n", err)
-			return err
 		}
 
-		if len(instagramItems) > 0 {
-			s.lock.Lock()
-			items = append(items, instagramItems...)
-			s.lock.Unlock()
-		}
+		s.lock.Lock()
+		items = append(items, instagramItems...)
+		s.lock.Unlock()
+	}()
 
-		return nil
-	})
-
-	eg.Go(func() error {
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
 		bloggerItems, err := s.getBlogger(bloggerID)
 		if err != nil {
 			log.Printf("error retrieving blogger items. err: %s\n", err)
-			return err
 		}
 
-		if len(bloggerItems) > 0 {
-			s.lock.Lock()
-			items = append(items, bloggerItems...)
-			s.lock.Unlock()
-		}
+		s.lock.Lock()
+		items = append(items, bloggerItems...)
+		s.lock.Unlock()
+	}()
 
-		return nil
-	})
-
-	eg.Go(func() error {
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
 		soundcloudItems, err := s.getSoundcloud(soundcloudID)
 		if err != nil {
 			log.Printf("error retrieving soundcloud items. err: %s\n", err)
-			return err
 		}
 
-		if len(soundcloudItems) > 0 {
-			s.lock.Lock()
-			items = append(items, soundcloudItems...)
-			s.lock.Unlock()
-		}
+		s.lock.Lock()
+		items = append(items, soundcloudItems...)
+		s.lock.Unlock()
+	}()
 
-		return nil
-	})
-
-	eg.Go(func() error {
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
 		swarmItems, err := s.getSwarm(swarmID)
 		if err != nil {
 			log.Printf("error retrieving swarm items. err: %s\n", err)
-			return err
 		}
 
-		if len(swarmItems) > 0 {
-			s.lock.Lock()
-			items = append(items, swarmItems...)
-			s.lock.Unlock()
-		}
+		s.lock.Lock()
+		items = append(items, swarmItems...)
+		s.lock.Unlock()
+	}()
 
-		return nil
-	})
-
-	eg.Go(func() error {
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
 		deviantartItems, err := s.getDeviantart(deviantartID)
 		if err != nil {
 			log.Printf("error retrieving deviantart items. err: %s\n", err)
-			return err
 		}
 
-		if len(deviantartItems) > 0 {
-			s.lock.Lock()
-			items = append(items, deviantartItems...)
-			s.lock.Unlock()
-		}
+		s.lock.Lock()
+		items = append(items, deviantartItems...)
+		s.lock.Unlock()
+	}()
 
-		return nil
-	})
-
-	_ = eg.Wait()
+	wg.Wait()
 
 	sort.SliceStable(items, func(i, j int) bool {
 		return items[i].Ts > items[j].Ts

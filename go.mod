@@ -11,6 +11,6 @@ require (
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/mmcdole/gofeed v1.0.0
 	github.com/stretchr/testify v1.4.0 // indirect
-	github.com/tidwall/gjson v1.6.0
+	github.com/tidwall/gjson v1.9.3
 	golang.org/x/oauth2 v0.0.0-20200107190931-bf48bf16ab8d
 )

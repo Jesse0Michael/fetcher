@@ -1,3 +1,9 @@
+## [1.9.1](https://github.com/Jesse0Michael/fetcher/compare/v1.9.0...v1.9.1) (2021-11-02)
+
+### Chores
+
+- fix gjon dependency (#4) ([e2ae03f](https://github.com/Jesse0Michael/fetcher/commit/e2ae03f30fac7e63c6ce03989850f907fe77e185)), closes [#4](https://github.com/Jesse0Michael/fetcher/issues/4)
+
 # [1.9.0](https://github.com/Jesse0Michael/fetcher/compare/v1.8.8...v1.9.0) (2021-11-02)
 
 ### Features

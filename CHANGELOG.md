@@ -1,3 +1,9 @@
+## [1.10.3](https://github.com/Jesse0Michael/fetcher/compare/v1.10.2...v1.10.3) (2021-11-02)
+
+### Bug Fixes
+
+- fix fetcher s's ([0f3193c](https://github.com/Jesse0Michael/fetcher/commit/0f3193c917abc2250e1a883c57921172fc0a22ff))
+
 ## [1.10.2](https://github.com/Jesse0Michael/fetcher/compare/v1.10.1...v1.10.2) (2021-11-02)
 
 ### Bug Fixes

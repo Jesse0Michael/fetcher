@@ -64,7 +64,7 @@ func main() {
 	fetcher := service.NewFetcher(log, twitterClient, insta)
 	srvr := server.New(cfg.Server, log, fetcher)
 	go func() { log.Fatal(srvr.ListenAndServe()) }()
-	log.WithField("port", cfg.Server.Port).Infof("started Fetch API")
+	log.WithField("port", cfg.Server.Port).Infof("started Fetcher API")
 
 	// Exit safely
 	<-ctx.Done()

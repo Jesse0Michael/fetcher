@@ -1,3 +1,9 @@
+## [1.10.1](https://github.com/Jesse0Michael/fetcher/compare/v1.10.0...v1.10.1) (2021-11-02)
+
+### Bug Fixes
+
+- update to go 1.17 ([82d2f76](https://github.com/Jesse0Michael/fetcher/commit/82d2f76a7bf69a60b472c32dd7c943db83a26ead))
+
 # [1.10.0](https://github.com/Jesse0Michael/fetcher/compare/v1.9.2...v1.10.0) (2021-11-02)
 
 ### Features

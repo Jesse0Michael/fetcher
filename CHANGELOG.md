@@ -1,3 +1,9 @@
+## [1.10.2](https://github.com/Jesse0Michael/fetcher/compare/v1.10.1...v1.10.2) (2021-11-02)
+
+### Bug Fixes
+
+- update PORT var ([1c1fd33](https://github.com/Jesse0Michael/fetcher/commit/1c1fd33705529eec43c16b28d5728a3eaea8a33c))
+
 ## [1.10.1](https://github.com/Jesse0Michael/fetcher/compare/v1.10.0...v1.10.1) (2021-11-02)
 
 ### Bug Fixes

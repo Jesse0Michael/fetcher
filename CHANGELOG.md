@@ -1,3 +1,9 @@
+# [1.9.0](https://github.com/Jesse0Michael/fetcher/compare/v1.8.8...v1.9.0) (2021-11-02)
+
+### Features
+
+- gen update ([277d926](https://github.com/Jesse0Michael/fetcher/commit/277d9269f5b554914ad06b8454df3b7c2cb8e908))
+
 ## [1.8.8](https://github.com/Jesse0Michael/fetcher/compare/v1.8.7...v1.8.8) (2021-11-02)
 
 ### Bug Fixes

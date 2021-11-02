@@ -1,3 +1,9 @@
+## [1.8.8](https://github.com/Jesse0Michael/fetcher/compare/v1.8.7...v1.8.8) (2021-11-02)
+
+### Bug Fixes
+
+- use sync.WaitGroup (#3) ([c76d996](https://github.com/Jesse0Michael/fetcher/commit/c76d99651a04bc0545d4b1df87d307d5c2ad6c4a)), closes [#3](https://github.com/Jesse0Michael/fetcher/issues/3)
+
 ## [1.8.7](https://github.com/Jesse0Michael/fetcher/compare/v1.8.6...v1.8.7) (2021-11-02)
 
 ### Bug Fixes

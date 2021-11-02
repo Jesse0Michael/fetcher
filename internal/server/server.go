@@ -11,6 +11,7 @@ import (
 
 type FeedServicer interface {
 	GetFeed(twitterID, instagramID int64, bloggerID, soundcloudID, swarmID, deviantartID string) (interface{}, error)
+	Proxy(url string) ([]byte, string, error)
 }
 
 type Config struct {
@@ -46,7 +47,8 @@ func New(cfg Config, log *logrus.Entry, servicer FeedServicer) *Server {
 }
 
 func (server *Server) route() {
-	server.router.HandleFunc("/fetcher", server.fetcher()).Methods("POST").Name("fetcher")
+	server.router.HandleFunc("/feed", server.feed()).Methods("GET").Name("feed")
+	server.router.HandleFunc("/proxy", server.proxy()).Methods("GET").Name("proxy")
 }
 
 func notFound(w http.ResponseWriter, r *http.Request) {

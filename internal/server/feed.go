@@ -7,7 +7,7 @@ import (
 	"github.com/jesse0michael/go-request"
 )
 
-type FetcherRequest struct {
+type FeedRequest struct {
 	TwitterID    int64  `query:"twitterID"`
 	InstagramID  int64  `query:"instagramID"`
 	BloggerID    string `query:"bloggerID"`
@@ -16,10 +16,10 @@ type FetcherRequest struct {
 	DeviantartID string `query:"deviantartID"`
 }
 
-func (s *Server) fetcher() http.HandlerFunc {
+func (s *Server) feed() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 
-		var req FetcherRequest
+		var req FeedRequest
 		if err := request.Decode(r, &req); err != nil {
 			s.log.WithError(err).Error("failed to decode request body")
 			writeError(w, http.StatusBadRequest, err)

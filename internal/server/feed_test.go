@@ -12,7 +12,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestServer_fetcher(t *testing.T) {
+func TestServer_feed(t *testing.T) {
 	tests := []struct {
 		name         string
 		req          *http.Request
@@ -22,7 +22,7 @@ func TestServer_fetcher(t *testing.T) {
 	}{
 		{
 			name: "empty feed retrieval",
-			req:  httptest.NewRequest("GET", "/fetcher", nil),
+			req:  httptest.NewRequest("GET", "/feed", nil),
 			stubServicer: func(m *MockFeedServicer) {
 				e := map[string]string{"test": "successful"}
 				m.EXPECT().GetFeed(int64(0), int64(0), "", "", "", "").Return(&e, nil)
@@ -32,7 +32,7 @@ func TestServer_fetcher(t *testing.T) {
 		},
 		{
 			name: "successful feed retrieval",
-			req:  httptest.NewRequest("GET", "/fetcher?twitterID=60887026&instagramID=50957893&bloggerID=2628647666607369284&soundcloudID=20560365&swarmID=jesse&deviantartID=mini-michael/33242408", nil),
+			req:  httptest.NewRequest("GET", "/feed?twitterID=60887026&instagramID=50957893&bloggerID=2628647666607369284&soundcloudID=20560365&swarmID=jesse&deviantartID=mini-michael/33242408", nil),
 			stubServicer: func(m *MockFeedServicer) {
 				e := map[string]string{"test": "successful"}
 				m.EXPECT().GetFeed(int64(60887026), int64(50957893), "2628647666607369284", "20560365", "jesse", "mini-michael/33242408").Return(&e, nil)
@@ -42,7 +42,7 @@ func TestServer_fetcher(t *testing.T) {
 		},
 		{
 			name: "failed feed retrieval",
-			req:  httptest.NewRequest("GET", "/fetcher", nil),
+			req:  httptest.NewRequest("GET", "/feed", nil),
 			stubServicer: func(m *MockFeedServicer) {
 				m.EXPECT().GetFeed(int64(0), int64(0), "", "", "", "").Return(nil, errors.New("test-error"))
 			},
@@ -51,7 +51,7 @@ func TestServer_fetcher(t *testing.T) {
 		},
 		{
 			name:         "failed request decode",
-			req:          httptest.NewRequest("GET", "/fetcher?twitterID=abc", nil),
+			req:          httptest.NewRequest("GET", "/feed?twitterID=abc", nil),
 			stubServicer: func(m *MockFeedServicer) {},
 			wantCode:     400,
 			wantBody:     `{"error":"strconv.ParseInt: parsing \"abc\": invalid syntax"}`,
@@ -67,7 +67,7 @@ func TestServer_fetcher(t *testing.T) {
 
 			resp := httptest.NewRecorder()
 			router := mux.NewRouter()
-			router.HandleFunc("/fetcher", s.fetcher())
+			router.HandleFunc("/feed", s.feed())
 			router.ServeHTTP(resp, tt.req)
 
 			result := resp.Result()

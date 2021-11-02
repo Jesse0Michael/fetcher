@@ -47,3 +47,19 @@ func (mr *MockFeedServicerMockRecorder) GetFeed(twitterID, instagramID, bloggerI
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetFeed", reflect.TypeOf((*MockFeedServicer)(nil).GetFeed), twitterID, instagramID, bloggerID, soundcloudID, swarmID, deviantartID)
 }
+
+// Proxy mocks base method.
+func (m *MockFeedServicer) Proxy(url string) ([]byte, string, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Proxy", url)
+	ret0, _ := ret[0].([]byte)
+	ret1, _ := ret[1].(string)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// Proxy indicates an expected call of Proxy.
+func (mr *MockFeedServicerMockRecorder) Proxy(url interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Proxy", reflect.TypeOf((*MockFeedServicer)(nil).Proxy), url)
+}

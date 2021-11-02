@@ -19,7 +19,7 @@ func TestNew(t *testing.T) {
 func TestServer_route(t *testing.T) {
 	server := New(Config{}, logrus.NewEntry(logrus.New()), nil)
 
-	expected := []string{"fetcher"}
+	expected := []string{"feed", "proxy"}
 	received := []string{}
 
 	_ = server.router.Walk(func(route *mux.Route, router *mux.Router, ancestors []*mux.Route) error {

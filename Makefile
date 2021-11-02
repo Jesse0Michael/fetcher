@@ -4,6 +4,8 @@ COVERAGEDIR = .coverage
 gen:
 	go generate ./...
 
+	docker run -v ${PWD}:/fetcher  openapitools/openapi-generator-cli generate -i /fetcher/api/openapi.yaml -g typescript-node -o /fetcher/client/ts/ --git-user-id jesse0michael --git-repo-id fetcher --additional-properties=npmName=@jesse0michael/fetcher,npmVersion=1.0.0
+
 gen-docs:
 	redoc-cli bundle api/openapi.yaml -o docs/index.html --options.disableSearch --options.hideDownloadButton
 
@@ -24,7 +26,6 @@ test-coverage:
 	if [ ! -d $(COVERAGEDIR) ]; then mkdir $(COVERAGEDIR); fi
 	go test -coverpkg ./internal/... -coverprofile $(COVERAGEDIR)/request.coverprofile ./internal/...
 	go tool cover -html $(COVERAGEDIR)/request.coverprofile
-
 
 run:
 	go run ./cmd/fetcher

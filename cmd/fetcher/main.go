@@ -10,14 +10,16 @@
 package main
 
 import (
-	"fmt"
-	"log"
-	"net/http"
+	"context"
 	"os"
+	"os/signal"
+	"syscall"
 
 	"github.com/Davincible/goinsta"
 	"github.com/dghubble/go-twitter/twitter"
-	fetcher "github.com/jesse0michael/fetcher/pkg/fetcher"
+	"github.com/jesse0michael/fetcher/internal"
+	"github.com/jesse0michael/fetcher/internal/server"
+	"github.com/jesse0michael/fetcher/internal/service"
 	"github.com/joho/godotenv"
 	"github.com/kelseyhightower/envconfig"
 	"golang.org/x/oauth2"
@@ -25,12 +27,24 @@ import (
 )
 
 func main() {
+	log := internal.NewLogger()
 	_ = godotenv.Load()
-	var cfg fetcher.Config
+	var cfg internal.Config
 	if err := envconfig.Process("", &cfg); err != nil {
 		log.Fatal("failed to process config")
 	}
 
+	// Setup context that will cancel on signalled termination
+	ctx, cancel := context.WithCancel(context.Background())
+	sig := make(chan os.Signal, 1)
+	signal.Notify(sig, syscall.SIGTERM, syscall.SIGINT)
+	go func() {
+		<-sig
+		log.Info("termination signaled")
+		cancel()
+	}()
+
+	// Twitter client
 	// oauth2 configures a client that uses app credentials to keep a fresh token
 	config := &clientcredentials.Config{
 		ClientID:     cfg.Twitter.ClientID,
@@ -39,24 +53,20 @@ func main() {
 	}
 	// http.Client will automatically authorize Requests
 	httpClient := config.Client(oauth2.NoContext)
-
-	// Twitter client
 	twitterClient := twitter.NewClient(httpClient)
 
+	// Instagram client
 	insta := goinsta.New(cfg.Instagram.Username, cfg.Instagram.Password)
 	if err := insta.Login(); err != nil {
-		log.Printf("failed to log into instagram: %s\n", err.Error())
+		log.WithError(err).Error("failed to log into instagram")
 	}
 
-	DefaultAPIService := fetcher.NewDefaultApiService(twitterClient, insta)
-	DefaultAPIController := fetcher.NewDefaultApiController(DefaultAPIService)
+	fetcher := service.NewFetcher(log, twitterClient, insta)
+	srvr := server.New(cfg.Server, log, fetcher)
+	go func() { log.Fatal(srvr.ListenAndServe()) }()
 
-	router := fetcher.NewRouter(DefaultAPIController)
-
-	port, ok := os.LookupEnv("PORT")
-	if !ok {
-		port = "8080"
-	}
-	log.Printf("Starting server on port %s", port)
-	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", port), router))
+	// Exit safely
+	<-ctx.Done()
+	srvr.Close()
+	log.Info("exiting")
 }

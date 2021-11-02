@@ -1,10 +1,9 @@
-package fetcher
+package service
 
 import (
-	"context"
 	"fmt"
+	"io"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"net/url"
 	"regexp"
@@ -16,6 +15,7 @@ import (
 	"github.com/Davincible/goinsta"
 	"github.com/dghubble/go-twitter/twitter"
 	"github.com/mmcdole/gofeed"
+	"github.com/sirupsen/logrus"
 	"github.com/tidwall/gjson"
 )
 
@@ -23,104 +23,104 @@ const (
 	count = 50
 )
 
-// DefaultApiService is a service that implents the logic for the DefaultApiServicer
-// This service should implement the business logic for every endpoint for the DefaultApi API.
-// Include any external packages or services that will be required by this service.
-type DefaultApiService struct {
+// Fetcher can retrieve feed items from various sources and compound the results into one feed
+type Fetcher struct {
 	tClient *twitter.Client
 	iClient *goinsta.Instagram
+	log     *logrus.Entry
 	lock    sync.Mutex
 }
 
-// NewDefaultApiService creates a default api service
-func NewDefaultApiService(twitterClient *twitter.Client, insta *goinsta.Instagram) DefaultApiServicer {
-	return &DefaultApiService{
+// NewFetcher creates a Fetcher service
+func NewFetcher(log *logrus.Entry, twitterClient *twitter.Client, insta *goinsta.Instagram) *Fetcher {
+	return &Fetcher{
 		tClient: twitterClient,
 		iClient: insta,
+		log:     log,
 	}
 }
 
 // GetFeed - Get feed
-func (s *DefaultApiService) GetFeed(ctx context.Context, twitterID, instagramID int64, bloggerID, soundcloudID, swarmID, deviantartID string) (ImplResponse, error) {
+func (f *Fetcher) GetFeed(twitterID, instagramID int64, bloggerID, soundcloudID, swarmID, deviantartID string) (interface{}, error) {
 	items := []FeedItem{}
 	var wg sync.WaitGroup
 
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
-		twitterItems, err := s.getTwitter(twitterID)
+		twitterItems, err := f.getTwitter(twitterID)
 		if err != nil {
-			log.Printf("error retrieving twitter items. err: %s\n", err)
+			f.log.WithError(err).Error("error retrieving twitter items")
 		}
 
-		s.lock.Lock()
+		f.lock.Lock()
 		items = append(items, twitterItems...)
-		s.lock.Unlock()
+		f.lock.Unlock()
 	}()
 
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
-		instagramItems, err := s.getInstagram(instagramID)
+		instagramItems, err := f.getInstagram(instagramID)
 		if err != nil {
-			log.Printf("error retrieving instagram items. err: %s\n", err)
+			f.log.WithError(err).Error("error retrieving instagram items")
 		}
 
-		s.lock.Lock()
+		f.lock.Lock()
 		items = append(items, instagramItems...)
-		s.lock.Unlock()
+		f.lock.Unlock()
 	}()
 
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
-		bloggerItems, err := s.getBlogger(bloggerID)
+		bloggerItems, err := f.getBlogger(bloggerID)
 		if err != nil {
-			log.Printf("error retrieving blogger items. err: %s\n", err)
+			f.log.WithError(err).Error("error retrieving blogger items")
 		}
 
-		s.lock.Lock()
+		f.lock.Lock()
 		items = append(items, bloggerItems...)
-		s.lock.Unlock()
+		f.lock.Unlock()
 	}()
 
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
-		soundcloudItems, err := s.getSoundcloud(soundcloudID)
+		soundcloudItems, err := f.getSoundcloud(soundcloudID)
 		if err != nil {
-			log.Printf("error retrieving soundcloud items. err: %s\n", err)
+			f.log.WithError(err).Error("error retrieving soundcloud items")
 		}
 
-		s.lock.Lock()
+		f.lock.Lock()
 		items = append(items, soundcloudItems...)
-		s.lock.Unlock()
+		f.lock.Unlock()
 	}()
 
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
-		swarmItems, err := s.getSwarm(swarmID)
+		swarmItems, err := f.getSwarm(swarmID)
 		if err != nil {
-			log.Printf("error retrieving swarm items. err: %s\n", err)
+			f.log.WithError(err).Error("error retrieving swarm items")
 		}
 
-		s.lock.Lock()
+		f.lock.Lock()
 		items = append(items, swarmItems...)
-		s.lock.Unlock()
+		f.lock.Unlock()
 	}()
 
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
-		deviantartItems, err := s.getDeviantart(deviantartID)
+		deviantartItems, err := f.getDeviantart(deviantartID)
 		if err != nil {
-			log.Printf("error retrieving deviantart items. err: %s\n", err)
+			f.log.WithError(err).Error("error retrieving deviantart items")
 		}
 
-		s.lock.Lock()
+		f.lock.Lock()
 		items = append(items, deviantartItems...)
-		s.lock.Unlock()
+		f.lock.Unlock()
 	}()
 
 	wg.Wait()
@@ -128,11 +128,11 @@ func (s *DefaultApiService) GetFeed(ctx context.Context, twitterID, instagramID 
 	sort.SliceStable(items, func(i, j int) bool {
 		return items[i].Ts > items[j].Ts
 	})
-	return ImplResponse{Code: 200, Body: FeedItems{Items: items}}, nil
+	return &FeedItems{Items: items}, nil
 }
 
-func (s *DefaultApiService) getTwitter(twitterID int64) ([]FeedItem, error) {
-	if s.tClient == nil || twitterID == 0 {
+func (f *Fetcher) getTwitter(twitterID int64) ([]FeedItem, error) {
+	if f.tClient == nil || twitterID == 0 {
 		return nil, nil
 	}
 
@@ -148,7 +148,7 @@ func (s *DefaultApiService) getTwitter(twitterID int64) ([]FeedItem, error) {
 		TweetMode:       "extended",
 	}
 
-	tweets, _, err := s.tClient.Timelines.UserTimeline(timeline)
+	tweets, _, err := f.tClient.Timelines.UserTimeline(timeline)
 	if err != nil {
 		return nil, err
 	}
@@ -200,20 +200,20 @@ func replaceTextWithHyperlink(text string) string {
 	})
 }
 
-func (s *DefaultApiService) getInstagram(instagramID int64) ([]FeedItem, error) {
-	if s.iClient == nil || instagramID == 0 {
+func (f *Fetcher) getInstagram(instagramID int64) ([]FeedItem, error) {
+	if f.iClient == nil || instagramID == 0 {
 		return nil, nil
 	}
 
-	res, err := s.iClient.Profiles.ByID(instagramID)
+	res, err := f.iClient.Profiles.ByID(instagramID)
 	if err != nil {
 		return nil, err
 	}
-	f := res.Feed()
-	f.Next()
+	feed := res.Feed()
+	feed.Next()
 
 	items := []FeedItem{}
-	for _, media := range f.Items {
+	for _, media := range feed.Items {
 		medias := getInstagramMedia(media)
 		fmt.Printf("%+v\n", media)
 		fmt.Printf("%+v\n", medias)
@@ -255,12 +255,12 @@ func getInstagramMedia(media goinsta.Item) []FeedItemMedia {
 	return medias
 }
 
-func (s *DefaultApiService) getBlogger(bloggerID string) ([]FeedItem, error) {
+func (f *Fetcher) getBlogger(bloggerID string) ([]FeedItem, error) {
 	if bloggerID == "" {
 		return nil, nil
 	}
 
-	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("https://www.googleapis.com/blogger/v2/blogs/%s/posts", bloggerID), nil)
+	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("https://www.googleapif.com/blogger/v2/blogs/%s/posts", bloggerID), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -298,7 +298,7 @@ func (s *DefaultApiService) getBlogger(bloggerID string) ([]FeedItem, error) {
 	return items, nil
 }
 
-func (s *DefaultApiService) getSoundcloud(soundcloudID string) ([]FeedItem, error) {
+func (f *Fetcher) getSoundcloud(soundcloudID string) ([]FeedItem, error) {
 	if soundcloudID == "" {
 		return nil, nil
 	}
@@ -342,7 +342,7 @@ func (s *DefaultApiService) getSoundcloud(soundcloudID string) ([]FeedItem, erro
 	return items, nil
 }
 
-func (s *DefaultApiService) getSwarm(swarmID string) ([]FeedItem, error) {
+func (f *Fetcher) getSwarm(swarmID string) ([]FeedItem, error) {
 	if swarmID == "" {
 		return nil, nil
 	}
@@ -367,11 +367,11 @@ func (s *DefaultApiService) getSwarm(swarmID string) ([]FeedItem, error) {
 	}
 
 	items := []FeedItem{}
-	for _, checkin := range gjson.GetBytes(body, "response.checkins.items").Array() {
-		if checkin.Get("photos.count").Int() == 0 {
+	for _, checkin := range gjson.GetBytes(body, "response.checkinf.items").Array() {
+		if checkin.Get("photof.count").Int() == 0 {
 			continue
 		}
-		media := fmt.Sprintf("%s300x300%s", checkin.Get("photos.items.0.prefix").String(), checkin.Get("photos.items.0.suffix").String())
+		media := fmt.Sprintf("%s300x300%s", checkin.Get("photof.itemf.0.prefix").String(), checkin.Get("photof.itemf.0.suffix").String())
 		item := FeedItem{
 			Id:     checkin.Get("id").String(),
 			Ts:     checkin.Get("createdAt").Int(),
@@ -388,13 +388,13 @@ func (s *DefaultApiService) getSwarm(swarmID string) ([]FeedItem, error) {
 	return items, nil
 }
 
-func (s *DefaultApiService) getDeviantart(deviantartID string) ([]FeedItem, error) {
+func (f *Fetcher) getDeviantart(deviantartID string) ([]FeedItem, error) {
 	if deviantartID == "" {
 		return nil, nil
 	}
 
 	fp := gofeed.NewParser()
-	feed, _ := fp.ParseURL(fmt.Sprintf("https://backend.deviantart.com/rss.xml?q=gallery:%s", deviantartID))
+	feed, _ := fp.ParseURL(fmt.Sprintf("https://backend.deviantart.com/rsf.xml?q=gallery:%s", deviantartID))
 
 	items := []FeedItem{}
 	for _, art := range feed.Items {
@@ -425,4 +425,16 @@ func (s *DefaultApiService) getDeviantart(deviantartID string) ([]FeedItem, erro
 		items = append(items, item)
 	}
 	return items, nil
+}
+
+// Proxy - Proxies url content
+func (f *Fetcher) Proxy(url string) ([]byte, string, error) {
+	resp, err := http.DefaultClient.Get(url)
+	if err != nil {
+		return nil, "", err
+	}
+
+	defer resp.Body.Close()
+	b, err := io.ReadAll(resp.Body)
+	return b, resp.Header.Get("Content-Type"), err
 }

@@ -1,93 +1,97 @@
 openapi: 3.0.3
 info:
   description: Fetch social media feeds
-  title: Fetcher
-  version: 1.1.0
+  title: Fetcher API
+  version: 1.2.0
 servers:
-- description: Jesse's internal api
-  url: http://localhost:8080/
+  - description: Fetcher Host
+    url: https://jesse0michael-fetcher.herokuapp.com/
 paths:
   /feed:
     get:
       description: Get feed.
       operationId: getFeed
       parameters:
-      - description: twitterID
-        explode: false
-        in: query
-        name: twitterID
-        required: false
-        schema:
-          format: int64
-          type: integer
-        style: simple
-      - description: instagramID
-        explode: false
-        in: query
-        name: instagramID
-        required: false
-        schema:
-          format: int64
-          type: integer
-        style: simple
-      - description: bloggerID
-        explode: false
-        in: query
-        name: bloggerID
-        required: false
-        schema:
-          type: string
-        style: simple
-      - description: soundcloudID
-        explode: false
-        in: query
-        name: soundcloudID
-        required: false
-        schema:
-          type: string
-        style: simple
-      - description: swarmID
-        explode: false
-        in: query
-        name: swarmID
-        required: false
-        schema:
-          type: string
-        style: simple
-      - description: deviantartID
-        explode: false
-        in: query
-        name: deviantartID
-        required: false
-        schema:
-          type: string
-        style: simple
+        - description: twitterID
+          in: query
+          name: twitterID
+          required: false
+          schema:
+            format: int64
+            type: integer
+        - description: instagramID
+          in: query
+          name: instagramID
+          required: false
+          schema:
+            format: int64
+            type: integer
+        - description: bloggerID
+          in: query
+          name: bloggerID
+          required: false
+          schema:
+            type: string
+        - description: soundcloudID
+          in: query
+          name: soundcloudID
+          required: false
+          schema:
+            type: string
+        - description: swarmID
+          in: query
+          name: swarmID
+          required: false
+          schema:
+            type: string
+        - description: deviantartID
+          in: query
+          name: deviantartID
+          required: false
+          schema:
+            type: string
       responses:
         "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/feedItems'
+                $ref: "#/components/schemas/feedItems"
           description: feed item array response
       summary: Get feed
+  /proxy:
+    get:
+      summary: Proxy url
+      description: Proxy url.
+      operationId: proxy
+      parameters:
+        - description: url
+          in: query
+          name: url
+          required: false
+          schema:
+            format: url
+            type: string
+      responses:
+        "200":
+          description: the proxied url content
 components:
   schemas:
     feedItems:
       example:
         items:
-        - id: CAfj92js93gjai
-          ts: 1560834652
-          source: instagram
-        - id: hnoy78d34qdty3
-          ts: 1560802637
-          source: twitter
+          - id: CAfj92js93gjai
+            ts: 1560834652
+            source: instagram
+          - id: hnoy78d34qdty3
+            ts: 1560802637
+            source: twitter
       properties:
         items:
           items:
-            $ref: '#/components/schemas/feedItem'
+            $ref: "#/components/schemas/feedItem"
           type: array
       required:
-      - items
+        - items
       type: object
     feedItem:
       example:
@@ -105,12 +109,12 @@ components:
         source:
           description: The source platform the item is from
           enum:
-          - twitter
-          - instagram
-          - blogger
-          - soundcloud
-          - swarm
-          - deviantart
+            - twitter
+            - instagram
+            - blogger
+            - soundcloud
+            - swarm
+            - deviantart
           type: string
         url:
           description: Permalink to the feed item on the platform
@@ -118,15 +122,15 @@ components:
         media:
           description: Array of media items (images, videos, etc...)
           items:
-            $ref: '#/components/schemas/feedItem_media'
+            $ref: "#/components/schemas/feedItem_media"
           type: array
         content:
           description: Text content for the item (may contain HTML)
           type: string
       required:
-      - id
-      - source
-      - ts
+        - id
+        - source
+        - ts
       type: object
     feedItem_media:
       properties:
@@ -139,10 +143,10 @@ components:
         kind:
           description: The kind of media
           enum:
-          - image
-          - video
-          - audio
+            - image
+            - video
+            - audio
           type: string
       required:
-      - kind
-      - url
+        - kind
+        - url

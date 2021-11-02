@@ -1,8 +1,13 @@
-package fetcher
+package internal
+
+import (
+	"github.com/jesse0michael/fetcher/internal/server"
+)
 
 type Config struct {
 	Twitter   TwitterConfig
 	Instagram InstagramConfig
+	Server    server.Config
 }
 
 type TwitterConfig struct {

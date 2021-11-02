@@ -1,6 +1,7 @@
 package fetcher
 
 import (
+	"context"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -40,7 +41,7 @@ func NewDefaultApiService(twitterClient *twitter.Client, insta *goinsta.Instagra
 }
 
 // GetFeed - Get feed
-func (s *DefaultApiService) GetFeed(twitterID, instagramID int64, bloggerID, soundcloudID, swarmID, deviantartID string) (interface{}, error) {
+func (s *DefaultApiService) GetFeed(ctx context.Context, twitterID, instagramID int64, bloggerID, soundcloudID, swarmID, deviantartID string) (ImplResponse, error) {
 	items := []FeedItem{}
 	var wg sync.WaitGroup
 
@@ -127,7 +128,7 @@ func (s *DefaultApiService) GetFeed(twitterID, instagramID int64, bloggerID, sou
 	sort.SliceStable(items, func(i, j int) bool {
 		return items[i].Ts > items[j].Ts
 	})
-	return FeedItems{Items: items}, nil
+	return ImplResponse{Code: 200, Body: FeedItems{Items: items}}, nil
 }
 
 func (s *DefaultApiService) getTwitter(twitterID int64) ([]FeedItem, error) {

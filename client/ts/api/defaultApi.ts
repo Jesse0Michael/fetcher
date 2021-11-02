@@ -10,8 +10,9 @@
  * Do not edit the class manually.
  */
 
-import localVarRequest = require('request');
-import http = require('http');
+
+import localVarRequest from 'request';
+import http from 'http';
 
 /* tslint:disable:no-unused-locals */
 import { FeedItems } from '../model/feedItems';
@@ -95,7 +96,7 @@ export class DefaultApi {
      * @param swarmID swarmID
      * @param deviantartID deviantartID
      */
-    public async getFeed (twitterID?: number, instagramID?: number, bloggerID?: string, soundcloudID?: string, swarmID?: string, deviantartID?: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.ClientResponse; body: FeedItems;  }> {
+    public async getFeed (twitterID?: number, instagramID?: number, bloggerID?: string, soundcloudID?: string, swarmID?: string, deviantartID?: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: FeedItems;  }> {
         const localVarPath = this.basePath + '/feed';
         let localVarQueryParameters: any = {};
         let localVarHeaderParams: any = (<any>Object).assign({}, this._defaultHeaders);
@@ -161,7 +162,7 @@ export class DefaultApi {
                     localVarRequestOptions.form = localVarFormParams;
                 }
             }
-            return new Promise<{ response: http.ClientResponse; body: FeedItems;  }>((resolve, reject) => {
+            return new Promise<{ response: http.IncomingMessage; body: FeedItems;  }>((resolve, reject) => {
                 localVarRequest(localVarRequestOptions, (error, response, body) => {
                     if (error) {
                         reject(error);

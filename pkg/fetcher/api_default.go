@@ -11,6 +11,7 @@ package fetcher
 
 import (
 	"net/http"
+	"strconv"
 	"strings"
 )
 
@@ -21,12 +22,12 @@ type DefaultApiController struct {
 
 // NewDefaultApiController creates a default api controller
 func NewDefaultApiController(s DefaultApiServicer) Router {
-	return &DefaultApiController{ service: s }
+	return &DefaultApiController{service: s}
 }
 
 // Routes returns all of the api route for the DefaultApiController
 func (c *DefaultApiController) Routes() Routes {
-	return Routes{ 
+	return Routes{
 		{
 			"GetFeed",
 			strings.ToUpper("Get"),
@@ -37,29 +38,19 @@ func (c *DefaultApiController) Routes() Routes {
 }
 
 // GetFeed - Get feed
-func (c *DefaultApiController) GetFeed(w http.ResponseWriter, r *http.Request) { 
+func (c *DefaultApiController) GetFeed(w http.ResponseWriter, r *http.Request) {
 	query := r.URL.Query()
-	twitterID, err := parseIntParameter(query.Get("twitterID"))
-	if err != nil {
-		w.WriteHeader(500)
-		return
-	}
-	
-	instagramID, err := parseIntParameter(query.Get("instagramID"))
-	if err != nil {
-		w.WriteHeader(500)
-		return
-	}
-	
+	twitterID, _ := strconv.ParseInt(query.Get("twitterID"), 10, 64)
+	instagramID, _ := strconv.ParseInt(query.Get("instagramID"), 10, 64)
 	bloggerID := query.Get("bloggerID")
 	soundcloudID := query.Get("soundcloudID")
 	swarmID := query.Get("swarmID")
 	deviantartID := query.Get("deviantartID")
-	result, err := c.service.GetFeed(twitterID, instagramID, bloggerID, soundcloudID, swarmID, deviantartID)
+	result, err := c.service.GetFeed(r.Context(), twitterID, instagramID, bloggerID, soundcloudID, swarmID, deviantartID)
 	if err != nil {
 		w.WriteHeader(500)
 		return
 	}
-	
+
 	EncodeJSONResponse(result, nil, w)
 }

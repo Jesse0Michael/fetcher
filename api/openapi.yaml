@@ -1,4 +1,4 @@
-openapi: 3.0.2
+openapi: 3.0.3
 info:
   description: Fetch social media feeds
   title: Fetcher

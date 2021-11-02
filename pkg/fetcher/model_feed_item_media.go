@@ -20,3 +20,30 @@ type FeedItemMedia struct {
 	// The kind of media
 	Kind string `json:"kind"`
 }
+
+// AssertFeedItemMediaRequired checks if the required fields are not zero-ed
+func AssertFeedItemMediaRequired(obj FeedItemMedia) error {
+	elements := map[string]interface{}{
+		"url": obj.Url,
+		"kind": obj.Kind,
+	}
+	for name, el := range elements {
+		if isZero := IsZeroValue(el); isZero {
+			return &RequiredError{Field: name}
+		}
+	}
+
+	return nil
+}
+
+// AssertRecurseFeedItemMediaRequired recursively checks if required fields are not zero-ed in a nested slice.
+// Accepts only nested slice of FeedItemMedia (e.g. [][]FeedItemMedia), otherwise ErrTypeAssertionError is thrown.
+func AssertRecurseFeedItemMediaRequired(objSlice interface{}) error {
+	return AssertRecurseInterfaceRequired(objSlice, func(obj interface{}) error {
+		aFeedItemMedia, ok := obj.(FeedItemMedia)
+		if !ok {
+			return ErrTypeAssertionError
+		}
+		return AssertFeedItemMediaRequired(aFeedItemMedia)
+	})
+}

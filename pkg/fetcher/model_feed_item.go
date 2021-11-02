@@ -29,3 +29,36 @@ type FeedItem struct {
 	// Text content for the item (may contain HTML)
 	Content string `json:"content,omitempty"`
 }
+
+// AssertFeedItemRequired checks if the required fields are not zero-ed
+func AssertFeedItemRequired(obj FeedItem) error {
+	elements := map[string]interface{}{
+		"id": obj.Id,
+		"ts": obj.Ts,
+		"source": obj.Source,
+	}
+	for name, el := range elements {
+		if isZero := IsZeroValue(el); isZero {
+			return &RequiredError{Field: name}
+		}
+	}
+
+	for _, el := range obj.Media {
+		if err := AssertFeedItemMediaRequired(el); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+// AssertRecurseFeedItemRequired recursively checks if required fields are not zero-ed in a nested slice.
+// Accepts only nested slice of FeedItem (e.g. [][]FeedItem), otherwise ErrTypeAssertionError is thrown.
+func AssertRecurseFeedItemRequired(objSlice interface{}) error {
+	return AssertRecurseInterfaceRequired(objSlice, func(obj interface{}) error {
+		aFeedItem, ok := obj.(FeedItem)
+		if !ok {
+			return ErrTypeAssertionError
+		}
+		return AssertFeedItemRequired(aFeedItem)
+	})
+}

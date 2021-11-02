@@ -1,3 +1,13 @@
+# [1.10.0](https://github.com/Jesse0Michael/fetcher/compare/v1.9.2...v1.10.0) (2021-11-02)
+
+### Features
+
+- release fetcher (#7) ([d815dbd](https://github.com/Jesse0Michael/fetcher/commit/d815dbdd60a386ee94f15077aee1cef380bcbe3f)), closes [#7](https://github.com/Jesse0Michael/fetcher/issues/7)
+
+### Other
+
+- Api refactor (#6) ([a7d96b9](https://github.com/Jesse0Michael/fetcher/commit/a7d96b93291179df26f5900e669f988f309f7ff4)), closes [#6](https://github.com/Jesse0Michael/fetcher/issues/6)
+
 ## [1.9.2](https://github.com/Jesse0Michael/fetcher/compare/v1.9.1...v1.9.2) (2021-11-02)
 
 ### Bug Fixes

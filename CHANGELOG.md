@@ -1,3 +1,9 @@
+## [1.8.7](https://github.com/Jesse0Michael/fetcher/compare/v1.8.6...v1.8.7) (2021-11-02)
+
+### Bug Fixes
+
+- conditional append items (#2) ([582f0df](https://github.com/Jesse0Michael/fetcher/commit/582f0dfa1906883411a2a9e5c16c4bf653eeaa02)), closes [#2](https://github.com/Jesse0Michael/fetcher/issues/2)
+
 ## [1.8.6](https://github.com/Jesse0Michael/fetcher/compare/v1.8.5...v1.8.6) (2021-11-01)
 
 ### Chores

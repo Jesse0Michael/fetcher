@@ -52,9 +52,11 @@ func (s *DefaultApiService) GetFeed(twitterID, instagramID int64, bloggerID, sou
 			return err
 		}
 
-		s.lock.Lock()
-		items = append(items, twitterItems...)
-		s.lock.Unlock()
+		if len(twitterItems) > 0 {
+			s.lock.Lock()
+			items = append(items, twitterItems...)
+			s.lock.Unlock()
+		}
 
 		return nil
 	})
@@ -66,9 +68,11 @@ func (s *DefaultApiService) GetFeed(twitterID, instagramID int64, bloggerID, sou
 			return err
 		}
 
-		s.lock.Lock()
-		items = append(items, instagramItems...)
-		s.lock.Unlock()
+		if len(instagramItems) > 0 {
+			s.lock.Lock()
+			items = append(items, instagramItems...)
+			s.lock.Unlock()
+		}
 
 		return nil
 	})
@@ -80,9 +84,11 @@ func (s *DefaultApiService) GetFeed(twitterID, instagramID int64, bloggerID, sou
 			return err
 		}
 
-		s.lock.Lock()
-		items = append(items, bloggerItems...)
-		s.lock.Unlock()
+		if len(bloggerItems) > 0 {
+			s.lock.Lock()
+			items = append(items, bloggerItems...)
+			s.lock.Unlock()
+		}
 
 		return nil
 	})
@@ -94,9 +100,11 @@ func (s *DefaultApiService) GetFeed(twitterID, instagramID int64, bloggerID, sou
 			return err
 		}
 
-		s.lock.Lock()
-		items = append(items, soundcloudItems...)
-		s.lock.Unlock()
+		if len(soundcloudItems) > 0 {
+			s.lock.Lock()
+			items = append(items, soundcloudItems...)
+			s.lock.Unlock()
+		}
 
 		return nil
 	})
@@ -108,9 +116,11 @@ func (s *DefaultApiService) GetFeed(twitterID, instagramID int64, bloggerID, sou
 			return err
 		}
 
-		s.lock.Lock()
-		items = append(items, swarmItems...)
-		s.lock.Unlock()
+		if len(swarmItems) > 0 {
+			s.lock.Lock()
+			items = append(items, swarmItems...)
+			s.lock.Unlock()
+		}
 
 		return nil
 	})
@@ -122,9 +132,11 @@ func (s *DefaultApiService) GetFeed(twitterID, instagramID int64, bloggerID, sou
 			return err
 		}
 
-		s.lock.Lock()
-		items = append(items, deviantartItems...)
-		s.lock.Unlock()
+		if len(deviantartItems) > 0 {
+			s.lock.Lock()
+			items = append(items, deviantartItems...)
+			s.lock.Unlock()
+		}
 
 		return nil
 	})
@@ -221,7 +233,8 @@ func (s *DefaultApiService) getInstagram(instagramID int64) ([]FeedItem, error) 
 	items := []FeedItem{}
 	for _, media := range f.Items {
 		medias := getInstagramMedia(media)
-
+		fmt.Printf("%+v\n", media)
+		fmt.Printf("%+v\n", medias)
 		item := FeedItem{
 			Id:      media.ID,
 			Ts:      media.TakenAt,

@@ -20,7 +20,8 @@ import (
 )
 
 const (
-	count = 50
+	count    = 50
+	proxyURL = "https://jesse0michael-fetcher.herokuapp.com/proxy"
 )
 
 // Fetcher can retrieve feed items from various sources and compound the results into one feed
@@ -242,12 +243,12 @@ func getInstagramMedia(media goinsta.Item) []FeedItemMedia {
 	if len(media.Videos) > 0 {
 		medias = append(medias, FeedItemMedia{
 			Url:    media.Videos[0].URL,
-			Poster: media.Images.GetBest(),
+			Poster: fmt.Sprintf("%s?url=%s", proxyURL, url.QueryEscape(media.Images.GetBest())),
 			Kind:   "video",
 		})
 	} else {
 		medias = append(medias, FeedItemMedia{
-			Url:  media.Images.GetBest(),
+			Url:  fmt.Sprintf("%s?url=%s", proxyURL, url.QueryEscape(media.Images.GetBest())),
 			Kind: "image",
 		})
 	}

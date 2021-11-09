@@ -1,3 +1,9 @@
+## [1.10.4](https://github.com/Jesse0Michael/fetcher/compare/v1.10.3...v1.10.4) (2021-11-09)
+
+### Bug Fixes
+
+- proxy instagram image urls ([e4b168e](https://github.com/Jesse0Michael/fetcher/commit/e4b168ebc18bd57dd5f957ae32f8b5435ec934f2))
+
 ## [1.10.3](https://github.com/Jesse0Michael/fetcher/compare/v1.10.2...v1.10.3) (2021-11-02)
 
 ### Bug Fixes

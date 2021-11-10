@@ -1,3 +1,9 @@
+## [1.10.5](https://github.com/Jesse0Michael/fetcher/compare/v1.10.4...v1.10.5) (2021-11-10)
+
+### Bug Fixes
+
+- use CORS ([f6ccf0e](https://github.com/Jesse0Michael/fetcher/commit/f6ccf0e49a37b4a18e270b3651118a4948455d3d))
+
 ## [1.10.4](https://github.com/Jesse0Michael/fetcher/compare/v1.10.3...v1.10.4) (2021-11-09)
 
 ### Bug Fixes

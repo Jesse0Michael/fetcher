@@ -6,6 +6,7 @@ require (
 	github.com/Davincible/goinsta v0.0.0-20210922223555-172c4b597032
 	github.com/dghubble/go-twitter v0.0.0-20190719072343-39e5462e111f
 	github.com/golang/mock v1.6.0
+	github.com/gorilla/handlers v1.5.1
 	github.com/gorilla/mux v1.8.0
 	github.com/jesse0michael/go-request v1.1.0
 	github.com/joho/godotenv v1.3.0
@@ -23,6 +24,7 @@ require (
 	github.com/cenkalti/backoff v2.1.1+incompatible // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/dghubble/sling v1.3.0 // indirect
+	github.com/felixge/httpsnoop v1.0.1 // indirect
 	github.com/golang/protobuf v1.2.0 // indirect
 	github.com/google/go-querystring v1.0.0 // indirect
 	github.com/mmcdole/goxpp v0.0.0-20181012175147-0068e33feabf // indirect

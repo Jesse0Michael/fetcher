@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	"github.com/sirupsen/logrus"
 )
@@ -30,6 +31,7 @@ func New(cfg Config, log *logrus.Entry, servicer FeedServicer) *Server {
 	router.StrictSlash(true)
 	router.NotFoundHandler = http.HandlerFunc(notFound)
 	router.MethodNotAllowedHandler = http.HandlerFunc(notAllowed)
+	router.Use(handlers.CORS())
 
 	server := &Server{
 		Server: &http.Server{

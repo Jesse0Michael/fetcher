@@ -1,3 +1,9 @@
+## [1.10.8](https://github.com/Jesse0Michael/fetcher/compare/v1.10.7...v1.10.8) (2022-12-07)
+
+### Continuous Integration
+
+- v1 setup cloud ([f444133](https://github.com/Jesse0Michael/fetcher/commit/f444133ad74c2d78c302615d81a5bf24cc044a00))
+
 ## [1.10.7](https://github.com/Jesse0Michael/fetcher/compare/v1.10.6...v1.10.7) (2022-12-07)
 
 ### Continuous Integration

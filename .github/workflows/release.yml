@@ -26,7 +26,7 @@ jobs:
         run: |
           docker build \
             --file ./build/Dockerfile \
-            -t docker.pkg.github.com/jesse0michael/fetcher/api:${REF##*/} .
+            -t docker.pkg.github.com/jesse0michael/fetcher/api:${REF##*/} \
             -t uswest1.gcr.io/${{ secrets.GCLOUD_PROJECT }}/${{ secrets.GCLOUD_APP_NAME }}:${REF##*/} .
 
       - name: Push Images

@@ -1,3 +1,9 @@
+## [1.10.6](https://github.com/Jesse0Michael/fetcher/compare/v1.10.5...v1.10.6) (2022-12-07)
+
+### Continuous Integration
+
+- remove heroku actions ([ba5762d](https://github.com/Jesse0Michael/fetcher/commit/ba5762d81458ca65ea5b9a947f949f7aae11a572))
+
 ## [1.10.5](https://github.com/Jesse0Michael/fetcher/compare/v1.10.4...v1.10.5) (2021-11-10)
 
 ### Bug Fixes

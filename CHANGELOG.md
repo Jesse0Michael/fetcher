@@ -1,3 +1,9 @@
+## [1.10.9](https://github.com/Jesse0Michael/fetcher/compare/v1.10.8...v1.10.9) (2022-12-07)
+
+### Continuous Integration
+
+- use google-github-actions/setup-gcloud@v1 ([ab6a749](https://github.com/Jesse0Michael/fetcher/commit/ab6a749dfb25b8a59da3b4fe789b3b2e90b90cd8))
+
 ## [1.10.8](https://github.com/Jesse0Michael/fetcher/compare/v1.10.7...v1.10.8) (2022-12-07)
 
 ### Continuous Integration

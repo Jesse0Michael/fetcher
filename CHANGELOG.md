@@ -1,3 +1,9 @@
+## [1.10.7](https://github.com/Jesse0Michael/fetcher/compare/v1.10.6...v1.10.7) (2022-12-07)
+
+### Continuous Integration
+
+- push to gcr ([e66ce75](https://github.com/Jesse0Michael/fetcher/commit/e66ce75a04176dedc83742b5eb1864b49f1b4a09))
+
 ## [1.10.6](https://github.com/Jesse0Michael/fetcher/compare/v1.10.5...v1.10.6) (2022-12-07)
 
 ### Continuous Integration

@@ -13,16 +13,27 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
+      - name: Authenticate into Google Cloud Platform
+        uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+        with:
+          service_account_email: ${{ secrets.GCLOUD_EMAIL }}
+          service_account_key: ${{ secrets.GCLOUD_AUTH }}
+
+      - name: Configure Docker to use Google Cloud Platform
+        run: "gcloud auth configure-docker --quiet"
+
       - name: Build
         run: |
           docker build \
             --file ./build/Dockerfile \
-            -t docker.pkg.github.com/jesse0michael/fetcher-api:${REF##*/} .
+            -t docker.pkg.github.com/jesse0michael/fetcher/api:${REF##*/} .
+            -t uswest1.gcr.io/${{ secrets.GCLOUD_PROJECT }}/${{ secrets.GCLOUD_APP_NAME }}:${REF##*/} .
 
-      - name: Publish Server
+      - name: Push Images
         run: |
           docker login docker.pkg.github.com -u Jesse0Michael -p ${{ secrets.PAT }}
-          docker push docker.pkg.github.com/jesse0michael/fetcher-api:${REF##*/}
+          docker push docker.pkg.github.com/jesse0michael/fetcher/api:${REF##*/}
+          docker push uswest1.gcr.io/${{ secrets.GCLOUD_PROJECT }}/${{ secrets.GCLOUD_APP_NAME }}:${REF##*/}
 
   release-client:
     env:

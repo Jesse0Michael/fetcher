@@ -1,3 +1,13 @@
+## [1.10.10](https://github.com/Jesse0Michael/fetcher/compare/v1.10.9...v1.10.10) (2022-12-07)
+
+### Continuous Integration
+
+- fix line syntax ([b117f48](https://github.com/Jesse0Michael/fetcher/commit/b117f487e081e7fcb6a2a70796e7dc04a4c40de9))
+
+### Other
+
+- Merge branch 'master' of ssh://github.com/Jesse0Michael/fetcher ([482c851](https://github.com/Jesse0Michael/fetcher/commit/482c85112404aa304b7124125f8d7b895bf59d42))
+
 ## [1.10.9](https://github.com/Jesse0Michael/fetcher/compare/v1.10.8...v1.10.9) (2022-12-07)
 
 ### Continuous Integration

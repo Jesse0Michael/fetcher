@@ -1,3 +1,9 @@
+## [1.10.18](https://github.com/Jesse0Michael/fetcher/compare/v1.10.17...v1.10.18) (2022-12-08)
+
+### Continuous Integration
+
+- id token ([5cec766](https://github.com/Jesse0Michael/fetcher/commit/5cec76614ef1935e49bc2fb88f548d25ddb1ab90))
+
 ## [1.10.17](https://github.com/Jesse0Michael/fetcher/compare/v1.10.16...v1.10.17) (2022-12-08)
 
 ### Continuous Integration

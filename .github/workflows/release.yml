@@ -19,6 +19,7 @@ jobs:
         with:
           credentials_json: "${{ secrets.GCLOUD_AUTH }}"
           token_format: "id_token"
+          id_token_audience: "aud"
 
       - name: Build
         run: |

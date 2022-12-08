@@ -1,3 +1,13 @@
+## [1.10.12](https://github.com/Jesse0Michael/fetcher/compare/v1.10.11...v1.10.12) (2022-12-08)
+
+### Continuous Integration
+
+- use us host ([eb41675](https://github.com/Jesse0Michael/fetcher/commit/eb41675311bf3f8b50775a8b5c1428057772b31b))
+
+### Other
+
+- Merge branch 'master' of ssh://github.com/Jesse0Michael/fetcher ([b3b7fab](https://github.com/Jesse0Michael/fetcher/commit/b3b7fab070c420fdfadb0583b2b4c6cdc608beee))
+
 ## [1.10.11](https://github.com/Jesse0Michael/fetcher/compare/v1.10.10...v1.10.11) (2022-12-08)
 
 ### Continuous Integration

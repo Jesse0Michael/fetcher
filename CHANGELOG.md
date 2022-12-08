@@ -1,3 +1,13 @@
+## [1.10.15](https://github.com/Jesse0Michael/fetcher/compare/v1.10.14...v1.10.15) (2022-12-08)
+
+### Chores
+
+- update to go 1.19 ([b3cbe40](https://github.com/Jesse0Michael/fetcher/commit/b3cbe401f8b1022889da5cfa4567df5396a79a2a))
+
+### Continuous Integration
+
+- app name ([837a239](https://github.com/Jesse0Michael/fetcher/commit/837a239320a0511b64b4feaf692844f2f99289d6))
+
 ## [1.10.14](https://github.com/Jesse0Michael/fetcher/compare/v1.10.13...v1.10.14) (2022-12-08)
 
 ### Continuous Integration

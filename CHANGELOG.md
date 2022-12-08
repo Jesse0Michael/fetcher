@@ -1,3 +1,13 @@
+## [1.10.16](https://github.com/Jesse0Michael/fetcher/compare/v1.10.15...v1.10.16) (2022-12-08)
+
+### Continuous Integration
+
+- remove access token ([659f0ff](https://github.com/Jesse0Michael/fetcher/commit/659f0ff88d6bb6ae00d37934af6a03fe251d629c))
+
+### Other
+
+- Merge branch 'master' of ssh://github.com/Jesse0Michael/fetcher ([9489924](https://github.com/Jesse0Michael/fetcher/commit/9489924b54bc84f945e1a3db3744740db5ddbdf7))
+
 ## [1.10.15](https://github.com/Jesse0Michael/fetcher/compare/v1.10.14...v1.10.15) (2022-12-08)
 
 ### Chores

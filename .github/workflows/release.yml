@@ -18,6 +18,7 @@ jobs:
         uses: "google-github-actions/auth@v1"
         with:
           credentials_json: "${{ secrets.GCLOUD_AUTH }}"
+          token_format: "id_token"
 
       - name: Build
         run: |

@@ -27,13 +27,13 @@ jobs:
           docker build \
             --file ./build/Dockerfile \
             -t docker.pkg.github.com/jesse0michael/fetcher/api:${REF##*/} \
-            -t uswest1.gcr.io/${{ secrets.GCLOUD_PROJECT }}/${{ secrets.GCLOUD_APP_NAME }}:${REF##*/} .
+            -t us-west1.gcr.io/${{ secrets.GCLOUD_PROJECT }}/${{ secrets.GCLOUD_APP_NAME }}:${REF##*/} .
 
       - name: Push Images
         run: |
           docker login docker.pkg.github.com -u Jesse0Michael -p ${{ secrets.PAT }}
           docker push docker.pkg.github.com/jesse0michael/fetcher/api:${REF##*/}
-          docker push uswest1.gcr.io/${{ secrets.GCLOUD_PROJECT }}/${{ secrets.GCLOUD_APP_NAME }}:${REF##*/}
+          docker push us-west1.gcr.io/${{ secrets.GCLOUD_PROJECT }}/${{ secrets.GCLOUD_APP_NAME }}:${REF##*/}
 
   release-client:
     env:

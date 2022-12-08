@@ -1,3 +1,9 @@
+## [1.10.13](https://github.com/Jesse0Michael/fetcher/compare/v1.10.12...v1.10.13) (2022-12-08)
+
+### Continuous Integration
+
+- gcloud auth ([306aa39](https://github.com/Jesse0Michael/fetcher/commit/306aa39893968dcba04ea0556e6a33afe8a6bbb3))
+
 ## [1.10.12](https://github.com/Jesse0Michael/fetcher/compare/v1.10.11...v1.10.12) (2022-12-08)
 
 ### Continuous Integration

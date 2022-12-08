@@ -18,7 +18,6 @@ type FeedRequest struct {
 
 func (s *Server) feed() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-
 		var req FeedRequest
 		if err := request.Decode(r, &req); err != nil {
 			s.log.WithError(err).Error("failed to decode request body")

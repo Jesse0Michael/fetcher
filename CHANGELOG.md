@@ -1,3 +1,9 @@
+## [1.10.14](https://github.com/Jesse0Michael/fetcher/compare/v1.10.13...v1.10.14) (2022-12-08)
+
+### Continuous Integration
+
+- docker login ([87faa92](https://github.com/Jesse0Michael/fetcher/commit/87faa9243398ce1a8ff778e85787245f10bb614f))
+
 ## [1.10.13](https://github.com/Jesse0Michael/fetcher/compare/v1.10.12...v1.10.13) (2022-12-08)
 
 ### Continuous Integration

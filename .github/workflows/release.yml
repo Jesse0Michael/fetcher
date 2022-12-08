@@ -17,10 +17,8 @@ jobs:
         name: "Authenticate to Google Cloud"
         uses: "google-github-actions/auth@v1"
         with:
+          token_format: "access_token"
           credentials_json: "${{ secrets.GCLOUD_AUTH }}"
-
-      - name: Authenticate into Google Cloud Platform
-        uses: google-github-actions/setup-gcloud@v1
 
       - name: Build
         run: |
@@ -33,6 +31,8 @@ jobs:
         run: |
           docker login docker.pkg.github.com -u Jesse0Michael -p ${{ secrets.PAT }}
           docker push docker.pkg.github.com/jesse0michael/fetcher/api:${REF##*/}
+
+          docker login us.gcr.io -u Jesse0Michael -p ${{ steps.auth.outputs.access_token }}
           docker push us.gcr.io/${{ secrets.GCLOUD_PROJECT }}/${{ secrets.GCLOUD_APP_NAME }}:${REF##*/}
 
   release-client:

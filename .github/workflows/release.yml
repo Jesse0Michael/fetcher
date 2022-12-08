@@ -13,14 +13,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
+      - id: "auth"
+        name: "Authenticate to Google Cloud"
+        uses: "google-github-actions/auth@v1"
+        with:
+          credentials_json: "${{ secrets.GCLOUD_AUTH }}"
+
       - name: Authenticate into Google Cloud Platform
         uses: google-github-actions/setup-gcloud@v1
-        with:
-          service_account_email: ${{ secrets.GCLOUD_EMAIL }}
-          service_account_key: ${{ secrets.GCLOUD_AUTH }}
-
-      - name: Configure Docker to use Google Cloud Platform
-        run: "gcloud auth configure-docker --quiet"
 
       - name: Build
         run: |

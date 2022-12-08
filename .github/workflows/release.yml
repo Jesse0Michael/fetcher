@@ -17,7 +17,6 @@ jobs:
         name: "Authenticate to Google Cloud"
         uses: "google-github-actions/auth@v1"
         with:
-          token_format: "access_token"
           credentials_json: "${{ secrets.GCLOUD_AUTH }}"
 
       - name: Build

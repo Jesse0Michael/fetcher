@@ -1,3 +1,9 @@
+## [1.10.11](https://github.com/Jesse0Michael/fetcher/compare/v1.10.10...v1.10.11) (2022-12-08)
+
+### Continuous Integration
+
+- fix gcr host ([4290175](https://github.com/Jesse0Michael/fetcher/commit/4290175b8478f5a380d9c8a10ddcf90019cd7521))
+
 ## [1.10.10](https://github.com/Jesse0Michael/fetcher/compare/v1.10.9...v1.10.10) (2022-12-07)
 
 ### Continuous Integration

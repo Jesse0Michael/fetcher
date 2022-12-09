@@ -1,3 +1,9 @@
+## [1.10.21](https://github.com/Jesse0Michael/fetcher/compare/v1.10.20...v1.10.21) (2022-12-09)
+
+### Bug Fixes
+
+- update proxy url ([dfdb99c](https://github.com/Jesse0Michael/fetcher/commit/dfdb99c2d54604b6bcdd2801762b92f84ed4cc44))
+
 ## [1.10.20](https://github.com/Jesse0Michael/fetcher/compare/v1.10.19...v1.10.20) (2022-12-09)
 
 ### Build System

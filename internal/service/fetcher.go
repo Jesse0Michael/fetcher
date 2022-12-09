@@ -21,7 +21,7 @@ import (
 
 const (
 	count    = 50
-	proxyURL = "https://jesse0michael-fetcher.herokuapp.com/proxy"
+	proxyURL = "https://fetcher-ho4joes5va-uw.a.run.app/proxy"
 )
 
 // Fetcher can retrieve feed items from various sources and compound the results into one feed

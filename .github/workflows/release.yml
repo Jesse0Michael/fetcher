@@ -18,8 +18,13 @@ jobs:
         uses: "google-github-actions/auth@v1"
         with:
           credentials_json: "${{ secrets.GCLOUD_AUTH }}"
-          token_format: "id_token"
-          id_token_audience: "aud"
+
+      - name: "Set up Cloud SDK"
+        uses: "google-github-actions/setup-gcloud@v1"
+
+      - name: Docker Auth
+        run: |
+          gcloud auth configure-docker
 
       - name: Build
         run: |
@@ -33,7 +38,6 @@ jobs:
           docker login docker.pkg.github.com -u Jesse0Michael -p ${{ secrets.PAT }}
           docker push docker.pkg.github.com/jesse0michael/fetcher/api:${REF##*/}
 
-          docker login us.gcr.io -u Jesse0Michael -p ${{ steps.auth.outputs.id_token }}
           docker push us.gcr.io/${{ steps.auth.outputs.project_id }}/fetcher:${REF##*/}
 
   release-client:

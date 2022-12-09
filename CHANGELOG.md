@@ -1,3 +1,13 @@
+## [1.10.19](https://github.com/Jesse0Michael/fetcher/compare/v1.10.18...v1.10.19) (2022-12-08)
+
+### Continuous Integration
+
+- id_token_audience ([0e12f28](https://github.com/Jesse0Michael/fetcher/commit/0e12f2816bbd7096809b82e9829d1c4138bfda1d))
+
+### Other
+
+- Merge branch 'master' of ssh://github.com/Jesse0Michael/fetcher ([f5410ee](https://github.com/Jesse0Michael/fetcher/commit/f5410ee98f03204914ffd49201dea7ac59e44850))
+
 ## [1.10.18](https://github.com/Jesse0Michael/fetcher/compare/v1.10.17...v1.10.18) (2022-12-08)
 
 ### Continuous Integration

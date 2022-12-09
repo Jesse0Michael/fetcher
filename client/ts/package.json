@@ -1,8 +1,11 @@
 {
     "name": "@jesse0michael/fetcher",
-    "version": "1.9.0",
+    "version": "1.0.0",
     "description": "NodeJS client for @jesse0michael/fetcher",
-    "repository": "jesse0michael/fetcher",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/jesse0michael/fetcher.git"
+    },
     "main": "dist/api.js",
     "types": "dist/api.d.ts",
     "scripts": {
@@ -15,12 +18,12 @@
     "dependencies": {
         "bluebird": "^3.5.0",
         "request": "^2.81.0",
-        "@types/bluebird": "3.5.33",
-        "@types/request": "*",
         "rewire": "^3.0.2"
     },
     "devDependencies": {
-        "typescript": "^2.4.2",
-        "@types/node": "8.10.34"
+        "@types/bluebird": "^3.5.33",
+        "@types/node": "^12",
+        "@types/request": "^2.48.8",
+        "typescript": "^4.0"
     }
 }

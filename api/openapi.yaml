@@ -5,7 +5,7 @@ info:
   version: 1.2.0
 servers:
   - description: Fetcher Host
-    url: https://jesse0michael-fetcher.herokuapp.com/
+    url: https://fetcher-ho4joes5va-uw.a.run.app/
 paths:
   /feed:
     get:

@@ -1,3 +1,4 @@
+//go:generate mockgen -source=servicer.go -destination=servicer_test.go -package=server
 package server
 
 type FeedServicer interface {

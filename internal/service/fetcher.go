@@ -3,7 +3,7 @@ package service
 import (
 	"fmt"
 	"io"
-	"io/ioutil"
+
 	"net/http"
 	"net/url"
 	"regexp"
@@ -276,7 +276,7 @@ func (f *Fetcher) getBlogger(bloggerID string) ([]FeedItem, error) {
 		return nil, err
 	}
 	defer resp.Body.Close()
-	body, err := ioutil.ReadAll(resp.Body)
+	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
 	}
@@ -318,7 +318,7 @@ func (f *Fetcher) getSoundcloud(soundcloudID string) ([]FeedItem, error) {
 		return nil, err
 	}
 	defer resp.Body.Close()
-	body, err := ioutil.ReadAll(resp.Body)
+	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
 	}
@@ -362,7 +362,7 @@ func (f *Fetcher) getSwarm(swarmID string) ([]FeedItem, error) {
 		return nil, err
 	}
 	defer resp.Body.Close()
-	body, err := ioutil.ReadAll(resp.Body)
+	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
 	}

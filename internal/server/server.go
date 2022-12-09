@@ -1,4 +1,3 @@
-//go:generate mockgen -source=server.go -destination=servicer_test.go -package=server
 package server
 
 import (

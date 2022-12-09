@@ -1,9 +1,8 @@
 FROM golang:1.19-alpine AS build
 
-# Install git + SSL ca certificates.
+# Install git
 # Git is required for fetching the dependencies.
-# Ca-certificates is required to call HTTPS endpoints.
-RUN apk update && apk add --no-cache git ca-certificates && update-ca-certificates
+RUN apk update && apk add --no-cache git 
 
 # Copy project files
 WORKDIR /go/src
@@ -19,10 +18,8 @@ COPY . .
 ENV CGO_ENABLED=0
 RUN go build -o fetcher ./cmd/fetcher
 
-FROM scratch AS runtime
+FROM gcr.io/distroless/static
 
-# Copy dependent files
 COPY --from=build /go/src/fetcher ./
-COPY --from=build /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 
 ENTRYPOINT ["./fetcher"]

@@ -1,3 +1,14 @@
+## [1.10.20](https://github.com/Jesse0Michael/fetcher/compare/v1.10.19...v1.10.20) (2022-12-09)
+
+### Build System
+
+- gen artifacts ([a37f724](https://github.com/Jesse0Michael/fetcher/commit/a37f724985a340b6d059d0939cb6e06d21e0f93d))
+- use gcr.io/distroless/static ([9ef175c](https://github.com/Jesse0Michael/fetcher/commit/9ef175c5bc8cfb0d883b23ac39c09045a29a98a8))
+
+### Other
+
+- Merge branch 'master' of ssh://github.com/Jesse0Michael/fetcher ([f277404](https://github.com/Jesse0Michael/fetcher/commit/f27740484fb1741c6509e3baec4ba40ea0f03db9))
+
 ## [1.10.19](https://github.com/Jesse0Michael/fetcher/compare/v1.10.18...v1.10.19) (2022-12-08)
 
 ### Continuous Integration

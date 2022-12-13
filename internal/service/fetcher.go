@@ -39,7 +39,7 @@ type Config struct {
 	ProxyURL string `envconfig:"FETCHER_PROXY_URL" default:"https://fetcher-ho4joes5va-uw.a.run.app/proxy"`
 }
 
-// Fetcher can retrieve feed items from various sources and compound the results into one feed
+// Fetcher can retrieve feed items from various sources and compound the results into one feed.
 type Fetcher struct {
 	tClient *twitter.Client
 	iClient *goinsta.Instagram
@@ -48,7 +48,7 @@ type Fetcher struct {
 	lock    sync.Mutex
 }
 
-// NewFetcher creates a Fetcher service
+// NewFetcher creates a Fetcher service.
 func NewFetcher(log *logrus.Entry, cfg Config, twitterClient *twitter.Client, insta *goinsta.Instagram) *Fetcher {
 	return &Fetcher{
 		tClient: twitterClient,
@@ -58,8 +58,8 @@ func NewFetcher(log *logrus.Entry, cfg Config, twitterClient *twitter.Client, in
 	}
 }
 
-// Feeds retrieves the feed items based on the request parameters
-func (f *Fetcher) Feeds(ctx context.Context, req FetcherRequest) (*FeedItems, error) {
+// Feeds retrieves the feed items based on the request parameters.
+func (f *Fetcher) Feeds(ctx context.Context, req FetcherRequest) (*FeedItems, error) { //nolint:funlen
 	items := []FeedItem{}
 	var wg sync.WaitGroup
 
@@ -146,7 +146,7 @@ func (f *Fetcher) Feeds(ctx context.Context, req FetcherRequest) (*FeedItems, er
 	wg.Wait()
 
 	sort.SliceStable(items, func(i, j int) bool {
-		return items[i].Ts > items[j].Ts
+		return items[i].TS > items[j].TS
 	})
 	return &FeedItems{Items: items}, nil
 }
@@ -168,7 +168,7 @@ func (f *Fetcher) getTwitter(twitterID int64) ([]FeedItem, error) {
 		TweetMode:       "extended",
 	}
 
-	tweets, _, err := f.tClient.Timelines.UserTimeline(timeline)
+	tweets, _, err := f.tClient.Timelines.UserTimeline(timeline) //nolint:bodyclose // twitter package
 	if err != nil {
 		return nil, err
 	}
@@ -184,10 +184,10 @@ func (f *Fetcher) getTwitter(twitterID int64) ([]FeedItem, error) {
 		tweetURL := fmt.Sprintf("https://twitter.com/%s/status/%s", tweet.User.ScreenName, tweet.IDStr)
 		ts, _ := time.Parse(time.RubyDate, tweet.CreatedAt)
 		item := FeedItem{
-			Id:      tweet.IDStr,
-			Ts:      ts.Unix(),
+			ID:      tweet.IDStr,
+			TS:      ts.Unix(),
 			Source:  "twitter",
-			Url:     tweetURL,
+			URL:     tweetURL,
 			Media:   []FeedItemMedia{},
 			Content: content,
 		}
@@ -198,14 +198,15 @@ func (f *Fetcher) getTwitter(twitterID int64) ([]FeedItem, error) {
 
 func getTwitterContent(tweet twitter.Tweet) string {
 	tweetURL := fmt.Sprintf("https://twitter.com/%s/status/%s", tweet.User.ScreenName, tweet.IDStr)
-	author := fmt.Sprintf("<a href='%s' style='text-decoration: none' target='_top'><img class='twitter-avatar' src='%s'> %s: </a>", tweetURL, tweet.User.ProfileImageURL, tweet.User.ScreenName)
+	author := fmt.Sprintf("<a href='%s' style='text-decoration: none' target='_top'><img class='twitter-avatar' src='%s'> %s: </a>", tweetURL, tweet.User.ProfileImageURL, tweet.User.ScreenName) //nolint:lll
 	text := replaceTextWithHyperlink(tweet.FullText)
 	media := ""
 	if len(tweet.Entities.Media) > 0 {
 		media = "<br/><div class='twitter-media'>"
 		for _, m := range tweet.Entities.Media {
 			text = strings.ReplaceAll(text, m.MediaURLHttps, "")
-			media += fmt.Sprintf("<a href='%s'  target='_top'><img class='content-media' src = '%s'.png'></a>", m.URLEntity.URL, m.MediaURLHttps)
+			media += fmt.Sprintf("<a href='%s'  target='_top'><img class='content-media' src = '%s'.png'></a>",
+				m.URLEntity.URL, m.MediaURLHttps)
 		}
 		media += "</div>"
 	}
@@ -235,13 +236,13 @@ func (f *Fetcher) getInstagram(instagramID int64) ([]FeedItem, error) {
 	items := []FeedItem{}
 	for _, media := range feed.Items {
 		medias := getInstagramMedia(media, f.cfg.ProxyURL)
-		fmt.Printf("%+v\n", media)
-		fmt.Printf("%+v\n", medias)
+		// fmt.Printf("%+v\n", media)
+		// fmt.Printf("%+v\n", medias)
 		item := FeedItem{
-			Id:      media.ID,
-			Ts:      media.TakenAt,
+			ID:      media.ID,
+			TS:      media.TakenAt,
 			Source:  "instagram",
-			Url:     fmt.Sprintf("https://www.instagram.com/p/%s", media.Code),
+			URL:     fmt.Sprintf("https://www.instagram.com/p/%s", media.Code),
 			Media:   medias,
 			Content: media.Caption.Text,
 		}
@@ -261,13 +262,13 @@ func getInstagramMedia(media goinsta.Item, proxyURL string) []FeedItemMedia {
 
 	if len(media.Videos) > 0 {
 		medias = append(medias, FeedItemMedia{
-			Url:    media.Videos[0].URL,
+			URL:    media.Videos[0].URL,
 			Poster: fmt.Sprintf("%s?url=%s", proxyURL, url.QueryEscape(media.Images.GetBest())),
 			Kind:   "video",
 		})
 	} else {
 		medias = append(medias, FeedItemMedia{
-			Url:  fmt.Sprintf("%s?url=%s", proxyURL, url.QueryEscape(media.Images.GetBest())),
+			URL:  fmt.Sprintf("%s?url=%s", proxyURL, url.QueryEscape(media.Images.GetBest())),
 			Kind: "image",
 		})
 	}
@@ -280,7 +281,8 @@ func (f *Fetcher) getBlogger(bloggerID string) ([]FeedItem, error) {
 		return nil, nil
 	}
 
-	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("https://www.googleapis.com/blogger/v2/blogs/%s/posts", bloggerID), nil)
+	req, err := http.NewRequestWithContext(context.Background(), http.MethodGet,
+		fmt.Sprintf("https://www.googleapis.com/blogger/v2/blogs/%s/posts", bloggerID), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -307,10 +309,10 @@ func (f *Fetcher) getBlogger(bloggerID string) ([]FeedItem, error) {
 			return nil, err
 		}
 		item := FeedItem{
-			Id:      blog.Get("id").String(),
-			Ts:      time.Unix(),
+			ID:      blog.Get("id").String(),
+			TS:      time.Unix(),
 			Source:  "blogger",
-			Url:     blog.Get("url").String(),
+			URL:     blog.Get("url").String(),
 			Content: blog.Get("content").String(),
 		}
 		items = append(items, item)
@@ -323,7 +325,8 @@ func (f *Fetcher) getSoundcloud(soundcloudID string) ([]FeedItem, error) {
 		return nil, nil
 	}
 
-	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("https://api.soundcloud.com/users/%s/favorites", soundcloudID), nil)
+	req, err := http.NewRequestWithContext(context.Background(), http.MethodGet,
+		fmt.Sprintf("https://api.soundcloud.com/users/%s/favorites", soundcloudID), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -348,13 +351,13 @@ func (f *Fetcher) getSoundcloud(soundcloudID string) ([]FeedItem, error) {
 		if err != nil {
 			return nil, err
 		}
-		iframe := fmt.Sprintf("https://w.soundcloud.com/player/?url=%s&buying=false&liking=false&download=false&sharing=false&show_artwork=false&show_comments=false&show_playcount=false", sound.Get("uri").String())
-		content := fmt.Sprintf("<iframe id='iframe-%s' class='sc-widget' src='%s' width='100%%' height='130' scrolling='no' frameborder='no' target='_top'></iframe>", sound.Get("uri").String(), iframe)
+		iframe := fmt.Sprintf("https://w.soundcloud.com/player/?url=%s&buying=false&liking=false&download=false&sharing=false&show_artwork=false&show_comments=false&show_playcount=false", sound.Get("uri").String()) //nolint:lll
+		content := fmt.Sprintf("<iframe id='iframe-%s' class='sc-widget' src='%s' width='100%%' height='130' scrolling='no' frameborder='no' target='_top'></iframe>", sound.Get("uri").String(), iframe)              //nolint:lll
 		item := FeedItem{
-			Id:      sound.Get("id").String(),
-			Ts:      time.Unix(),
+			ID:      sound.Get("id").String(),
+			TS:      time.Unix(),
 			Source:  "soundcloud",
-			Url:     sound.Get("uri").String(),
+			URL:     sound.Get("uri").String(),
 			Content: content,
 		}
 		items = append(items, item)
@@ -367,7 +370,8 @@ func (f *Fetcher) getSwarm(swarmID string) ([]FeedItem, error) {
 		return nil, nil
 	}
 
-	req, err := http.NewRequest(http.MethodGet, "https://api.foursquare.com/v2/users/self/checkins", nil)
+	req, err := http.NewRequestWithContext(context.Background(), http.MethodGet,
+		"https://api.foursquare.com/v2/users/self/checkins", nil)
 	if err != nil {
 		return nil, err
 	}
@@ -391,16 +395,17 @@ func (f *Fetcher) getSwarm(swarmID string) ([]FeedItem, error) {
 		if checkin.Get("photos.count").Int() == 0 {
 			continue
 		}
-		media := fmt.Sprintf("%s300x300%s", checkin.Get("photos.items.0.prefix").String(), checkin.Get("photos.items.0.suffix").String())
+		media := fmt.Sprintf("%s300x300%s", checkin.Get("photos.items.0.prefix").String(),
+			checkin.Get("photos.items.0.suffix").String())
 		item := FeedItem{
-			Id:     checkin.Get("id").String(),
-			Ts:     checkin.Get("createdAt").Int(),
+			ID:     checkin.Get("id").String(),
+			TS:     checkin.Get("createdAt").Int(),
 			Source: "swarm",
 			Media: []FeedItemMedia{{
-				Url:  media,
+				URL:  media,
 				Kind: "image",
 			}},
-			Url:     checkin.Get("source.url").String(),
+			URL:     checkin.Get("source.url").String(),
 			Content: checkin.Get("shout").String(),
 		}
 		items = append(items, item)
@@ -414,7 +419,10 @@ func (f *Fetcher) getDeviantart(deviantartID string) ([]FeedItem, error) {
 	}
 
 	fp := gofeed.NewParser()
-	feed, _ := fp.ParseURL(fmt.Sprintf("https://backend.deviantart.com/rss.xml?q=gallery:%s", deviantartID))
+	feed, err := fp.ParseURL(fmt.Sprintf("https://backend.deviantart.com/rss.xml?q=gallery:%s", deviantartID))
+	if err != nil {
+		return nil, err
+	}
 
 	items := []FeedItem{}
 	for _, art := range feed.Items {
@@ -432,14 +440,14 @@ func (f *Fetcher) getDeviantart(deviantartID string) ([]FeedItem, error) {
 		}
 
 		item := FeedItem{
-			Id:     art.Title,
-			Ts:     art.PublishedParsed.Unix(),
+			ID:     art.Title,
+			TS:     art.PublishedParsed.Unix(),
 			Source: "deviantart",
 			Media: []FeedItemMedia{{
-				Url:  image,
+				URL:  image,
 				Kind: "image",
 			}},
-			Url:     art.Link,
+			URL:     art.Link,
 			Content: art.Title,
 		}
 		items = append(items, item)

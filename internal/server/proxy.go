@@ -8,20 +8,20 @@ import (
 )
 
 type ProxyRequest struct {
-	Url string `query:"url"`
+	URL string `query:"url"`
 }
 
 func (s *Server) proxy() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-
-		var req ProxyRequest
-		if err := request.Decode(r, &req); err != nil {
+		var proxy ProxyRequest
+		if err := request.Decode(r, &proxy); err != nil {
 			s.log.WithError(err).Error("failed to decode request body")
 			writeError(w, http.StatusBadRequest, err)
 			return
 		}
 
-		resp, err := http.DefaultClient.Get(req.Url)
+		req, _ := http.NewRequestWithContext(r.Context(), http.MethodGet, proxy.URL, nil)
+		resp, err := s.client.Do(req)
 		if err != nil {
 			s.log.WithError(err).Error("failed to proxy url")
 			writeError(w, http.StatusInternalServerError, err)

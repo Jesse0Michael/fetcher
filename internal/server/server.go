@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
@@ -16,12 +17,14 @@ type Fetcher interface {
 }
 
 type Config struct {
-	Port int `envconfig:"PORT" default:"8080"`
+	Port    int           `envconfig:"PORT" default:"8080"`
+	Timeout time.Duration `envconfig:"TIMEOUT" default:"10s"`
 }
 
 type Server struct {
 	*http.Server
 	router  *mux.Router
+	client  *http.Client
 	log     *logrus.Entry
 	fetcher Fetcher
 }
@@ -35,10 +38,12 @@ func New(cfg Config, log *logrus.Entry, fetcher Fetcher) *Server {
 
 	server := &Server{
 		Server: &http.Server{
-			Handler: router,
-			Addr:    fmt.Sprintf(":%d", cfg.Port),
+			Handler:     router,
+			Addr:        fmt.Sprintf(":%d", cfg.Port),
+			ReadTimeout: cfg.Timeout,
 		},
 		router:  router,
+		client:  http.DefaultClient,
 		log:     log,
 		fetcher: fetcher,
 	}
@@ -48,9 +53,9 @@ func New(cfg Config, log *logrus.Entry, fetcher Fetcher) *Server {
 	return server
 }
 
-func (server *Server) route() {
-	server.router.HandleFunc("/feed", server.feed()).Methods("GET").Name("feed")
-	server.router.HandleFunc("/proxy", server.proxy()).Methods("GET").Name("proxy")
+func (s *Server) route() {
+	s.router.HandleFunc("/feed", s.feed()).Methods("GET").Name("feed")
+	s.router.HandleFunc("/proxy", s.proxy()).Methods("GET").Name("proxy")
 }
 
 func notFound(w http.ResponseWriter, r *http.Request) {

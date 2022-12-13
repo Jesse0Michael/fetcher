@@ -44,7 +44,7 @@ func TestServer_proxy(t *testing.T) {
 		tt := tests[i]
 		t.Run(tt.name, func(t *testing.T) {
 			url := tt.server.URL
-			req := httptest.NewRequest("GET", fmt.Sprintf("/proxy?url=%s/test", url), nil)
+			req := httptest.NewRequest(http.MethodGet, fmt.Sprintf("/proxy?url=%s/test", url), nil)
 			s := New(Config{}, logrus.NewEntry(logrus.New()), nil)
 
 			resp := httptest.NewRecorder()

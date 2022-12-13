@@ -37,18 +37,18 @@ func TestServer_feed(t *testing.T) {
 	}{
 		{
 			name:     "empty feed retrieval",
-			req:      httptest.NewRequest("GET", "/feed", nil),
+			req:      httptest.NewRequest(http.MethodGet, "/feed", nil),
 			fetcher:  &MockFetcher{items: []service.FeedItem{}},
 			wantCode: 200,
 			wantBody: `{"items":[]}`,
 		},
 		{
 			name: "successful feed retrieval",
-			req:  httptest.NewRequest("GET", "/feed?twitterID=60887026&instagramID=50957893&bloggerID=2628647666607369284&soundcloudID=20560365&swarmID=jesse&deviantartID=mini-michael/33242408", nil),
+			req:  httptest.NewRequest(http.MethodGet, "/feed?twitterID=60887026&instagramID=50957893&bloggerID=2628647666607369284&soundcloudID=20560365&swarmID=jesse&deviantartID=mini-michael/33242408", nil),
 			fetcher: &MockFetcher{
 				expected: service.FetcherRequest{TwitterID: "60887026", InstagramID: "50957893", BloggerID: "2628647666607369284", SoundcloudID: "20560365", SwarmID: "jesse", DeviantartID: "mini-michael/33242408"},
 				items: []service.FeedItem{
-					{Id: "test", Source: "testing"},
+					{ID: "test", Source: "testing"},
 				},
 			},
 			wantCode: 200,
@@ -56,7 +56,7 @@ func TestServer_feed(t *testing.T) {
 		},
 		{
 			name: "failed feed retrieval",
-			req:  httptest.NewRequest("GET", "/feed", nil),
+			req:  httptest.NewRequest(http.MethodGet, "/feed", nil),
 			fetcher: &MockFetcher{
 				err: errors.New("test-error"),
 			},

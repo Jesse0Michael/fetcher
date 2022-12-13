@@ -6,8 +6,8 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-// NewLogger returns a structured logrus entry logger
-// with fields and configuration pulled from environment variables
+// NewLogger returns a structured logrus entry logger.
+// with fields and configuration pulled from environment variables.
 func NewLogger() *logrus.Entry {
 	logger := logrus.New()
 

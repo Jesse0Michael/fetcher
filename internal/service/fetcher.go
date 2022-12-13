@@ -29,25 +29,27 @@ type FetcherRequest struct {
 	DeviantartID string `query:"deviantartID"`
 }
 
-const (
-	count    = 50
-	proxyURL = "https://fetcher-ho4joes5va-uw.a.run.app/proxy"
-)
+type Config struct {
+	Count    int    `envconfig:"FETCHER_COUNT" default:"50"`
+	ProxyURL string `envconfig:"FETCHER_PROXY_URL" default:"https://fetcher-ho4joes5va-uw.a.run.app/proxy"`
+}
 
 // Fetcher can retrieve feed items from various sources and compound the results into one feed
 type Fetcher struct {
 	tClient *twitter.Client
 	iClient *goinsta.Instagram
 	log     *logrus.Entry
+	cfg     Config
 	lock    sync.Mutex
 }
 
 // NewFetcher creates a Fetcher service
-func NewFetcher(log *logrus.Entry, twitterClient *twitter.Client, insta *goinsta.Instagram) *Fetcher {
+func NewFetcher(log *logrus.Entry, cfg Config, twitterClient *twitter.Client, insta *goinsta.Instagram) *Fetcher {
 	return &Fetcher{
 		tClient: twitterClient,
 		iClient: insta,
 		log:     log,
+		cfg:     cfg,
 	}
 }
 
@@ -154,7 +156,7 @@ func (f *Fetcher) getTwitter(twitterID int64) ([]FeedItem, error) {
 	trimUser := false
 	timeline := &twitter.UserTimelineParams{
 		UserID:          twitterID,
-		Count:           count,
+		Count:           f.cfg.Count,
 		ExcludeReplies:  &excludeReplies,
 		IncludeRetweets: &includeRetweets,
 		TrimUser:        &trimUser,
@@ -227,7 +229,7 @@ func (f *Fetcher) getInstagram(instagramID int64) ([]FeedItem, error) {
 
 	items := []FeedItem{}
 	for _, media := range feed.Items {
-		medias := getInstagramMedia(media)
+		medias := getInstagramMedia(media, f.cfg.ProxyURL)
 		fmt.Printf("%+v\n", media)
 		fmt.Printf("%+v\n", medias)
 		item := FeedItem{
@@ -244,11 +246,11 @@ func (f *Fetcher) getInstagram(instagramID int64) ([]FeedItem, error) {
 	return items, nil
 }
 
-func getInstagramMedia(media goinsta.Item) []FeedItemMedia {
+func getInstagramMedia(media goinsta.Item, proxyURL string) []FeedItemMedia {
 	medias := []FeedItemMedia{}
 	if len(media.CarouselMedia) > 0 {
 		for _, c := range media.CarouselMedia {
-			medias = append(medias, getInstagramMedia(c)...)
+			medias = append(medias, getInstagramMedia(c, proxyURL)...)
 		}
 	}
 

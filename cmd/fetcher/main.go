@@ -61,7 +61,7 @@ func main() {
 		log.WithError(err).Error("failed to log into instagram")
 	}
 
-	fetcher := service.NewFetcher(log, twitterClient, insta)
+	fetcher := service.NewFetcher(log, cfg.Fetcher, twitterClient, insta)
 	srvr := server.New(cfg.Server, log, fetcher)
 	go func() { log.Fatal(srvr.ListenAndServe()) }()
 	log.WithField("port", cfg.Server.Port).Infof("started Fetcher API")

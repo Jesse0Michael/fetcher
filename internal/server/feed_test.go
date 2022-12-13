@@ -1,6 +1,7 @@
 package server
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"net/http"
@@ -19,7 +20,7 @@ type MockFetcher struct {
 	err      error
 }
 
-func (m *MockFetcher) Feeds(req service.FetcherRequest) (*service.FeedItems, error) {
+func (m *MockFetcher) Feeds(ctx context.Context, req service.FetcherRequest) (*service.FeedItems, error) {
 	if req != m.expected {
 		return nil, fmt.Errorf("unexpected req")
 	}

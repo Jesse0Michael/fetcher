@@ -1,6 +1,7 @@
 package service
 
 import (
+	"context"
 	"fmt"
 	"io"
 	"strconv"
@@ -19,6 +20,10 @@ import (
 	"github.com/sirupsen/logrus"
 	"github.com/tidwall/gjson"
 )
+
+type Feeder interface {
+	Feed(ctx context.Context, id string) ([]FeedItem, error)
+}
 
 type FetcherRequest struct {
 	TwitterID    string `query:"twitterID"`
@@ -53,8 +58,8 @@ func NewFetcher(log *logrus.Entry, cfg Config, twitterClient *twitter.Client, in
 	}
 }
 
-// GetFeed - Get feed
-func (f *Fetcher) Feeds(req FetcherRequest) (*FeedItems, error) {
+// Feeds retrieves the feed items based on the request parameters
+func (f *Fetcher) Feeds(ctx context.Context, req FetcherRequest) (*FeedItems, error) {
 	items := []FeedItem{}
 	var wg sync.WaitGroup
 

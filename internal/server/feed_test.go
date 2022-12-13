@@ -2,68 +2,71 @@ package server
 
 import (
 	"errors"
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 
-	gomock "github.com/golang/mock/gomock"
 	"github.com/gorilla/mux"
+	"github.com/jesse0michael/fetcher/internal/service"
 	"github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/assert"
 )
 
+type MockFetcher struct {
+	expected service.FetcherRequest
+	items    []service.FeedItem
+	err      error
+}
+
+func (m *MockFetcher) Feeds(req service.FetcherRequest) (*service.FeedItems, error) {
+	if req != m.expected {
+		return nil, fmt.Errorf("unexpected req")
+	}
+	return &service.FeedItems{Items: m.items}, m.err
+}
+
 func TestServer_feed(t *testing.T) {
 	tests := []struct {
-		name         string
-		req          *http.Request
-		stubServicer func(*MockFeedServicer)
-		wantCode     int
-		wantBody     string
+		name     string
+		req      *http.Request
+		fetcher  Fetcher
+		wantCode int
+		wantBody string
 	}{
 		{
-			name: "empty feed retrieval",
-			req:  httptest.NewRequest("GET", "/feed", nil),
-			stubServicer: func(m *MockFeedServicer) {
-				e := map[string]string{"test": "successful"}
-				m.EXPECT().GetFeed(int64(0), int64(0), "", "", "", "").Return(&e, nil)
-			},
+			name:     "empty feed retrieval",
+			req:      httptest.NewRequest("GET", "/feed", nil),
+			fetcher:  &MockFetcher{items: []service.FeedItem{}},
 			wantCode: 200,
-			wantBody: `{"test":"successful"}`,
+			wantBody: `{"items":[]}`,
 		},
 		{
 			name: "successful feed retrieval",
 			req:  httptest.NewRequest("GET", "/feed?twitterID=60887026&instagramID=50957893&bloggerID=2628647666607369284&soundcloudID=20560365&swarmID=jesse&deviantartID=mini-michael/33242408", nil),
-			stubServicer: func(m *MockFeedServicer) {
-				e := map[string]string{"test": "successful"}
-				m.EXPECT().GetFeed(int64(60887026), int64(50957893), "2628647666607369284", "20560365", "jesse", "mini-michael/33242408").Return(&e, nil)
+			fetcher: &MockFetcher{
+				expected: service.FetcherRequest{TwitterID: "60887026", InstagramID: "50957893", BloggerID: "2628647666607369284", SoundcloudID: "20560365", SwarmID: "jesse", DeviantartID: "mini-michael/33242408"},
+				items: []service.FeedItem{
+					{Id: "test", Source: "testing"},
+				},
 			},
 			wantCode: 200,
-			wantBody: `{"test":"successful"}`,
+			wantBody: `{"items":[{"id":"test","source":"testing","ts":0}]}`,
 		},
 		{
 			name: "failed feed retrieval",
 			req:  httptest.NewRequest("GET", "/feed", nil),
-			stubServicer: func(m *MockFeedServicer) {
-				m.EXPECT().GetFeed(int64(0), int64(0), "", "", "", "").Return(nil, errors.New("test-error"))
+			fetcher: &MockFetcher{
+				err: errors.New("test-error"),
 			},
 			wantCode: 500,
 			wantBody: `{"error":"test-error"}`,
-		},
-		{
-			name:         "failed request decode",
-			req:          httptest.NewRequest("GET", "/feed?twitterID=abc", nil),
-			stubServicer: func(m *MockFeedServicer) {},
-			wantCode:     400,
-			wantBody:     `{"error":"strconv.ParseInt: parsing \"abc\": invalid syntax"}`,
 		},
 	}
 	for i := range tests {
 		tt := tests[i]
 		t.Run(tt.name, func(t *testing.T) {
-			ctrl := gomock.NewController(t)
-			MockServicer := NewMockFeedServicer(ctrl)
-			tt.stubServicer(MockServicer)
-			s := New(Config{}, logrus.NewEntry(logrus.New()), MockServicer)
+			s := New(Config{}, logrus.NewEntry(logrus.New()), tt.fetcher)
 
 			resp := httptest.NewRecorder()
 			router := mux.NewRouter()
@@ -77,7 +80,6 @@ func TestServer_feed(t *testing.T) {
 			} else {
 				assert.Empty(t, resp.Body.String())
 			}
-			ctrl.Finish()
 			result.Body.Close()
 		})
 	}

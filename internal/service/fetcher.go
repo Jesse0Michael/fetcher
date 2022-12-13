@@ -3,6 +3,7 @@ package service
 import (
 	"fmt"
 	"io"
+	"strconv"
 
 	"net/http"
 	"net/url"
@@ -18,6 +19,15 @@ import (
 	"github.com/sirupsen/logrus"
 	"github.com/tidwall/gjson"
 )
+
+type FetcherRequest struct {
+	TwitterID    string `query:"twitterID"`
+	InstagramID  string `query:"instagramID"`
+	BloggerID    string `query:"bloggerID"`
+	SoundcloudID string `query:"soundcloudID"`
+	SwarmID      string `query:"swarmID"`
+	DeviantartID string `query:"deviantartID"`
+}
 
 const (
 	count    = 50
@@ -42,14 +52,15 @@ func NewFetcher(log *logrus.Entry, twitterClient *twitter.Client, insta *goinsta
 }
 
 // GetFeed - Get feed
-func (f *Fetcher) GetFeed(twitterID, instagramID int64, bloggerID, soundcloudID, swarmID, deviantartID string) (interface{}, error) {
+func (f *Fetcher) Feeds(req FetcherRequest) (*FeedItems, error) {
 	items := []FeedItem{}
 	var wg sync.WaitGroup
 
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
-		twitterItems, err := f.getTwitter(twitterID)
+		id, _ := strconv.Atoi(req.TwitterID)
+		twitterItems, err := f.getTwitter(int64(id))
 		if err != nil {
 			f.log.WithError(err).Error("error retrieving twitter items")
 		}
@@ -62,7 +73,8 @@ func (f *Fetcher) GetFeed(twitterID, instagramID int64, bloggerID, soundcloudID,
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
-		instagramItems, err := f.getInstagram(instagramID)
+		id, _ := strconv.Atoi(req.InstagramID)
+		instagramItems, err := f.getInstagram(int64(id))
 		if err != nil {
 			f.log.WithError(err).Error("error retrieving instagram items")
 		}
@@ -75,7 +87,7 @@ func (f *Fetcher) GetFeed(twitterID, instagramID int64, bloggerID, soundcloudID,
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
-		bloggerItems, err := f.getBlogger(bloggerID)
+		bloggerItems, err := f.getBlogger(req.BloggerID)
 		if err != nil {
 			f.log.WithError(err).Error("error retrieving blogger items")
 		}
@@ -88,7 +100,7 @@ func (f *Fetcher) GetFeed(twitterID, instagramID int64, bloggerID, soundcloudID,
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
-		soundcloudItems, err := f.getSoundcloud(soundcloudID)
+		soundcloudItems, err := f.getSoundcloud(req.SoundcloudID)
 		if err != nil {
 			f.log.WithError(err).Error("error retrieving soundcloud items")
 		}
@@ -101,7 +113,7 @@ func (f *Fetcher) GetFeed(twitterID, instagramID int64, bloggerID, soundcloudID,
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
-		swarmItems, err := f.getSwarm(swarmID)
+		swarmItems, err := f.getSwarm(req.SwarmID)
 		if err != nil {
 			f.log.WithError(err).Error("error retrieving swarm items")
 		}
@@ -114,7 +126,7 @@ func (f *Fetcher) GetFeed(twitterID, instagramID int64, bloggerID, soundcloudID,
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
-		deviantartItems, err := f.getDeviantart(deviantartID)
+		deviantartItems, err := f.getDeviantart(req.DeviantartID)
 		if err != nil {
 			f.log.WithError(err).Error("error retrieving deviantart items")
 		}

@@ -6,8 +6,13 @@ import (
 
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
+	"github.com/jesse0michael/fetcher/internal/service"
 	"github.com/sirupsen/logrus"
 )
+
+type Fetcher interface {
+	Feeds(service.FetcherRequest) (*service.FeedItems, error)
+}
 
 type Config struct {
 	Port int `envconfig:"PORT" default:"8080"`
@@ -15,12 +20,12 @@ type Config struct {
 
 type Server struct {
 	*http.Server
-	router   *mux.Router
-	log      *logrus.Entry
-	servicer FeedServicer
+	router  *mux.Router
+	log     *logrus.Entry
+	fetcher Fetcher
 }
 
-func New(cfg Config, log *logrus.Entry, servicer FeedServicer) *Server {
+func New(cfg Config, log *logrus.Entry, fetcher Fetcher) *Server {
 	router := mux.NewRouter()
 	router.StrictSlash(true)
 	router.NotFoundHandler = http.HandlerFunc(notFound)
@@ -32,9 +37,9 @@ func New(cfg Config, log *logrus.Entry, servicer FeedServicer) *Server {
 			Handler: router,
 			Addr:    fmt.Sprintf(":%d", cfg.Port),
 		},
-		router:   router,
-		log:      log,
-		servicer: servicer,
+		router:  router,
+		log:     log,
+		fetcher: fetcher,
 	}
 
 	server.route()

@@ -1,12 +1,11 @@
 package server
 
 import (
-	"errors"
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 
-	gomock "github.com/golang/mock/gomock"
 	"github.com/gorilla/mux"
 	"github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/assert"
@@ -14,52 +13,52 @@ import (
 
 func TestServer_proxy(t *testing.T) {
 	tests := []struct {
-		name         string
-		req          *http.Request
-		stubServicer func(*MockFeedServicer)
-		wantCode     int
-		wantBody     string
+		name     string
+		server   *httptest.Server
+		wantCode int
+		wantBody string
 	}{
 		{
 			name: "successful proxy retrieval",
-			req:  httptest.NewRequest("GET", "/proxy?url=http://www.example.com", nil),
-			stubServicer: func(m *MockFeedServicer) {
-				m.EXPECT().Proxy("http://www.example.com").Return([]byte("test"), "plain/test", nil)
-			},
+			server: httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+				_, _ = w.Write([]byte("test"))
+				w.Header().Add("Content-Type", "plain/test")
+			})),
 			wantCode: 200,
 			wantBody: `test`,
 		},
 		{
 			name: "failed feed retrieval",
-			req:  httptest.NewRequest("GET", "/proxy?url=http://www.example.com", nil),
-			stubServicer: func(m *MockFeedServicer) {
-				m.EXPECT().Proxy("http://www.example.com").Return(nil, "", errors.New("test-error"))
-			},
+			server: func() *httptest.Server {
+				ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+					w.WriteHeader(http.StatusInternalServerError)
+				}))
+				ts.Close()
+				return ts
+			}(),
 			wantCode: 500,
-			wantBody: `{"error":"test-error"}`,
+			wantBody: `connect: connection refused`,
 		},
 	}
 	for i := range tests {
 		tt := tests[i]
 		t.Run(tt.name, func(t *testing.T) {
-			ctrl := gomock.NewController(t)
-			MockServicer := NewMockFeedServicer(ctrl)
-			tt.stubServicer(MockServicer)
-			s := New(Config{}, logrus.NewEntry(logrus.New()), MockServicer)
+			url := tt.server.URL
+			req := httptest.NewRequest("GET", fmt.Sprintf("/proxy?url=%s/test", url), nil)
+			s := New(Config{}, logrus.NewEntry(logrus.New()), nil)
 
 			resp := httptest.NewRecorder()
 			router := mux.NewRouter()
 			router.HandleFunc("/proxy", s.proxy())
-			router.ServeHTTP(resp, tt.req)
+			router.ServeHTTP(resp, req)
 
 			result := resp.Result()
 			assert.Equal(t, tt.wantCode, result.StatusCode)
 			if tt.wantBody != "" {
-				assert.Equal(t, tt.wantBody, resp.Body.String())
+				assert.Contains(t, resp.Body.String(), tt.wantBody)
 			} else {
 				assert.Empty(t, resp.Body.String())
 			}
-			ctrl.Finish()
 			result.Body.Close()
 		})
 	}

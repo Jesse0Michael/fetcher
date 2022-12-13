@@ -1,6 +1,7 @@
 package server
 
 import (
+	"io"
 	"net/http"
 
 	"github.com/jesse0michael/go-request"
@@ -20,14 +21,17 @@ func (s *Server) proxy() http.HandlerFunc {
 			return
 		}
 
-		b, content, err := s.servicer.Proxy(req.Url)
+		resp, err := http.DefaultClient.Get(req.Url)
 		if err != nil {
 			s.log.WithError(err).Error("failed to proxy url")
 			writeError(w, http.StatusInternalServerError, err)
 			return
 		}
 
-		w.Header().Add("Content-Type", content)
+		defer resp.Body.Close()
+		b, _ := io.ReadAll(resp.Body)
+
+		w.Header().Add("Content-Type", resp.Header.Get("Content-Type"))
 		w.WriteHeader(http.StatusOK)
 		_, _ = w.Write(b)
 	}

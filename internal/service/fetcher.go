@@ -427,15 +427,3 @@ func (f *Fetcher) getDeviantart(deviantartID string) ([]FeedItem, error) {
 	}
 	return items, nil
 }
-
-// Proxy - Proxies url content
-func (f *Fetcher) Proxy(url string) ([]byte, string, error) {
-	resp, err := http.DefaultClient.Get(url)
-	if err != nil {
-		return nil, "", err
-	}
-
-	defer resp.Body.Close()
-	b, err := io.ReadAll(resp.Body)
-	return b, resp.Header.Get("Content-Type"), err
-}

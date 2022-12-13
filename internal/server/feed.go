@@ -17,7 +17,7 @@ func (s *Server) feed() http.HandlerFunc {
 			return
 		}
 
-		feed, err := s.fetcher.Feeds(req)
+		feed, err := s.fetcher.Feeds(r.Context(), req)
 		if err != nil {
 			s.log.WithError(err).Error("failed to get feed")
 			writeError(w, http.StatusInternalServerError, err)

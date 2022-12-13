@@ -1,6 +1,7 @@
 package server
 
 import (
+	"context"
 	"fmt"
 	"net/http"
 
@@ -11,7 +12,7 @@ import (
 )
 
 type Fetcher interface {
-	Feeds(service.FetcherRequest) (*service.FeedItems, error)
+	Feeds(ctx context.Context, req service.FetcherRequest) (*service.FeedItems, error)
 }
 
 type Config struct {

@@ -1,3 +1,9 @@
+## [1.10.23](https://github.com/Jesse0Michael/fetcher/compare/v1.10.22...v1.10.23) (2022-12-14)
+
+### Bug Fixes
+
+- separate individual feeders ([b2d6333](https://github.com/Jesse0Michael/fetcher/commit/b2d6333456225b689d88baa431dcabc58468264b))
+
 ## [1.10.22](https://github.com/Jesse0Michael/fetcher/compare/v1.10.21...v1.10.22) (2022-12-14)
 
 ### Bug Fixes

@@ -1,3 +1,16 @@
+## [1.10.22](https://github.com/Jesse0Michael/fetcher/compare/v1.10.21...v1.10.22) (2022-12-14)
+
+### Bug Fixes
+
+- pass context ([e41c904](https://github.com/Jesse0Michael/fetcher/commit/e41c904480acaccc27c383cc707c91681f904ab9))
+- remove proxy from interface ([f613007](https://github.com/Jesse0Michael/fetcher/commit/f613007fb8a38accd08ba98ebcf1ff7bffe1814b))
+- update fetcher interface ([5053f6e](https://github.com/Jesse0Michael/fetcher/commit/5053f6ef3265f9476a62895f9254ac37ca1c12c0))
+- use fetcher config ([e2d13a4](https://github.com/Jesse0Michael/fetcher/commit/e2d13a4fd90914376df089b6d0bfbad28cddb69e))
+
+### Chores
+
+- use linter ([922df93](https://github.com/Jesse0Michael/fetcher/commit/922df93aa59e3a8b4225a33d7a1a67938124d57d))
+
 ## [1.10.21](https://github.com/Jesse0Michael/fetcher/compare/v1.10.20...v1.10.21) (2022-12-09)
 
 ### Bug Fixes

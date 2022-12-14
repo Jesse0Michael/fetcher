@@ -46,7 +46,7 @@ func TestServer_feed(t *testing.T) {
 			name: "successful feed retrieval",
 			req:  httptest.NewRequest(http.MethodGet, "/feed?twitterID=60887026&instagramID=50957893&bloggerID=2628647666607369284&soundcloudID=20560365&swarmID=jesse&deviantartID=mini-michael/33242408", nil),
 			fetcher: &MockFetcher{
-				expected: service.FetcherRequest{TwitterID: "60887026", InstagramID: "50957893", BloggerID: "2628647666607369284", SoundcloudID: "20560365", SwarmID: "jesse", DeviantartID: "mini-michael/33242408"},
+				expected: service.FetcherRequest{TwitterID: "60887026", InstagramID: "50957893", BloggerID: "2628647666607369284", SoundCloudID: "20560365", SwarmID: "jesse", DeviantArtID: "mini-michael/33242408"},
 				items: []service.FeedItem{
 					{ID: "test", Source: "testing"},
 				},

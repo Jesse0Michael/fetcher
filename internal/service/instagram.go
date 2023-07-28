@@ -30,11 +30,11 @@ func (i *Instagram) Feed(ctx context.Context, id string) ([]FeedItem, error) {
 
 	items := []FeedItem{}
 	for _, media := range feed.Items {
-		medias := getInstagramMedia(media, i.proxyURL)
+		medias := getInstagramMedia(*media, i.proxyURL)
 		// fmt.Printf("%+v\n", media)
 		// fmt.Printf("%+v\n", medias)
 		item := FeedItem{
-			ID:      media.ID,
+			ID:      media.ID.(string),
 			TS:      media.TakenAt,
 			Source:  "instagram",
 			URL:     fmt.Sprintf("https://www.instagram.com/p/%s", media.Code),

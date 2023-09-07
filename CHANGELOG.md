@@ -1,3 +1,20 @@
+# [1.11.0](https://github.com/Jesse0Michael/fetcher/compare/v1.10.23...v1.11.0) (2023-09-07)
+
+### Bug Fixes
+
+- reorganize service structure ([f1f8cc0](https://github.com/Jesse0Michael/fetcher/commit/f1f8cc09cf33d92c7d800d2c4b3aada556333eab))
+- update go and dependencies ([168b382](https://github.com/Jesse0Michael/fetcher/commit/168b382544d3f49423afae7bde42b726a74abb0b))
+
+### Continuous Integration
+
+- reference main branch ([50ba2c6](https://github.com/Jesse0Michael/fetcher/commit/50ba2c655ffebdaecfeee04858076a3f15d69c42))
+- release from main ([bb30d85](https://github.com/Jesse0Michael/fetcher/commit/bb30d857619a031bba30c4ea5b74be5805ce32c0))
+
+### Features
+
+- update soundcloud feeder ([a08067f](https://github.com/Jesse0Michael/fetcher/commit/a08067f1d707a3c7107147b281f590073cb8744b))
+- use log/slog package ([29dc8f6](https://github.com/Jesse0Michael/fetcher/commit/29dc8f600dfe2be7b912a8d192c88e5dcd730078))
+
 ## [1.10.23](https://github.com/Jesse0Michael/fetcher/compare/v1.10.22...v1.10.23) (2022-12-14)
 
 ### Bug Fixes

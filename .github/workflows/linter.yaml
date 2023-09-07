@@ -2,7 +2,7 @@ name: Lint Code Base
 on:
   push:
     branches-ignore:
-      - "master"
+      - "main"
 
 jobs:
   build:
@@ -17,4 +17,4 @@ jobs:
         env:
           VALIDATE_ALL_CODEBASE: false
           VALIDATE_GO: true
-          DEFAULT_BRANCH: master
+          DEFAULT_BRANCH: main

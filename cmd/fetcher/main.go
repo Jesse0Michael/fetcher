@@ -7,16 +7,16 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/Davincible/goinsta"
-	"github.com/dghubble/go-twitter/twitter"
-	"github.com/jesse0michael/fetcher/internal"
 	"github.com/jesse0michael/fetcher/internal/server"
 	"github.com/jesse0michael/fetcher/internal/service"
 	"github.com/joho/godotenv"
 	"github.com/kelseyhightower/envconfig"
-	"golang.org/x/oauth2"
-	"golang.org/x/oauth2/clientcredentials"
 )
+
+type Config struct {
+	Server  server.Config
+	Service service.Config
+}
 
 func main() {
 	slog.SetDefault(slog.New(slog.NewJSONHandler(os.Stderr, &slog.HandlerOptions{Level: slog.LevelInfo})))
@@ -32,30 +32,13 @@ func main() {
 	}()
 
 	_ = godotenv.Load()
-	var cfg internal.Config
+	var cfg Config
 	if err := envconfig.Process("", &cfg); err != nil {
 		slog.Error("failed to process config")
 		cancel()
 	}
 
-	// Twitter client
-	// oauth2 configures a client that uses app credentials to keep a fresh token
-	config := &clientcredentials.Config{
-		ClientID:     cfg.Twitter.ClientID,
-		ClientSecret: cfg.Twitter.ClientSecret,
-		TokenURL:     cfg.Twitter.TokenURL,
-	}
-	// http.Client will automatically authorize Requests
-	httpClient := config.Client(oauth2.NoContext)
-	twitterClient := twitter.NewClient(httpClient)
-
-	// Instagram client
-	insta := goinsta.New(cfg.Instagram.Username, cfg.Instagram.Password)
-	if err := insta.Login(); err != nil {
-		slog.With("error", err).Error("failed to log into instagram")
-	}
-
-	fetcher := service.NewFetcher(cfg.Fetcher, twitterClient, insta)
+	fetcher := service.NewFetcher(cfg.Service)
 	srvr := server.New(cfg.Server, fetcher)
 	go func() {
 		if err := srvr.ListenAndServe(); err != nil {

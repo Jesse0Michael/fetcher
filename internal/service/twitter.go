@@ -9,18 +9,36 @@ import (
 	"time"
 
 	"github.com/dghubble/go-twitter/twitter"
+	"golang.org/x/oauth2"
+	"golang.org/x/oauth2/clientcredentials"
 )
+
+type TwitterConfig struct {
+	Count        int    `envconfig:"TWITTER_COUNT" default:"20"`
+	ClientID     string `envconfig:"TWITTER_CLIENT_ID"`
+	ClientSecret string `envconfig:"TWITTER_CLIENT_SECRET"`
+	TokenURL     string `envconfig:"TWITTER_TOKEN_URL" default:"https://api.twitter.com/oauth2/token"`
+}
 
 type Twitter struct {
 	count  int
 	client *twitter.Client
 }
 
-func NewTwitter(count int, client *twitter.Client) *Twitter {
-	return &Twitter{
-		count:  count,
-		client: client,
+func NewTwitter(cfg TwitterConfig) (*Twitter, error) {
+	// oauth2 configures a client that uses app credentials to keep a fresh token
+	config := &clientcredentials.Config{
+		ClientID:     cfg.ClientID,
+		ClientSecret: cfg.ClientSecret,
+		TokenURL:     cfg.TokenURL,
 	}
+	// http.Client will automatically authorize Requests
+	httpClient := config.Client(oauth2.NoContext)
+	client := twitter.NewClient(httpClient)
+	return &Twitter{
+		count:  cfg.Count,
+		client: client,
+	}, nil
 }
 
 func (t *Twitter) Feed(_ context.Context, id string) ([]FeedItem, error) {

@@ -8,16 +8,23 @@ import (
 	"github.com/Davincible/goinsta"
 )
 
+type InstagramConfig struct {
+	Username string `envconfig:"INSTAGRAM_USERNAME"`
+	Password string `envconfig:"INSTAGRAM_PASSWORD"`
+}
+
 type Instagram struct {
 	proxyURL string
 	client   *goinsta.Instagram
 }
 
-func NewInstagram(proxyURL string, client *goinsta.Instagram) *Instagram {
+func NewInstagram(cfg InstagramConfig, proxyURL string) (*Instagram, error) {
+	insta := goinsta.New(cfg.Username, cfg.Password)
+	err := insta.Login()
 	return &Instagram{
 		proxyURL: proxyURL,
-		client:   client,
-	}
+		client:   insta,
+	}, err
 }
 
 func (i *Instagram) Feed(_ context.Context, id string) ([]FeedItem, error) {

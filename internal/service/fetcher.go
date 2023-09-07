@@ -5,10 +5,14 @@ import (
 	"log/slog"
 	"sort"
 	"sync"
-
-	"github.com/Davincible/goinsta"
-	"github.com/dghubble/go-twitter/twitter"
 )
+
+type Config struct {
+	Twitter   TwitterConfig
+	Instagram InstagramConfig
+	Count     int    `envconfig:"FETCHER_COUNT" default:"50"`
+	ProxyURL  string `envconfig:"FETCHER_PROXY_URL" default:"https://fetcher-ho4joes5va-uw.a.run.app/proxy"`
+}
 
 type Feeder interface {
 	Feed(ctx context.Context, id string) ([]FeedItem, error)
@@ -21,11 +25,6 @@ type FetcherRequest struct {
 	SoundCloudID string `query:"soundcloudID"`
 	SwarmID      string `query:"swarmID"`
 	DeviantArtID string `query:"deviantartID"`
-}
-
-type Config struct {
-	Count    int    `envconfig:"FETCHER_COUNT" default:"50"`
-	ProxyURL string `envconfig:"FETCHER_PROXY_URL" default:"https://fetcher-ho4joes5va-uw.a.run.app/proxy"`
 }
 
 // Fetcher can retrieve feed items from various sources and compound the results into one feed.
@@ -41,12 +40,22 @@ type Fetcher struct {
 }
 
 // NewFetcher creates a Fetcher service.
-func NewFetcher(cfg Config, twitterClient *twitter.Client, insta *goinsta.Instagram) *Fetcher {
+func NewFetcher(cfg Config) *Fetcher {
+	twitter, err := NewTwitter(cfg.Twitter)
+	if err != nil {
+		slog.With("error", err).Error("failed to create twitter feeder")
+	}
+
+	instagram, err := NewInstagram(cfg.Instagram, cfg.ProxyURL)
+	if err != nil {
+		slog.With("error", err).Error("failed to create instagram feeder")
+	}
+
 	return &Fetcher{
 		cfg:        cfg,
 		blogger:    NewBlogger(),
-		twitter:    NewTwitter(cfg.Count, twitterClient),
-		instagram:  NewInstagram(cfg.ProxyURL, insta),
+		twitter:    twitter,
+		instagram:  instagram,
 		soundCloud: NewSoundCloud(),
 		swarm:      NewSwarm(),
 		deviantArt: NewDeviantArt(),

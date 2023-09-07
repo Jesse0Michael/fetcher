@@ -1,6 +1,12 @@
 .PHONY: build
 COVERAGEDIR = .coverage
 
+# Source a local .env
+ifneq (,$(wildcard ./.env))
+    include .env
+    export
+endif
+
 gen:
 	go generate ./...
 

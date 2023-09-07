@@ -5,6 +5,7 @@ import (
 	"log/slog"
 	"os"
 	"os/signal"
+	"strings"
 	"syscall"
 
 	"github.com/jesse0michael/fetcher/internal/server"
@@ -19,7 +20,7 @@ type Config struct {
 }
 
 func main() {
-	slog.SetDefault(slog.New(slog.NewJSONHandler(os.Stderr, &slog.HandlerOptions{Level: slog.LevelInfo})))
+	slog.SetDefault(slog.New(slog.NewJSONHandler(os.Stderr, &slog.HandlerOptions{Level: LogLevel()})))
 
 	// Setup context that will cancel on signalled termination
 	ctx, cancel := context.WithCancel(context.Background())
@@ -51,4 +52,17 @@ func main() {
 	<-ctx.Done()
 	srvr.Close()
 	slog.Info("exiting")
+}
+
+func LogLevel() slog.Leveler {
+	switch strings.ToUpper(os.Getenv("LOG_LEVEL")) {
+	case "DEBUG":
+		return slog.LevelDebug
+	case "WARN":
+		return slog.LevelWarn
+	case "ERROR":
+		return slog.LevelError
+	default:
+		return slog.LevelInfo
+	}
 }

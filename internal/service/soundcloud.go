@@ -4,30 +4,84 @@ import (
 	"context"
 	"fmt"
 	"io"
+	"log/slog"
 	"net/http"
 	"net/url"
+	"strconv"
 	"time"
 
 	"github.com/tidwall/gjson"
 )
 
+type SoundCloudConfig struct {
+	Count        int    `envconfig:"SOUND_CLOUD_COUNT" default:"20"`
+	ClientID     string `envconfig:"SOUND_CLOUD_CLIENT_ID"`
+	ClientSecret string `envconfig:"SOUND_CLOUD_CLIENT_SECRET"`
+}
+
 type SoundCloud struct {
+	cfg       SoundCloudConfig
+	authToken string
 }
 
-func NewSoundCloud() *SoundCloud {
-	return &SoundCloud{}
+func NewSoundCloud(cfg SoundCloudConfig) *SoundCloud {
+	return &SoundCloud{cfg: cfg}
 }
 
-func (s *SoundCloud) Feed(_ context.Context, id string) ([]FeedItem, error) {
-	req, err := http.NewRequestWithContext(context.Background(), http.MethodGet,
-		fmt.Sprintf("https://api.soundcloud.com/users/%s/favorites", id), nil)
+func (s *SoundCloud) auth(ctx context.Context) (string, error) {
+	if s.authToken != "" {
+		return s.authToken, nil
+	}
+
+	auth, err := s.authenticate(ctx)
+	if err != nil {
+		return "", err
+	}
+	s.authToken = auth
+	return auth, nil
+}
+
+func (s *SoundCloud) authenticate(ctx context.Context) (string, error) {
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost,
+		"https://api.soundcloud.com/oauth2/token", nil)
+	if err != nil {
+		return "", err
+	}
+	q := url.Values{}
+	q.Add("client_id", s.cfg.ClientID)
+	q.Add("client_secret", s.cfg.ClientSecret)
+	q.Add("grant_type", "client_credentials")
+	req.URL.RawQuery = q.Encode()
+
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return "", err
+	}
+	defer resp.Body.Close()
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return "", err
+	}
+	slog.With("feeder", "soundcloud", "body", string(body), "status", resp.StatusCode).
+		Debug("soundcloud authentication response")
+
+	return gjson.GetBytes(body, "access_token").String(), nil
+}
+
+func (s *SoundCloud) Feed(ctx context.Context, id string) ([]FeedItem, error) {
+	auth, err := s.auth(ctx)
+	if err != nil {
+		return nil, err
+	}
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet,
+		fmt.Sprintf("https://api.soundcloud.com/users/%s/likes/tracks", id), nil)
 	if err != nil {
 		return nil, err
 	}
 	q := url.Values{}
-	q.Add("client_id", "f330c0bb90f1c89a15e78ece83e21856")
-	q.Add("limit", "20")
+	q.Add("limit", strconv.Itoa(s.cfg.Count))
 	req.URL.RawQuery = q.Encode()
+	req.Header.Set("Authorization", fmt.Sprintf("OAuth %s", auth))
 
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
@@ -38,6 +92,8 @@ func (s *SoundCloud) Feed(_ context.Context, id string) ([]FeedItem, error) {
 	if err != nil {
 		return nil, err
 	}
+	slog.With("feeder", "soundcloud", "body", string(body), "status", resp.StatusCode).
+		Debug("soundcloud response")
 
 	items := []FeedItem{}
 	for _, sound := range gjson.ParseBytes(body).Array() {

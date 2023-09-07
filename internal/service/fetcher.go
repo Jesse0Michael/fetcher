@@ -8,10 +8,11 @@ import (
 )
 
 type Config struct {
-	Twitter   TwitterConfig
-	Instagram InstagramConfig
-	Count     int    `envconfig:"FETCHER_COUNT" default:"50"`
-	ProxyURL  string `envconfig:"FETCHER_PROXY_URL" default:"https://fetcher-ho4joes5va-uw.a.run.app/proxy"`
+	Twitter    TwitterConfig
+	Instagram  InstagramConfig
+	SoundCloud SoundCloudConfig
+	Count      int    `envconfig:"FETCHER_COUNT" default:"50"`
+	ProxyURL   string `envconfig:"FETCHER_PROXY_URL" default:"https://fetcher-ho4joes5va-uw.a.run.app/proxy"`
 }
 
 type Feeder interface {
@@ -56,7 +57,7 @@ func NewFetcher(cfg Config) *Fetcher {
 		blogger:    NewBlogger(),
 		twitter:    twitter,
 		instagram:  instagram,
-		soundCloud: NewSoundCloud(),
+		soundCloud: NewSoundCloud(cfg.SoundCloud),
 		swarm:      NewSwarm(),
 		deviantArt: NewDeviantArt(),
 	}

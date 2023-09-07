@@ -14,7 +14,7 @@ func NewDeviantArt() *DeviantArt {
 	return &DeviantArt{}
 }
 
-func (d *DeviantArt) Feed(ctx context.Context, id string) ([]FeedItem, error) {
+func (d *DeviantArt) Feed(_ context.Context, id string) ([]FeedItem, error) {
 	fp := gofeed.NewParser()
 	feed, err := fp.ParseURL(fmt.Sprintf("https://backend.deviantart.com/rss.xml?q=gallery:%s", id))
 	if err != nil {

@@ -17,7 +17,7 @@ func NewSwarm() *Swarm {
 	return &Swarm{}
 }
 
-func (s *Swarm) Feed(ctx context.Context, id string) ([]FeedItem, error) {
+func (s *Swarm) Feed(_ context.Context, _ string) ([]FeedItem, error) {
 	req, err := http.NewRequestWithContext(context.Background(), http.MethodGet,
 		"https://api.foursquare.com/v2/users/self/checkins", nil)
 	if err != nil {

@@ -10,7 +10,6 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/jesse0michael/fetcher/internal/service"
-	"github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -20,7 +19,7 @@ type MockFetcher struct {
 	err      error
 }
 
-func (m *MockFetcher) Feeds(ctx context.Context, req service.FetcherRequest) (*service.FeedItems, error) {
+func (m *MockFetcher) Feeds(_ context.Context, req service.FetcherRequest) (*service.FeedItems, error) {
 	if req != m.expected {
 		return nil, fmt.Errorf("unexpected req")
 	}
@@ -67,7 +66,7 @@ func TestServer_feed(t *testing.T) {
 	for i := range tests {
 		tt := tests[i]
 		t.Run(tt.name, func(t *testing.T) {
-			s := New(Config{}, logrus.NewEntry(logrus.New()), tt.fetcher)
+			s := New(Config{}, tt.fetcher)
 
 			resp := httptest.NewRecorder()
 			router := mux.NewRouter()

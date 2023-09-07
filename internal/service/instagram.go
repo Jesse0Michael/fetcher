@@ -20,7 +20,7 @@ func NewInstagram(proxyURL string, client *goinsta.Instagram) *Instagram {
 	}
 }
 
-func (i *Instagram) Feed(ctx context.Context, id string) ([]FeedItem, error) {
+func (i *Instagram) Feed(_ context.Context, id string) ([]FeedItem, error) {
 	res, err := i.client.Profiles.ByID(id)
 	if err != nil {
 		return nil, err

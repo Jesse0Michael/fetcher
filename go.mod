@@ -1,6 +1,6 @@
 module github.com/jesse0michael/fetcher
 
-go 1.20
+go 1.21
 
 require (
 	github.com/Davincible/goinsta v0.0.0-20220425072628-96aad7267204
@@ -11,7 +11,6 @@ require (
 	github.com/joho/godotenv v1.5.1
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/mmcdole/gofeed v1.2.1
-	github.com/sirupsen/logrus v1.9.3
 	github.com/stretchr/testify v1.8.4
 	github.com/tidwall/gjson v1.15.0
 	golang.org/x/oauth2 v0.10.0

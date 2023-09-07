@@ -18,7 +18,7 @@ func NewSoundCloud() *SoundCloud {
 	return &SoundCloud{}
 }
 
-func (s *SoundCloud) Feed(ctx context.Context, id string) ([]FeedItem, error) {
+func (s *SoundCloud) Feed(_ context.Context, id string) ([]FeedItem, error) {
 	req, err := http.NewRequestWithContext(context.Background(), http.MethodGet,
 		fmt.Sprintf("https://api.soundcloud.com/users/%s/favorites", id), nil)
 	if err != nil {

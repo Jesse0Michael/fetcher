@@ -6,18 +6,17 @@ import (
 	"testing"
 
 	"github.com/gorilla/mux"
-	"github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestNew(t *testing.T) {
-	server := New(Config{}, logrus.NewEntry(logrus.New()), nil)
+	server := New(Config{}, nil)
 
 	assert.NotNil(t, server.router, "router should not be nil")
 }
 
 func TestServer_route(t *testing.T) {
-	server := New(Config{}, logrus.NewEntry(logrus.New()), nil)
+	server := New(Config{}, nil)
 
 	expected := []string{"feed", "proxy"}
 	received := []string{}

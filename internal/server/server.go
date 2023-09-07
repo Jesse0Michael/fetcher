@@ -9,7 +9,6 @@ import (
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	"github.com/jesse0michael/fetcher/internal/service"
-	"github.com/sirupsen/logrus"
 )
 
 type Fetcher interface {
@@ -25,11 +24,10 @@ type Server struct {
 	*http.Server
 	router  *mux.Router
 	client  *http.Client
-	log     *logrus.Entry
 	fetcher Fetcher
 }
 
-func New(cfg Config, log *logrus.Entry, fetcher Fetcher) *Server {
+func New(cfg Config, fetcher Fetcher) *Server {
 	router := mux.NewRouter()
 	router.StrictSlash(true)
 	router.NotFoundHandler = http.HandlerFunc(notFound)
@@ -44,7 +42,6 @@ func New(cfg Config, log *logrus.Entry, fetcher Fetcher) *Server {
 		},
 		router:  router,
 		client:  http.DefaultClient,
-		log:     log,
 		fetcher: fetcher,
 	}
 
@@ -58,13 +55,13 @@ func (s *Server) route() {
 	s.router.HandleFunc("/proxy", s.proxy()).Methods("GET").Name("proxy")
 }
 
-func notFound(w http.ResponseWriter, r *http.Request) {
+func notFound(w http.ResponseWriter, _ *http.Request) {
 	w.WriteHeader(http.StatusNotFound)
 	w.Header().Set("Content-Type", "application/json")
 	_, _ = w.Write([]byte(`{"error":"page not found"}`))
 }
 
-func notAllowed(w http.ResponseWriter, r *http.Request) {
+func notAllowed(w http.ResponseWriter, _ *http.Request) {
 	w.WriteHeader(http.StatusMethodNotAllowed)
 	w.Header().Set("Content-Type", "application/json")
 	_, _ = w.Write([]byte(`{"error":"method not allowed"}`))

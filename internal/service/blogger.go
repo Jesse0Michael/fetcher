@@ -18,7 +18,7 @@ func NewBlogger() *Blogger {
 	return &Blogger{}
 }
 
-func (b *Blogger) Feed(ctx context.Context, id string) ([]FeedItem, error) {
+func (b *Blogger) Feed(_ context.Context, id string) ([]FeedItem, error) {
 	req, err := http.NewRequestWithContext(context.Background(), http.MethodGet,
 		fmt.Sprintf("https://www.googleapis.com/blogger/v2/blogs/%s/posts", id), nil)
 	if err != nil {

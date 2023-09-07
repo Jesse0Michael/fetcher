@@ -7,7 +7,6 @@ import (
 	"testing"
 
 	"github.com/gorilla/mux"
-	"github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -45,7 +44,7 @@ func TestServer_proxy(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			url := tt.server.URL
 			req := httptest.NewRequest(http.MethodGet, fmt.Sprintf("/proxy?url=%s/test", url), nil)
-			s := New(Config{}, logrus.NewEntry(logrus.New()), nil)
+			s := New(Config{}, nil)
 
 			resp := httptest.NewRecorder()
 			router := mux.NewRouter()

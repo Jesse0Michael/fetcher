@@ -23,7 +23,7 @@ func NewTwitter(count int, client *twitter.Client) *Twitter {
 	}
 }
 
-func (t *Twitter) Feed(ctx context.Context, id string) ([]FeedItem, error) {
+func (t *Twitter) Feed(_ context.Context, id string) ([]FeedItem, error) {
 	excludeReplies := false
 	includeRetweets := true
 	trimUser := false

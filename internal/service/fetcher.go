@@ -2,13 +2,12 @@ package service
 
 import (
 	"context"
-
+	"log/slog"
 	"sort"
 	"sync"
 
 	"github.com/Davincible/goinsta"
 	"github.com/dghubble/go-twitter/twitter"
-	"github.com/sirupsen/logrus"
 )
 
 type Feeder interface {
@@ -31,7 +30,6 @@ type Config struct {
 
 // Fetcher can retrieve feed items from various sources and compound the results into one feed.
 type Fetcher struct {
-	log        *logrus.Entry
 	cfg        Config
 	lock       sync.Mutex
 	blogger    Feeder
@@ -43,9 +41,8 @@ type Fetcher struct {
 }
 
 // NewFetcher creates a Fetcher service.
-func NewFetcher(log *logrus.Entry, cfg Config, twitterClient *twitter.Client, insta *goinsta.Instagram) *Fetcher {
+func NewFetcher(cfg Config, twitterClient *twitter.Client, insta *goinsta.Instagram) *Fetcher {
 	return &Fetcher{
-		log:        log,
 		cfg:        cfg,
 		blogger:    NewBlogger(),
 		twitter:    NewTwitter(cfg.Count, twitterClient),
@@ -66,7 +63,7 @@ func (f *Fetcher) Feeds(ctx context.Context, req FetcherRequest) (*FeedItems, er
 			defer wg.Done()
 			twitterItems, err := feeder.Feed(ctx, id)
 			if err != nil {
-				f.log.WithError(err).Error("error retrieving feed items")
+				slog.With("error", err).Error("error retrieving feed items")
 			}
 
 			f.lock.Lock()

@@ -1,3 +1,9 @@
+## [1.11.1](https://github.com/Jesse0Michael/fetcher/compare/v1.11.0...v1.11.1) (2023-09-12)
+
+### Chores
+
+- update twitter and insta package ([9ef36d2](https://github.com/Jesse0Michael/fetcher/commit/9ef36d2c60dd9e49aa466e4678329513e6fbc8a9))
+
 # [1.11.0](https://github.com/Jesse0Michael/fetcher/compare/v1.10.23...v1.11.0) (2023-09-07)
 
 ### Bug Fixes

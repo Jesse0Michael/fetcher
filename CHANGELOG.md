@@ -1,3 +1,9 @@
+## [1.12.1](https://github.com/Jesse0Michael/fetcher/compare/v1.12.0...v1.12.1) (2023-09-12)
+
+### Bug Fixes
+
+- disable Instagram feed ([8dcf0d2](https://github.com/Jesse0Michael/fetcher/commit/8dcf0d2e873f3c586104c229b8c4970f736a6c2d))
+
 # [1.12.0](https://github.com/Jesse0Michael/fetcher/compare/v1.11.1...v1.12.0) (2023-09-12)
 
 ### Features

@@ -24,3 +24,4 @@ API Docs: https://jesse0michael.github.io/fetcher/index.html
 * Swarm
 * Soundcloud
 * Deviantart
+* Untappd

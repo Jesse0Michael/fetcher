@@ -10,6 +10,7 @@ require (
 	github.com/jesse0michael/go-request v1.4.0
 	github.com/joho/godotenv v1.5.1
 	github.com/kelseyhightower/envconfig v1.4.0
+	github.com/mdlayher/untappd v0.0.0-20200131153647-e8eec0d2d578
 	github.com/mmcdole/gofeed v1.2.1
 	github.com/stretchr/testify v1.8.4
 	github.com/tidwall/gjson v1.15.0

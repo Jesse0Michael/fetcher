@@ -11,6 +11,7 @@ type Config struct {
 	Twitter    TwitterConfig
 	Instagram  InstagramConfig
 	SoundCloud SoundCloudConfig
+	Untappd    UntappdConfig
 	Count      int    `envconfig:"FETCHER_COUNT" default:"50"`
 	ProxyURL   string `envconfig:"FETCHER_PROXY_URL" default:"https://fetcher-ho4joes5va-uw.a.run.app/proxy"`
 }
@@ -26,6 +27,7 @@ type FetcherRequest struct {
 	SoundCloudID string `query:"soundcloudID"`
 	SwarmID      string `query:"swarmID"`
 	DeviantArtID string `query:"deviantartID"`
+	UntappdID    string `query:"untappdID"`
 }
 
 // Fetcher can retrieve feed items from various sources and compound the results into one feed.
@@ -38,6 +40,7 @@ type Fetcher struct {
 	soundCloud Feeder
 	swarm      Feeder
 	deviantArt Feeder
+	untappd    Feeder
 }
 
 // NewFetcher creates a Fetcher service.
@@ -52,6 +55,11 @@ func NewFetcher(cfg Config) *Fetcher {
 		slog.With("error", err).Error("failed to create instagram feeder")
 	}
 
+	untappd, err := NewUntappd(cfg.Untappd)
+	if err != nil {
+		slog.With("error", err).Error("failed to create untappd feeder")
+	}
+
 	return &Fetcher{
 		cfg:        cfg,
 		blogger:    NewBlogger(),
@@ -60,6 +68,7 @@ func NewFetcher(cfg Config) *Fetcher {
 		soundCloud: NewSoundCloud(cfg.SoundCloud),
 		swarm:      NewSwarm(),
 		deviantArt: NewDeviantArt(),
+		untappd:    untappd,
 	}
 }
 
@@ -99,6 +108,9 @@ func (f *Fetcher) Feeds(ctx context.Context, req FetcherRequest) (*FeedItems, er
 	}
 	if req.DeviantArtID != "" {
 		feed(ctx, req.DeviantArtID, f.deviantArt, &wg)
+	}
+	if req.UntappdID != "" {
+		feed(ctx, req.UntappdID, f.untappd, &wg)
 	}
 
 	wg.Wait()

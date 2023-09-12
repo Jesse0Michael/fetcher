@@ -50,6 +50,12 @@ paths:
           required: false
           schema:
             type: string
+        - description: untappdID
+          in: query
+          name: untappdID
+          required: false
+          schema:
+            type: string
       responses:
         "200":
           content:
@@ -115,6 +121,7 @@ components:
             - soundcloud
             - swarm
             - deviantart
+            - untappd
           type: string
         url:
           description: Permalink to the feed item on the platform

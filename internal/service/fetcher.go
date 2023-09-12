@@ -50,10 +50,10 @@ func NewFetcher(cfg Config) *Fetcher {
 		slog.With("error", err).Error("failed to create twitter feeder")
 	}
 
-	instagram, err := NewInstagram(cfg.Instagram, cfg.ProxyURL)
-	if err != nil {
-		slog.With("error", err).Error("failed to create instagram feeder")
-	}
+	// instagram, err := NewInstagram(cfg.Instagram, cfg.ProxyURL)
+	// if err != nil {
+	// 	slog.With("error", err).Error("failed to create instagram feeder")
+	// }
 
 	untappd, err := NewUntappd(cfg.Untappd)
 	if err != nil {
@@ -64,7 +64,7 @@ func NewFetcher(cfg Config) *Fetcher {
 		cfg:        cfg,
 		blogger:    NewBlogger(),
 		twitter:    twitter,
-		instagram:  instagram,
+		instagram:  nil,
 		soundCloud: NewSoundCloud(cfg.SoundCloud),
 		swarm:      NewSwarm(),
 		deviantArt: NewDeviantArt(),
@@ -97,7 +97,7 @@ func (f *Fetcher) Feeds(ctx context.Context, req FetcherRequest) (*FeedItems, er
 	if req.TwitterID != "" {
 		feed(ctx, req.TwitterID, f.twitter, &wg)
 	}
-	if req.InstagramID != "" {
+	if req.InstagramID != "" && f.instagram != nil {
 		feed(ctx, req.InstagramID, f.instagram, &wg)
 	}
 	if req.SoundCloudID != "" {

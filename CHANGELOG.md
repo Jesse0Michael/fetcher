@@ -1,3 +1,13 @@
+# [1.12.0](https://github.com/Jesse0Michael/fetcher/compare/v1.11.1...v1.12.0) (2023-09-12)
+
+### Features
+
+- add Untappd feed support ([20016f2](https://github.com/Jesse0Michael/fetcher/commit/20016f2431a9821ee24ab805036a2bda2ba7d27f))
+
+### Other
+
+- Merge branch 'main' of ssh://github.com/Jesse0Michael/fetcher ([e683c50](https://github.com/Jesse0Michael/fetcher/commit/e683c505f0bbfb12e3669b0b35bafce2e1b3c6b6))
+
 ## [1.11.1](https://github.com/Jesse0Michael/fetcher/compare/v1.11.0...v1.11.1) (2023-09-12)
 
 ### Chores

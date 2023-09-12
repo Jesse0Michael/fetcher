@@ -3,75 +3,78 @@ package service
 import (
 	"context"
 	"fmt"
+	"net/http"
 	"regexp"
-	"strconv"
 	"strings"
 	"time"
 
-	"github.com/dghubble/go-twitter/twitter"
-	"golang.org/x/oauth2"
-	"golang.org/x/oauth2/clientcredentials"
+	"github.com/g8rswimmer/go-twitter/v2"
 )
 
+type authorize struct {
+	Token string
+}
+
+func (a authorize) Add(req *http.Request) {
+	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", a.Token))
+}
+
 type TwitterConfig struct {
-	Count        int    `envconfig:"TWITTER_COUNT" default:"20"`
-	ClientID     string `envconfig:"TWITTER_CLIENT_ID"`
-	ClientSecret string `envconfig:"TWITTER_CLIENT_SECRET"`
-	TokenURL     string `envconfig:"TWITTER_TOKEN_URL" default:"https://api.twitter.com/oauth2/token"`
+	Count          int    `envconfig:"TWITTER_COUNT" default:"20"`
+	APIKey         string `envconfig:"TWITTER_API_KEY"`
+	APIKeySecret   string `envconfig:"TWITTER_API_KEY_SECRET"`
+	APIBearerToken string `envconfig:"TWITTER_API_BEARER_TOKEN"`
 }
 
 type Twitter struct {
-	count  int
+	cfg    TwitterConfig
 	client *twitter.Client
 }
 
 func NewTwitter(cfg TwitterConfig) (*Twitter, error) {
-	// oauth2 configures a client that uses app credentials to keep a fresh token
-	config := &clientcredentials.Config{
-		ClientID:     cfg.ClientID,
-		ClientSecret: cfg.ClientSecret,
-		TokenURL:     cfg.TokenURL,
+	client := &twitter.Client{
+		Authorizer: authorize{
+			Token: cfg.APIBearerToken,
+		},
+		Client: http.DefaultClient,
+		Host:   "https://api.twitter.com",
 	}
-	// http.Client will automatically authorize Requests
-	httpClient := config.Client(oauth2.NoContext)
-	client := twitter.NewClient(httpClient)
 	return &Twitter{
-		count:  cfg.Count,
+		cfg:    cfg,
 		client: client,
 	}, nil
 }
 
-func (t *Twitter) Feed(_ context.Context, id string) ([]FeedItem, error) {
-	excludeReplies := false
-	includeRetweets := true
-	trimUser := false
-	user, _ := strconv.Atoi(id)
-	timeline := &twitter.UserTimelineParams{
-		UserID:          int64(user),
-		Count:           t.count,
-		ExcludeReplies:  &excludeReplies,
-		IncludeRetweets: &includeRetweets,
-		TrimUser:        &trimUser,
-		TweetMode:       "extended",
+func (t *Twitter) Feed(ctx context.Context, id string) ([]FeedItem, error) {
+	// excludeReplies := false
+	// includeRetweets := true
+	// trimUser := false
+	opts := twitter.UserTweetTimelineOpts{
+		MaxResults: t.cfg.Count,
+		// Count:           t.count,
+		// ExcludeReplies:  &excludeReplies,
+		// IncludeRetweets: &includeRetweets,
+		// TrimUser:        &trimUser,
+		// TweetMode:       "extended",
 	}
 
-	tweets, _, err := t.client.Timelines.UserTimeline(timeline) //nolint:bodyclose // twitter package
+	tweets, err := t.client.UserTweetTimeline(ctx, id, opts)
 	if err != nil {
 		return nil, err
 	}
 
 	items := []FeedItem{}
-	for _, tweet := range tweets {
+	for _, tweet := range tweets.Raw.Tweets {
 		var content string
-		if tweet.RetweetedStatus != nil {
-			content = getTwitterContent(*tweet.RetweetedStatus)
-		} else {
-			content = getTwitterContent(tweet)
-		}
-		tweetURL := fmt.Sprintf("https://twitter.com/%s/status/%s", tweet.User.ScreenName, tweet.IDStr)
+		// if tweet.RetweetedStatus != nil {
+		// 	content = getTwitterContent(*tweet.RetweetedStatus)
+		// } else {
+		content = getTwitterContent(tweet)
+		// }
+		tweetURL := fmt.Sprintf("https://twitter.com/%s/status/%s", tweet.AuthorID, tweet.ID)
 		ts, _ := time.Parse(time.RubyDate, tweet.CreatedAt)
 		item := FeedItem{
-			ID:      tweet.IDStr,
+			ID:      tweet.ID,
 			TS:      ts.Unix(),
 			Source:  "twitter",
 			URL:     tweetURL,
@@ -83,17 +86,17 @@ func (t *Twitter) Feed(_ context.Context, id string) ([]FeedItem, error) {
 	return items, nil
 }
 
-func getTwitterContent(tweet twitter.Tweet) string {
-	tweetURL := fmt.Sprintf("https://twitter.com/%s/status/%s", tweet.User.ScreenName, tweet.IDStr)
-	author := fmt.Sprintf("<a href='%s' style='text-decoration: none' target='_top'><img class='twitter-avatar' src='%s'> %s: </a>", tweetURL, tweet.User.ProfileImageURL, tweet.User.ScreenName) //nolint:lll
-	text := replaceTextWithHyperlink(tweet.FullText)
+func getTwitterContent(tweet *twitter.TweetObj) string {
+	tweetURL := fmt.Sprintf("https://twitter.com/%s/status/%s", tweet.AuthorID, tweet.ID)
+	author := fmt.Sprintf("<a href='%s' style='text-decoration: none' target='_top'><img class='twitter-avatar' src='%'> %s: </a>", tweetURL, tweet.Entities.URLs, tweet.AuthorID) //nolint:lll
+	text := replaceTextWithHyperlink(tweet.Text)
 	media := ""
-	if len(tweet.Entities.Media) > 0 {
+	if len(tweet.Entities.URLs) > 0 {
 		media = "<br/><div class='twitter-media'>"
-		for _, m := range tweet.Entities.Media {
-			text = strings.ReplaceAll(text, m.MediaURLHttps, "")
+		for _, m := range tweet.Entities.URLs {
+			text = strings.ReplaceAll(text, m.URL, "")
 			media += fmt.Sprintf("<a href='%s'  target='_top'><img class='content-media' src = '%s'.png'></a>",
-				m.URLEntity.URL, m.MediaURLHttps)
+				m.URL, m.URL)
 		}
 		media += "</div>"
 	}

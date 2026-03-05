@@ -1,14 +1,8 @@
-FROM golang:1.21-alpine AS build
-
-# Install git
-# Git is required for fetching the dependencies.
-RUN apk update && apk add --no-cache git 
+FROM golang:1.26-alpine AS build
 
 # Copy project files
 WORKDIR /go/src
-COPY go.mod .
-COPY go.sum .
-RUN mkdir /dir
+COPY go.mod go.sum ./
 
 # Fetch dependencies
 RUN go mod download

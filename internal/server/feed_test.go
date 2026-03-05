@@ -63,8 +63,7 @@ func TestServer_feed(t *testing.T) {
 			wantBody: `{"error":"test-error"}`,
 		},
 	}
-	for i := range tests {
-		tt := tests[i]
+	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			s := New(Config{}, tt.fetcher)
 

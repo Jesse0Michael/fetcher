@@ -1,9 +1,10 @@
 package service
 
 import (
+	"cmp"
 	"context"
 	"log/slog"
-	"sort"
+	"slices"
 	"sync"
 )
 
@@ -115,8 +116,8 @@ func (f *Fetcher) Feeds(ctx context.Context, req FetcherRequest) (*FeedItems, er
 
 	wg.Wait()
 
-	sort.SliceStable(items, func(i, j int) bool {
-		return items[i].TS > items[j].TS
+	slices.SortStableFunc(items, func(a, b FeedItem) int {
+		return cmp.Compare(b.TS, a.TS)
 	})
 	return &FeedItems{Items: items}, nil
 }

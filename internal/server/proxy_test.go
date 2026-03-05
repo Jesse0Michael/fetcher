@@ -39,8 +39,7 @@ func TestServer_proxy(t *testing.T) {
 			wantBody: `connect: connection refused`,
 		},
 	}
-	for i := range tests {
-		tt := tests[i]
+	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			url := tt.server.URL
 			req := httptest.NewRequest(http.MethodGet, fmt.Sprintf("/proxy?url=%s/test", url), nil)

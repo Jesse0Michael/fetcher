@@ -1,3 +1,9 @@
+## [1.13.1](https://github.com/Jesse0Michael/fetcher/compare/v1.13.0...v1.13.1) (2026-03-06)
+
+### Chores
+
+- log feed type ([5c458d6](https://github.com/Jesse0Michael/fetcher/commit/5c458d677c0703c4fef8ae2b49760b45f02269e7))
+
 # [1.13.0](https://github.com/Jesse0Michael/fetcher/compare/v1.12.1...v1.13.0) (2026-03-06)
 
 ### Features

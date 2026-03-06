@@ -3,6 +3,7 @@ package service
 import (
 	"cmp"
 	"context"
+	"fmt"
 	"log/slog"
 	"slices"
 	"sync"
@@ -87,7 +88,7 @@ func (f *Fetcher) Feeds(ctx context.Context, req FetcherRequest) (*FeedItems, er
 			defer wg.Done()
 			feedItems, err := feeder.Feed(ctx, id)
 			if err != nil {
-				slog.With("error", err).Error("error retrieving feed items")
+				slog.With("error", err, "feed", fmt.Sprintf("%T", feeder)).Error("error retrieving feed items")
 			}
 
 			f.lock.Lock()

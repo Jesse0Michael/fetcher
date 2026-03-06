@@ -1,3 +1,9 @@
+## [1.13.2](https://github.com/Jesse0Michael/fetcher/compare/v1.13.1...v1.13.2) (2026-03-06)
+
+### Bug Fixes
+
+- upgrade deps ([839ee51](https://github.com/Jesse0Michael/fetcher/commit/839ee5191e8428eb37a20177939ac9d7444b348c))
+
 ## [1.13.1](https://github.com/Jesse0Michael/fetcher/compare/v1.13.0...v1.13.1) (2026-03-06)
 
 ### Chores

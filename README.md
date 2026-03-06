@@ -25,3 +25,4 @@ API Docs: https://jesse0michael.github.io/fetcher/index.html
 * Soundcloud
 * Deviantart
 * Untappd
+* Bluesky

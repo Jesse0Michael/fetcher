@@ -85,6 +85,8 @@ export namespace FeedItem {
         Blogger = <any> 'blogger',
         Soundcloud = <any> 'soundcloud',
         Swarm = <any> 'swarm',
-        Deviantart = <any> 'deviantart'
+        Deviantart = <any> 'deviantart',
+        Untappd = <any> 'untappd',
+        Bluesky = <any> 'bluesky'
     }
 }

@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:docs.bsky.app)",
+      "WebSearch",
+      "WebFetch(domain:chrismcleod.dev)"
+    ]
+  }
+}

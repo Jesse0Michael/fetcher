@@ -95,8 +95,10 @@ export class DefaultApi {
      * @param soundcloudID soundcloudID
      * @param swarmID swarmID
      * @param deviantartID deviantartID
+     * @param untappdID untappdID
+     * @param blueskyID blueskyID
      */
-    public async getFeed (twitterID?: number, instagramID?: number, bloggerID?: string, soundcloudID?: string, swarmID?: string, deviantartID?: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: FeedItems;  }> {
+    public async getFeed (twitterID?: number, instagramID?: number, bloggerID?: string, soundcloudID?: string, swarmID?: string, deviantartID?: string, untappdID?: string, blueskyID?: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: FeedItems;  }> {
         const localVarPath = this.basePath + '/feed';
         let localVarQueryParameters: any = {};
         let localVarHeaderParams: any = (<any>Object).assign({}, this._defaultHeaders);
@@ -131,6 +133,14 @@ export class DefaultApi {
 
         if (deviantartID !== undefined) {
             localVarQueryParameters['deviantartID'] = ObjectSerializer.serialize(deviantartID, "string");
+        }
+
+        if (untappdID !== undefined) {
+            localVarQueryParameters['untappdID'] = ObjectSerializer.serialize(untappdID, "string");
+        }
+
+        if (blueskyID !== undefined) {
+            localVarQueryParameters['blueskyID'] = ObjectSerializer.serialize(blueskyID, "string");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);

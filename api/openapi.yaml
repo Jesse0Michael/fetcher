@@ -56,6 +56,12 @@ paths:
           required: false
           schema:
             type: string
+        - description: blueskyID
+          in: query
+          name: blueskyID
+          required: false
+          schema:
+            type: string
       responses:
         "200":
           content:
@@ -122,6 +128,7 @@ components:
             - swarm
             - deviantart
             - untappd
+            - bluesky
           type: string
         url:
           description: Permalink to the feed item on the platform

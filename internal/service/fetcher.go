@@ -55,10 +55,10 @@ func NewFetcher(cfg Config) *Fetcher {
 		slog.With("error", err).Error("failed to create twitter feeder")
 	}
 
-	// instagram, err := NewInstagram(cfg.Instagram, cfg.ProxyURL)
-	// if err != nil {
-	// 	slog.With("error", err).Error("failed to create instagram feeder")
-	// }
+	instagram, err := NewInstagram(cfg.Instagram, cfg.ProxyURL)
+	if err != nil {
+		slog.With("error", err).Error("failed to create instagram feeder")
+	}
 
 	untappd, err := NewUntappd(cfg.Untappd)
 	if err != nil {
@@ -69,7 +69,7 @@ func NewFetcher(cfg Config) *Fetcher {
 		cfg:        cfg,
 		blogger:    NewBlogger(),
 		twitter:    twitter,
-		instagram:  nil,
+		instagram:  instagram,
 		soundCloud: NewSoundCloud(cfg.SoundCloud),
 		swarm:      NewSwarm(),
 		deviantArt: NewDeviantArt(),
@@ -97,28 +97,28 @@ func (f *Fetcher) Feeds(ctx context.Context, req FetcherRequest) (*FeedItems, er
 		}()
 	}
 
-	if req.BloggerID != "" {
+	if req.BloggerID != "" && f.blogger != nil {
 		feed(ctx, req.BloggerID, f.blogger, &wg)
 	}
-	if req.TwitterID != "" {
+	if req.TwitterID != "" && f.twitter != nil {
 		feed(ctx, req.TwitterID, f.twitter, &wg)
 	}
 	if req.InstagramID != "" && f.instagram != nil {
 		feed(ctx, req.InstagramID, f.instagram, &wg)
 	}
-	if req.SoundCloudID != "" {
+	if req.SoundCloudID != "" && f.soundCloud != nil {
 		feed(ctx, req.SoundCloudID, f.soundCloud, &wg)
 	}
-	if req.SwarmID != "" {
+	if req.SwarmID != "" && f.swarm != nil {
 		feed(ctx, req.SwarmID, f.swarm, &wg)
 	}
-	if req.DeviantArtID != "" {
+	if req.DeviantArtID != "" && f.deviantArt != nil {
 		feed(ctx, req.DeviantArtID, f.deviantArt, &wg)
 	}
-	if req.UntappdID != "" {
+	if req.UntappdID != "" && f.untappd != nil {
 		feed(ctx, req.UntappdID, f.untappd, &wg)
 	}
-	if req.BlueskyID != "" {
+	if req.BlueskyID != "" && f.bluesky != nil {
 		feed(ctx, req.BlueskyID, f.bluesky, &wg)
 	}
 

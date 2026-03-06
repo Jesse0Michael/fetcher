@@ -1,3 +1,10 @@
+# [1.13.0](https://github.com/Jesse0Michael/fetcher/compare/v1.12.1...v1.13.0) (2026-03-06)
+
+### Features
+
+- add bluesky support ([ed307e0](https://github.com/Jesse0Michael/fetcher/commit/ed307e08749b7535718028a75dcf24503a85e068))
+- modernize go ([b92cccf](https://github.com/Jesse0Michael/fetcher/commit/b92cccfed0279c8d2c8795e315334170a530240b))
+
 ## [1.12.1](https://github.com/Jesse0Michael/fetcher/compare/v1.12.0...v1.12.1) (2023-09-12)
 
 ### Bug Fixes

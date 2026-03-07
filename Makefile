@@ -9,8 +9,13 @@ endif
 
 gen:
 	go generate ./...
-
-	docker run -v ${PWD}:/fetcher  openapitools/openapi-generator-cli generate -i /fetcher/api/openapi.yaml -g typescript-node -o /fetcher/client/ts/ --git-user-id jesse0michael --git-repo-id fetcher --additional-properties=npmName=@jesse0michael/fetcher,npmVersion=1.0.0
+	docker run -v "$(PWD):/fetcher" openapitools/openapi-generator-cli generate \
+		-i /fetcher/api/openapi.yaml \
+		-g typescript-fetch \
+		-o /fetcher/client/ts \
+		--git-user-id jesse0michael \
+		--git-repo-id fetcher \
+		--additional-properties=npmName=@jesse0michael/fetcher,supportsES6=true,withoutRuntimeChecks=true
 
 gen-docs:
 	redoc-cli bundle api/openapi.yaml -o docs/index.html --options.disableSearch --options.hideDownloadButton

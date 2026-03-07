@@ -53,21 +53,27 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          registry-url: https://npm.pkg.github.com/
+          registry-url: https://registry.npmjs.org/
           scope: "@jesse0michael"
 
-      - name: Build Client
+      - name: Regenerate Client
+        run: make gen
+
+      - name: Publish to npm
         working-directory: client/ts
         run: |
           npm install
-          npm run build
+          npm version ${REF##*/}
+          npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: Publish Client
+      - name: Publish to GitHub Packages
         working-directory: client/ts
         run: |
           npm config set //npm.pkg.github.com/:_authToken=$NODE_AUTH_TOKEN
           npm config set scope "jesse0michael"
-          npm version ${REF##*/}
+          npm config set registry https://npm.pkg.github.com/
           npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.PAT }}

@@ -1,28 +1,21 @@
 {
-    "name": "@jesse0michael/fetcher",
-    "version": "1.0.0",
-    "description": "NodeJS client for @jesse0michael/fetcher",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/jesse0michael/fetcher.git"
-    },
-    "main": "dist/api.js",
-    "types": "dist/api.d.ts",
-    "scripts": {
-        "clean": "rm -Rf node_modules/ *.js",
-        "build": "tsc",
-        "test": "npm run build && node dist/client.js"
-    },
-    "author": "OpenAPI-Generator Contributors",
-    "license": "Unlicense",
-    "dependencies": {
-        "bluebird": "^3.7.2",
-        "request": "^2.88.2"
-    },
-    "devDependencies": {
-        "@types/bluebird": "^3.5.33",
-        "@types/node": "^12",
-        "@types/request": "^2.48.8",
-        "typescript": "^4.0 || ^5.0"
-    }
+  "name": "@jesse0michael/fetcher",
+  "version": "1.2.0",
+  "description": "OpenAPI client for @jesse0michael/fetcher",
+  "author": "OpenAPI-Generator",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jesse0michael/fetcher.git"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "module": "./dist/esm/index.js",
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsc && tsc -p tsconfig.esm.json",
+    "prepare": "npm run build"
+  },
+  "devDependencies": {
+    "typescript": "^4.0 || ^5.0"
+  }
 }

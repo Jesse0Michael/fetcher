@@ -1,3 +1,9 @@
+## [1.13.3](https://github.com/Jesse0Michael/fetcher/compare/v1.13.2...v1.13.3) (2026-03-07)
+
+### Bug Fixes
+
+- non-blocking instagram initialization ([f19cd4f](https://github.com/Jesse0Michael/fetcher/commit/f19cd4f48daab95db213cc2d81faa7e668114fd8))
+
 ## [1.13.2](https://github.com/Jesse0Michael/fetcher/compare/v1.13.1...v1.13.2) (2026-03-06)
 
 ### Bug Fixes

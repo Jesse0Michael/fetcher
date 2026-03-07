@@ -7,6 +7,7 @@ import (
 	"log/slog"
 	"slices"
 	"sync"
+	"sync/atomic"
 )
 
 type Config struct {
@@ -40,7 +41,7 @@ type Fetcher struct {
 	lock       sync.Mutex
 	blogger    Feeder
 	twitter    Feeder
-	instagram  Feeder
+	instagram  atomic.Pointer[Instagram]
 	soundCloud Feeder
 	swarm      Feeder
 	deviantArt Feeder
@@ -55,27 +56,32 @@ func NewFetcher(cfg Config) *Fetcher {
 		slog.With("error", err).Error("failed to create twitter feeder")
 	}
 
-	instagram, err := NewInstagram(cfg.Instagram, cfg.ProxyURL)
-	if err != nil {
-		slog.With("error", err).Error("failed to create instagram feeder")
-	}
-
 	untappd, err := NewUntappd(cfg.Untappd)
 	if err != nil {
 		slog.With("error", err).Error("failed to create untappd feeder")
 	}
 
-	return &Fetcher{
+	f := &Fetcher{
 		cfg:        cfg,
 		blogger:    NewBlogger(),
 		twitter:    twitter,
-		instagram:  instagram,
 		soundCloud: NewSoundCloud(cfg.SoundCloud),
 		swarm:      NewSwarm(),
 		deviantArt: NewDeviantArt(),
 		untappd:    untappd,
 		bluesky:    NewBluesky(cfg.Bluesky),
 	}
+
+	go func() {
+		instagram, err := NewInstagram(cfg.Instagram, cfg.ProxyURL)
+		if err != nil {
+			slog.With("error", err).Error("failed to create instagram feeder")
+			return
+		}
+		f.instagram.Store(instagram)
+	}()
+
+	return f
 }
 
 // Feeds retrieves the feed items based on the request parameters.
@@ -103,8 +109,10 @@ func (f *Fetcher) Feeds(ctx context.Context, req FetcherRequest) (*FeedItems, er
 	if req.TwitterID != "" && f.twitter != nil {
 		feed(ctx, req.TwitterID, f.twitter, &wg)
 	}
-	if req.InstagramID != "" && f.instagram != nil {
-		feed(ctx, req.InstagramID, f.instagram, &wg)
+	if req.InstagramID != "" {
+		if instagram := f.instagram.Load(); instagram != nil {
+			feed(ctx, req.InstagramID, instagram, &wg)
+		}
 	}
 	if req.SoundCloudID != "" && f.soundCloud != nil {
 		feed(ctx, req.SoundCloudID, f.soundCloud, &wg)

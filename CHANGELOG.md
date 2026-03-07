@@ -1,3 +1,9 @@
+# [1.14.0](https://github.com/Jesse0Michael/fetcher/compare/v1.13.3...v1.14.0) (2026-03-07)
+
+### Features
+
+- publish ESM typescript-fetch client to npm and GitHub Packages ([f9d5c41](https://github.com/Jesse0Michael/fetcher/commit/f9d5c412c96d0d4953e8b43f9332437fc518fbaf))
+
 ## [1.13.3](https://github.com/Jesse0Michael/fetcher/compare/v1.13.2...v1.13.3) (2026-03-07)
 
 ### Bug Fixes

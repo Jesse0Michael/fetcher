@@ -1,3 +1,13 @@
+## [1.14.1](https://github.com/Jesse0Michael/fetcher/compare/v1.14.0...v1.14.1) (2026-03-08)
+
+### Bug Fixes
+
+- update fetcher ([0f20123](https://github.com/Jesse0Michael/fetcher/commit/0f20123b87b3bce72bac2989ebfde2dc0fcd1e1d))
+
+### Other
+
+- ci ([598673a](https://github.com/Jesse0Michael/fetcher/commit/598673a7cb4c948844ead28ddfe832147bbe456a))
+
 # [1.14.0](https://github.com/Jesse0Michael/fetcher/compare/v1.13.3...v1.14.0) (2026-03-07)
 
 ### Features

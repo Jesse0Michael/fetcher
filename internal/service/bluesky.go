@@ -62,8 +62,12 @@ func (b *Bluesky) Feed(ctx context.Context, id string) ([]FeedItem, error) {
 		rkey := uri[strings.LastIndex(uri, "/")+1:]
 		postURL := fmt.Sprintf("https://bsky.app/profile/%s/post/%s", handle, rkey)
 
+		// Use full text from record; resolve any link-card URL from the external embed
+		content := record.Get("text").String()
+
 		var media []FeedItemMedia
-		switch post.Get("embed.$type").String() {
+		embedType := post.Get("embed.$type").String()
+		switch embedType {
 		case "app.bsky.embed.images#view":
 			for _, img := range post.Get("embed.images").Array() {
 				media = append(media, FeedItemMedia{
@@ -77,6 +81,18 @@ func (b *Bluesky) Feed(ctx context.Context, id string) ([]FeedItem, error) {
 				Poster: post.Get("embed.thumbnail").String(),
 				Kind:   "video",
 			})
+		case "app.bsky.embed.external#view":
+			// The full link URL lives here; record.text may have a truncated version
+			if externalURI := post.Get("embed.external.uri").String(); externalURI != "" {
+				content = replaceTrailingEllipsis(content, externalURI)
+			}
+		case "app.bsky.embed.recordWithMedia#view":
+			for _, img := range post.Get("embed.media.images").Array() {
+				media = append(media, FeedItemMedia{
+					URL:  img.Get("fullsize").String(),
+					Kind: "image",
+				})
+			}
 		}
 
 		items = append(items, FeedItem{
@@ -85,9 +101,21 @@ func (b *Bluesky) Feed(ctx context.Context, id string) ([]FeedItem, error) {
 			Source:  "bluesky",
 			URL:     postURL,
 			Media:   media,
-			Content: record.Get("text").String(),
+			Content: content,
 		})
 	}
 
 	return items, nil
+}
+
+// replaceTrailingEllipsis replaces a trailing "..." (or a truncated URL ending in "...")
+// in text with the full URI from the external embed.
+func replaceTrailingEllipsis(text, uri string) string {
+	// Find last whitespace-delimited token; if it ends with "..." replace it with the full URI
+	idx := strings.LastIndexAny(text, " \n\t")
+	last := text[idx+1:]
+	if strings.HasSuffix(last, "...") {
+		return strings.TrimRight(text[:idx+1], " \n\t") + " " + uri
+	}
+	return text
 }

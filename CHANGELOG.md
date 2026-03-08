@@ -1,3 +1,9 @@
+## [1.14.2](https://github.com/Jesse0Michael/fetcher/compare/v1.14.1...v1.14.2) (2026-03-08)
+
+### Bug Fixes
+
+- setup registry ([b9785ab](https://github.com/Jesse0Michael/fetcher/commit/b9785ab5f730c2e524a9029f21faa55e76c38e28))
+
 ## [1.14.1](https://github.com/Jesse0Michael/fetcher/compare/v1.14.0...v1.14.1) (2026-03-08)
 
 ### Bug Fixes

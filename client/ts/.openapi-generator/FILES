@@ -1,9 +1,9 @@
 .gitignore
 .npmignore
-.openapi-generator-ignore
 README.md
 docs/DefaultApi.md
 docs/FeedItem.md
+docs/FeedItemAuthor.md
 docs/FeedItemMedia.md
 docs/FeedItems.md
 package.json

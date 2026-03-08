@@ -71,6 +71,7 @@ All URIs are relative to *https://fetcher-ho4joes5va-uw.a.run.app*
 ### Models
 
 - [FeedItem](docs/FeedItem.md)
+- [FeedItemAuthor](docs/FeedItemAuthor.md)
 - [FeedItemMedia](docs/FeedItemMedia.md)
 - [FeedItems](docs/FeedItems.md)
 

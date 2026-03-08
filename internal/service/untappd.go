@@ -39,6 +39,12 @@ func (u *Untappd) Feed(_ context.Context, id string) ([]FeedItem, error) {
 			TS:     c.Created.Unix(),
 			Source: "untappd",
 			URL:    fmt.Sprintf("https://untappd.com/user/%s/checkin/%d", c.User.UserName, c.ID),
+			Author: &FeedItemAuthor{
+				Handle: c.User.UserName,
+				Name:   fmt.Sprintf("%s %s", c.User.FirstName, c.User.LastName),
+				Avatar: c.User.Avatar.String(),
+				URL:    fmt.Sprintf("https://untappd.com/user/%s", c.User.UserName),
+			},
 			// Media:   medias,
 			Content: c.Comment,
 		}

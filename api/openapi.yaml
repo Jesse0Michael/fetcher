@@ -133,6 +133,8 @@ components:
         url:
           description: Permalink to the feed item on the platform
           type: string
+        author:
+          $ref: "#/components/schemas/feedItem_author"
         media:
           description: Array of media items (images, videos, etc...)
           items:
@@ -145,6 +147,22 @@ components:
         - id
         - source
         - ts
+      type: object
+    feedItem_author:
+      description: Author of the feed item (poster, uploader, or originator in reposts/quotes)
+      properties:
+        handle:
+          description: Username or handle on the platform
+          type: string
+        name:
+          description: Display name of the author
+          type: string
+        avatar:
+          description: URL to the author's avatar image
+          type: string
+        url:
+          description: URL to the author's profile on the platform
+          type: string
       type: object
     feedItem_media:
       properties:

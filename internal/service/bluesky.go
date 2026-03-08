@@ -95,11 +95,19 @@ func (b *Bluesky) Feed(ctx context.Context, id string) ([]FeedItem, error) {
 			}
 		}
 
+		author := &FeedItemAuthor{
+			Handle: post.Get("author.handle").String(),
+			Name:   post.Get("author.displayName").String(),
+			Avatar: post.Get("author.avatar").String(),
+			URL:    fmt.Sprintf("https://bsky.app/profile/%s", post.Get("author.handle").String()),
+		}
+
 		items = append(items, FeedItem{
 			ID:      post.Get("cid").String(),
 			TS:      ts.Unix(),
 			Source:  "bluesky",
 			URL:     postURL,
+			Author:  author,
 			Media:   media,
 			Content: content,
 		})

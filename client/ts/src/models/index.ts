@@ -31,6 +31,12 @@ export interface FeedItem {
      */
     url?: string;
     /**
+     * 
+     * @type {FeedItemAuthor}
+     * @memberof FeedItem
+     */
+    author?: FeedItemAuthor;
+    /**
      * Array of media items (images, videos, etc...)
      * @type {Array<FeedItemMedia>}
      * @memberof FeedItem
@@ -60,6 +66,37 @@ export const FeedItemSourceEnum = {
 } as const;
 export type FeedItemSourceEnum = typeof FeedItemSourceEnum[keyof typeof FeedItemSourceEnum];
 
+/**
+ * Author of the feed item (poster, uploader, or originator in reposts/quotes)
+ * @export
+ * @interface FeedItemAuthor
+ */
+export interface FeedItemAuthor {
+    /**
+     * Username or handle on the platform
+     * @type {string}
+     * @memberof FeedItemAuthor
+     */
+    handle?: string;
+    /**
+     * Display name of the author
+     * @type {string}
+     * @memberof FeedItemAuthor
+     */
+    name?: string;
+    /**
+     * URL to the author's avatar image
+     * @type {string}
+     * @memberof FeedItemAuthor
+     */
+    avatar?: string;
+    /**
+     * URL to the author's profile on the platform
+     * @type {string}
+     * @memberof FeedItemAuthor
+     */
+    url?: string;
+}
 /**
  * 
  * @export

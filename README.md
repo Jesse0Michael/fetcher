@@ -6,14 +6,24 @@ API Docs: https://jesse0michael.github.io/fetcher/index.html
 
 ## Feed Item
 
-| field   | type        | required | description                                    |
-|---------|-------------|----------|------------------------------------------------|
-| id      | string      | true     | Unique identifier for a feed item              |
-| ts      | int         | true     | Unix timestamp for when the item was published |
-| source  | string      | true     | The source platform the item is from           |
-| url     | string      | false    | Permalink to the feed item on the platform     |
-| media   | MediaItem[] | false    | Array of media items (image, video, audio)     |
-| content | string      | false    | Text content for the item (may contain HTML)   |
+| field   | type           | required | description                                                    |
+|---------|----------------|----------|----------------------------------------------------------------|
+| id      | string         | true     | Unique identifier for a feed item                              |
+| ts      | int            | true     | Unix timestamp for when the item was published                 |
+| source  | string         | true     | The source platform the item is from                           |
+| url     | string         | false    | Permalink to the feed item on the platform                     |
+| author  | AuthorItem     | false    | Author of the item (useful for reposts/quotes)                 |
+| media   | MediaItem[]    | false    | Array of media items (image, video, audio)                     |
+| content | string         | false    | Text content for the item (may contain HTML)                   |
+
+## Author Item
+
+| field  | type   | required | description                              |
+|--------|--------|----------|------------------------------------------|
+| handle | string | false    | Username or handle on the platform       |
+| name   | string | false    | Display name of the author               |
+| avatar | string | false    | URL to the author's avatar image         |
+| url    | string | false    | URL to the author's profile on the platform |
 
 ---
 

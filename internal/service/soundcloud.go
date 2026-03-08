@@ -104,10 +104,15 @@ func (s *SoundCloud) Feed(ctx context.Context, id string) ([]FeedItem, error) {
 		iframe := fmt.Sprintf("https://w.soundcloud.com/player/?url=%s&buying=false&liking=false&download=false&sharing=false&show_artwork=false&show_comments=false&show_playcount=false", sound.Get("uri").String()) //nolint:lll
 		content := fmt.Sprintf("<iframe id='iframe-%s' class='sc-widget' src='%s' width='100%%' height='130' scrolling='no' frameborder='no' target='_top'></iframe>", sound.Get("uri").String(), iframe)              //nolint:lll
 		item := FeedItem{
-			ID:      sound.Get("id").String(),
-			TS:      time.Unix(),
-			Source:  "soundcloud",
-			URL:     sound.Get("uri").String(),
+			ID:     sound.Get("id").String(),
+			TS:     time.Unix(),
+			Source: "soundcloud",
+			URL:    sound.Get("uri").String(),
+			Author: &FeedItemAuthor{
+				Handle: sound.Get("user.username").String(),
+				Avatar: sound.Get("user.avatar_url").String(),
+				URL:    sound.Get("user.permalink_url").String(),
+			},
 			Content: content,
 		}
 		items = append(items, item)

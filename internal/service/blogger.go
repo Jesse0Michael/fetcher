@@ -47,10 +47,15 @@ func (b *Blogger) Feed(ctx context.Context, id string) ([]FeedItem, error) {
 			return nil, err
 		}
 		item := FeedItem{
-			ID:      blog.Get("id").String(),
-			TS:      time.Unix(),
-			Source:  "blogger",
-			URL:     blog.Get("url").String(),
+			ID:     blog.Get("id").String(),
+			TS:     time.Unix(),
+			Source: "blogger",
+			URL:    blog.Get("url").String(),
+			Author: &FeedItemAuthor{
+				Name:   blog.Get("author.displayName").String(),
+				Avatar: blog.Get("author.image.url").String(),
+				URL:    blog.Get("author.url").String(),
+			},
 			Content: blog.Get("content").String(),
 		}
 		items = append(items, item)

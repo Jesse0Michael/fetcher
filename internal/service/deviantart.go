@@ -36,6 +36,14 @@ func (d *DeviantArt) Feed(_ context.Context, id string) ([]FeedItem, error) {
 			continue
 		}
 
+		var author *FeedItemAuthor
+		if art.Author != nil && art.Author.Name != "" {
+			author = &FeedItemAuthor{
+				Handle: art.Author.Name,
+				URL:    fmt.Sprintf("https://www.deviantart.com/%s", art.Author.Name),
+			}
+		}
+
 		item := FeedItem{
 			ID:     art.Title,
 			TS:     art.PublishedParsed.Unix(),
@@ -45,6 +53,7 @@ func (d *DeviantArt) Feed(_ context.Context, id string) ([]FeedItem, error) {
 				Kind: "image",
 			}},
 			URL:     art.Link,
+			Author:  author,
 			Content: art.Title,
 		}
 		items = append(items, item)

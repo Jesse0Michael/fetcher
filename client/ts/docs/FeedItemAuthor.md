@@ -1,18 +1,16 @@
 
-# FeedItem
+# FeedItemAuthor
 
+Author of the feed item (poster, uploader, or originator in reposts/quotes)
 
 ## Properties
 
 Name | Type
 ------------ | -------------
-`id` | string
-`ts` | number
-`source` | string
+`handle` | string
+`name` | string
+`avatar` | string
 `url` | string
-`author` | [FeedItemAuthor](FeedItemAuthor.md)
-`media` | [Array&lt;FeedItemMedia&gt;](FeedItemMedia.md)
-`content` | string
 
 
 [[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)

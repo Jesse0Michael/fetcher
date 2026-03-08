@@ -46,16 +46,14 @@ func NewTwitter(cfg TwitterConfig) (*Twitter, error) {
 }
 
 func (t *Twitter) Feed(ctx context.Context, id string) ([]FeedItem, error) {
-	// excludeReplies := false
-	// includeRetweets := true
-	// trimUser := false
 	opts := twitter.UserTweetTimelineOpts{
 		MaxResults: t.cfg.Count,
-		// Count:           t.count,
-		// ExcludeReplies:  &excludeReplies,
-		// IncludeRetweets: &includeRetweets,
-		// TrimUser:        &trimUser,
-		// TweetMode:       "extended",
+		Expansions: []twitter.Expansion{twitter.ExpansionAuthorID},
+		UserFields: []twitter.UserField{
+			twitter.UserFieldName,
+			twitter.UserFieldUserName,
+			twitter.UserFieldProfileImageURL,
+		},
 	}
 
 	tweets, err := t.client.UserTweetTimeline(ctx, id, opts)
@@ -63,21 +61,40 @@ func (t *Twitter) Feed(ctx context.Context, id string) ([]FeedItem, error) {
 		return nil, err
 	}
 
+	// Build a lookup from user ID -> user object for author resolution
+	users := map[string]*twitter.UserObj{}
+	if tweets.Raw.Includes != nil {
+		for _, u := range tweets.Raw.Includes.Users {
+			users[u.ID] = u
+		}
+	}
+
 	items := []FeedItem{}
 	for _, tweet := range tweets.Raw.Tweets {
-		var content string
-		// if tweet.RetweetedStatus != nil {
-		// 	content = getTwitterContent(*tweet.RetweetedStatus)
-		// } else {
-		content = getTwitterContent(tweet)
-		// }
+		content := getTwitterContent(tweet)
+		ts, _ := time.Parse(time.RFC3339, tweet.CreatedAt)
+
+		var author *FeedItemAuthor
+		if u, ok := users[tweet.AuthorID]; ok {
+			author = &FeedItemAuthor{
+				Handle: u.UserName,
+				Name:   u.Name,
+				Avatar: u.ProfileImageURL,
+				URL:    fmt.Sprintf("https://twitter.com/%s", u.UserName),
+			}
+		}
+
 		tweetURL := fmt.Sprintf("https://twitter.com/%s/status/%s", tweet.AuthorID, tweet.ID)
-		ts, _ := time.Parse(time.RubyDate, tweet.CreatedAt)
+		if author != nil {
+			tweetURL = fmt.Sprintf("https://twitter.com/%s/status/%s", author.Handle, tweet.ID)
+		}
+
 		item := FeedItem{
 			ID:      tweet.ID,
 			TS:      ts.Unix(),
 			Source:  "twitter",
 			URL:     tweetURL,
+			Author:  author,
 			Media:   []FeedItemMedia{},
 			Content: content,
 		}

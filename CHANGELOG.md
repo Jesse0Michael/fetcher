@@ -1,3 +1,13 @@
+# [1.15.0](https://github.com/Jesse0Michael/fetcher/compare/v1.14.2...v1.15.0) (2026-03-08)
+
+### Bug Fixes
+
+- full bluesky content ([89c8273](https://github.com/Jesse0Michael/fetcher/commit/89c8273e8314763f599f8ae9c2f8e08df97c88cb))
+
+### Features
+
+- add feed item author ([cf1b19b](https://github.com/Jesse0Michael/fetcher/commit/cf1b19b07e85b8b4ba2ee4b44340a98877e3b930))
+
 ## [1.14.2](https://github.com/Jesse0Michael/fetcher/compare/v1.14.1...v1.14.2) (2026-03-08)
 
 ### Bug Fixes

@@ -11,7 +11,7 @@ All URIs are relative to *https://fetcher-ho4joes5va-uw.a.run.app*
 
 ## getFeed
 
-> FeedItems getFeed(twitterID, instagramID, bloggerID, soundcloudID, swarmID, deviantartID, untappdID, blueskyID)
+> FeedItems getFeed(twitterID, instagramID, bloggerID, soundcloudID, swarmID, deviantartID, untappdID, blueskyID, youtubeID)
 
 Get feed
 
@@ -47,6 +47,8 @@ async function example() {
     untappdID: untappdID_example,
     // string | blueskyID (optional)
     blueskyID: blueskyID_example,
+    // string | youtubeID (optional)
+    youtubeID: youtubeID_example,
   } satisfies GetFeedRequest;
 
   try {
@@ -74,6 +76,7 @@ example().catch(console.error);
 | **deviantartID** | `string` | deviantartID | [Optional] [Defaults to `undefined`] |
 | **untappdID** | `string` | untappdID | [Optional] [Defaults to `undefined`] |
 | **blueskyID** | `string` | blueskyID | [Optional] [Defaults to `undefined`] |
+| **youtubeID** | `string` | youtubeID | [Optional] [Defaults to `undefined`] |
 
 ### Return type
 

@@ -62,6 +62,12 @@ paths:
           required: false
           schema:
             type: string
+        - description: youtubeID
+          in: query
+          name: youtubeID
+          required: false
+          schema:
+            type: string
       responses:
         "200":
           content:
@@ -129,6 +135,7 @@ components:
             - deviantart
             - untappd
             - bluesky
+            - youtube
           type: string
         url:
           description: Permalink to the feed item on the platform

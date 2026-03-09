@@ -41,6 +41,8 @@ async function example() {
     untappdID: untappdID_example,
     // string | blueskyID (optional)
     blueskyID: blueskyID_example,
+    // string | youtubeID (optional)
+    youtubeID: youtubeID_example,
   } satisfies GetFeedRequest;
 
   try {

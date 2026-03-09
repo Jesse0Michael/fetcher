@@ -33,6 +33,7 @@ type FetcherRequest struct {
 	DeviantArtID string `query:"deviantartID"`
 	UntappdID    string `query:"untappdID"`
 	BlueskyID    string `query:"blueskyID"`
+	YouTubeID    string `query:"youtubeID"`
 }
 
 // Fetcher can retrieve feed items from various sources and compound the results into one feed.
@@ -47,6 +48,7 @@ type Fetcher struct {
 	deviantArt Feeder
 	untappd    Feeder
 	bluesky    Feeder
+	youtube    Feeder
 }
 
 // NewFetcher creates a Fetcher service.
@@ -70,6 +72,7 @@ func NewFetcher(cfg Config) *Fetcher {
 		deviantArt: NewDeviantArt(),
 		untappd:    untappd,
 		bluesky:    NewBluesky(cfg.Bluesky),
+		youtube:    NewYouTube(),
 	}
 
 	go func() {
@@ -128,6 +131,9 @@ func (f *Fetcher) Feeds(ctx context.Context, req FetcherRequest) (*FeedItems, er
 	}
 	if req.BlueskyID != "" && f.bluesky != nil {
 		feed(ctx, req.BlueskyID, f.bluesky, &wg)
+	}
+	if req.YouTubeID != "" && f.youtube != nil {
+		feed(ctx, req.YouTubeID, f.youtube, &wg)
 	}
 
 	wg.Wait()

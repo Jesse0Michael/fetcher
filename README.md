@@ -39,3 +39,4 @@ API Docs: https://jesse0michael.github.io/fetcher/index.html
 | Swarm      | `swarmID`      |
 | Deviantart | `deviantartID` |
 | Untappd    | `untappdID`    |
+| YouTube    | `youtubeID`    |

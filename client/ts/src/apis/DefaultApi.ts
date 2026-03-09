@@ -27,6 +27,7 @@ export interface GetFeedRequest {
     deviantartID?: string;
     untappdID?: string;
     blueskyID?: string;
+    youtubeID?: string;
 }
 
 export interface ProxyRequest {
@@ -74,6 +75,10 @@ export class DefaultApi extends runtime.BaseAPI {
 
         if (requestParameters['blueskyID'] != null) {
             queryParameters['blueskyID'] = requestParameters['blueskyID'];
+        }
+
+        if (requestParameters['youtubeID'] != null) {
+            queryParameters['youtubeID'] = requestParameters['youtubeID'];
         }
 
         const headerParameters: runtime.HTTPHeaders = {};

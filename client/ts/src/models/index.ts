@@ -62,7 +62,8 @@ export const FeedItemSourceEnum = {
     Swarm: 'swarm',
     Deviantart: 'deviantart',
     Untappd: 'untappd',
-    Bluesky: 'bluesky'
+    Bluesky: 'bluesky',
+    Youtube: 'youtube'
 } as const;
 export type FeedItemSourceEnum = typeof FeedItemSourceEnum[keyof typeof FeedItemSourceEnum];
 

@@ -1,3 +1,9 @@
+## [1.15.1](https://github.com/Jesse0Michael/fetcher/compare/v1.15.0...v1.15.1) (2026-03-09)
+
+### Bug Fixes
+
+- add youtube fetcher feed ([f23e58b](https://github.com/Jesse0Michael/fetcher/commit/f23e58b67a6fbcf7ba3d3e4e79273c6de03d78fb))
+
 # [1.15.0](https://github.com/Jesse0Michael/fetcher/compare/v1.14.2...v1.15.0) (2026-03-08)
 
 ### Bug Fixes
